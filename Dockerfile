@@ -10,6 +10,11 @@ ARG CADDY_VERSION=2
 # Prod image
 FROM php:${PHP_VERSION}-fpm-alpine AS app_php
 
+RUN apk update && \
+    apk add --no-cache \
+    nodejs \
+    npm
+	
 # Allow to use development versions of Symfony
 ARG STABILITY="stable"
 ENV STABILITY ${STABILITY}
