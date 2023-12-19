@@ -3,34 +3,22 @@
 namespace App\Entity;
 
 use App\Repository\TechcareUserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\Uid\Uuid;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: TechcareUserRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $createdBy = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $updatedBy = null;
+    private ?Uuid $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
@@ -50,15 +38,19 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
-    #[ORM\ManyToMany(targetEntity: techcarerole::class, inversedBy: 'techcareUsers')]
-    private Collection $role;
+    #[ORM\Column(length: 255)]
+    private ?string $createdBy = null;
 
-    public function __construct()
-    {
-        $this->role = new ArrayCollection();
-    }
+    #[ORM\Column(length: 255)]
+    private ?string $updatedBy = null;
 
-    public function getId(): ?Uuid
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -128,54 +120,6 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?string
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(string $createdBy): static
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?string
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(string $updatedBy): static
-    {
-        $this->updatedBy = $updatedBy;
-
-        return $this;
-    }
-
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -200,26 +144,50 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, techcarerole>
-     */
-    public function getRole(): Collection
+    public function getCreatedBy(): ?string
     {
-        return $this->role;
+        return $this->createdBy;
     }
 
-    public function addRole(techcarerole $role): static
+    public function setCreatedBy(string $createdBy): static
     {
-        if (!$this->role->contains($role)) {
-            $this->role->add($role);
-        }
+        $this->createdBy = $createdBy;
 
         return $this;
     }
 
-    public function removeRole(techcarerole $role): static
+    public function getUpdatedBy(): ?string
     {
-        $this->role->removeElement($role);
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(string $updatedBy): static
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

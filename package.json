@@ -20,5 +20,10 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "sass": "^1.69.5",
+        "sass-loader": "^13.3.2",
+        "webpack-watch-files-plugin": "^1.2.1"
     }
 }
