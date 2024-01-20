@@ -2,16 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\TechcareProductCategoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\TechcareServiceRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: TechcareProductCategoryRepository::class)]
-class TechcareProductCategory
+#[ORM\Entity(repositoryClass: TechcareServiceRepository::class)]
+class TechcareService
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
@@ -35,13 +34,8 @@ class TechcareProductCategory
     #[Assert\Unique]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'productCategory', targetEntity: TechcareProduct::class)]
-    private Collection $product;
-
-    public function __construct()
-    {
-        $this->product = new ArrayCollection();
-    }
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $price = null;
 
     public function getId(): ?Uuid
     {
@@ -108,32 +102,14 @@ class TechcareProductCategory
         return $this;
     }
 
-    /**
-     * @return Collection<int, TechcareProduct>
-     */
-    public function getProduct(): Collection
+    public function getPrice(): ?string
     {
-        return $this->product;
+        return $this->price;
     }
 
-    public function addProduct(TechcareProduct $product): static
+    public function setPrice(string $price): static
     {
-        if (!$this->product->contains($product)) {
-            $this->product->add($product);
-            $product->setProductCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(TechcareProduct $product): static
-    {
-        if ($this->product->removeElement($product)) {
-            // set the owning side to null (unless already changed)
-            if ($product->getProductCategory() === $this) {
-                $product->setProductCategory(null);
-            }
-        }
+        $this->price = $price;
 
         return $this;
     }

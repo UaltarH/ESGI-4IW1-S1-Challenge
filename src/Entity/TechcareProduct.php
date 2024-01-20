@@ -3,15 +3,21 @@
 namespace App\Entity;
 
 use App\Repository\TechcareProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TechcareProductRepository::class)]
 class TechcareProduct
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?Uuid $id = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -26,12 +32,28 @@ class TechcareProduct
     private ?string $updatedBy = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Unique]
     private ?string $name = null;
 
     #[ORM\Column(length: 4, nullable: true)]
     private ?string $release_year = null;
 
-    public function getId(): ?int
+    #[ORM\ManyToMany(targetEntity: TechcareComponent::class, mappedBy: 'product')]
+    private Collection $components;
+
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    private ?TechcareBrand $brand = null;
+
+    #[ORM\ManyToOne(inversedBy: 'product')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TechcareProductCategory $productCategory = null;
+
+    public function __construct()
+    {
+        $this->components = new ArrayCollection();
+    }
+
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -104,6 +126,57 @@ class TechcareProduct
     public function setReleaseYear(?string $release_year): static
     {
         $this->release_year = $release_year;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TechcareComponent>
+     */
+    public function getComponents(): Collection
+    {
+        return $this->components;
+    }
+
+    public function addComponent(TechcareComponent $component): static
+    {
+        if (!$this->components->contains($component)) {
+            $this->components->add($component);
+            $component->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComponent(TechcareComponent $component): static
+    {
+        if ($this->components->removeElement($component)) {
+            $component->removeProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function getBrand(): ?TechcareBrand
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?TechcareBrand $brand): static
+    {
+        $this->brand = $brand;
+
+        return $this;
+    }
+
+    public function getProductCategory(): ?TechcareProductCategory
+    {
+        return $this->productCategory;
+    }
+
+    public function setProductCategory(?TechcareProductCategory $productCategory): static
+    {
+        $this->productCategory = $productCategory;
 
         return $this;
     }

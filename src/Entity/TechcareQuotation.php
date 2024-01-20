@@ -3,18 +3,25 @@
 namespace App\Entity;
 
 use App\Repository\TechcareQuotationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TechcareQuotationRepository::class)]
 class TechcareQuotation
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?Uuid $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Unique]
     private ?string $quotation_number = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
@@ -32,7 +39,23 @@ class TechcareQuotation
     #[ORM\Column]
     private ?bool $water_damage = null;
 
-    public function getId(): ?int
+    #[ORM\OneToMany(mappedBy: 'quotation', targetEntity: TechcareQuotationContent::class, orphanRemoval: true)]
+    private Collection $contents;
+
+    #[ORM\ManyToOne(inversedBy: 'quotations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TechcareClient $client = null;
+
+    #[ORM\OneToMany(mappedBy: 'quotation', targetEntity: TechcareInvoice::class, orphanRemoval: true)]
+    private Collection $invoices;
+
+    public function __construct()
+    {
+        $this->contents = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
+    }
+
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -105,6 +128,78 @@ class TechcareQuotation
     public function setWaterDamage(bool $water_damage): static
     {
         $this->water_damage = $water_damage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TechcareQuotationContent>
+     */
+    public function getContents(): Collection
+    {
+        return $this->contents;
+    }
+
+    public function addContent(TechcareQuotationContent $content): static
+    {
+        if (!$this->contents->contains($content)) {
+            $this->contents->add($content);
+            $content->setQuotation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContent(TechcareQuotationContent $content): static
+    {
+        if ($this->contents->removeElement($content)) {
+            // set the owning side to null (unless already changed)
+            if ($content->getQuotation() === $this) {
+                $content->setQuotation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getClient(): ?TechcareClient
+    {
+        return $this->client;
+    }
+
+    public function setClient(?TechcareClient $client): static
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TechcareInvoice>
+     */
+    public function getInvoices(): Collection
+    {
+        return $this->invoices;
+    }
+
+    public function addInvoice(TechcareInvoice $invoice): static
+    {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices->add($invoice);
+            $invoice->setQuotation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoice(TechcareInvoice $invoice): static
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getQuotation() === $this) {
+                $invoice->setQuotation(null);
+            }
+        }
 
         return $this;
     }

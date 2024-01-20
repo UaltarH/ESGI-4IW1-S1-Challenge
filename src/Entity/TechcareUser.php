@@ -50,7 +50,10 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    public function getId(): ?int
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?TechcareCompany $company = null;
+
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -188,6 +191,18 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCompany(): ?TechcareCompany
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?TechcareCompany $company): static
+    {
+        $this->company = $company;
 
         return $this;
     }

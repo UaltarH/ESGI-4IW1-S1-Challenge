@@ -5,14 +5,17 @@ namespace App\Entity;
 use App\Repository\TechcareQuotationContentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: TechcareQuotationContentRepository::class)]
 class TechcareQuotationContent
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?Uuid $id = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -35,7 +38,18 @@ class TechcareQuotationContent
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $final_amount = null;
 
-    public function getId(): ?int
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\ManyToOne(inversedBy: 'contents')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TechcareQuotation $quotation = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TechcareService $service = null;
+
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -120,6 +134,42 @@ class TechcareQuotationContent
     public function setFinalAmount(string $final_amount): static
     {
         $this->final_amount = $final_amount;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getQuotation(): ?TechcareQuotation
+    {
+        return $this->quotation;
+    }
+
+    public function setQuotation(?TechcareQuotation $quotation): static
+    {
+        $this->quotation = $quotation;
+
+        return $this;
+    }
+
+    public function getService(): ?TechcareService
+    {
+        return $this->service;
+    }
+
+    public function setService(?TechcareService $service): static
+    {
+        $this->service = $service;
 
         return $this;
     }
