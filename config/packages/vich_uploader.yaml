@@ -1,0 +1,10 @@
+vich_uploader:
+  db_driver: orm
+
+  mappings:
+    companyLogo:
+      uri_prefix: /uploads/post/images
+      upload_destination: '%kernel.project_dir%/public/uploads/companyLogo/images'
+      namer:
+        service: Vich\UploaderBundle\Naming\PropertyNamer
+        options: { property: 'id' }

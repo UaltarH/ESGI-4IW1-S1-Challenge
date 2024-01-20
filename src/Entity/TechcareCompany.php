@@ -8,8 +8,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TechcareCompanyRepository::class)]
+#[Vich\Uploadable]
 class TechcareCompany
 {
     #[ORM\Id]
@@ -35,6 +39,23 @@ class TechcareCompany
 
     #[ORM\Column]
     private ?bool $active = null;
+
+    #[Vich\UploadableField(mapping: 'companyLogo', fileNameProperty: 'imageName', size: 'imageSize')]
+    #[Assert\Image(
+        maxSize: '1000k',
+        mimeTypes: ['image/jpeg', 'image/png'],
+        maxRatio: '1.75',
+        minRatio: '1.70',
+        maxSizeMessage: 'Le fichier ne doit pas faire plus de {{ limit }}ko, mais il fait {{ size }}',
+        mimeTypesMessage: 'Le fichier doit être au format JPG ou PNG',
+    )]
+    private ?File $imageFile = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $imageName = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $imageSize = null;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: TechcareClient::class)]
     private Collection $client;
@@ -122,6 +143,43 @@ class TechcareCompany
     {
         $this->active = $active;
 
+        return $this;
+    }
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile): TechcareCompany
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            $this->updatedAt = new \DateTime();
+        }
+
+        return $this;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageName(?string $imageName): TechcareCompany
+    {
+        $this->imageName = $imageName;
+        return $this;
+    }
+
+    public function getImageSize(): ?int
+    {
+        return $this->imageSize;
+    }
+
+    public function setImageSize(?int $imageSize): TechcareCompany
+    {
+        $this->imageSize = $imageSize;
         return $this;
     }
 
