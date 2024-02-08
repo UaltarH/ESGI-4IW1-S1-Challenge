@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page de gestion des devis{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% include '_components/main_menu.html.twig' with {'menuItems' : menuItems} %}
+    </div>
+    <main>
+        <h1>Page de gestion des devis</h1>
+        {% if is_granted('ROLE_ADMIN') %}
+            <span>Only admin can see this </span>
+        {% endif %}
+    </main>
+{% endblock %}

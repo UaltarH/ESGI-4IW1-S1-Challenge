@@ -22,10 +22,18 @@ class TechcareCompany
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
+    /**
+     * Règles du code
+     * - Initiales du propriétaire (prénom + nom)
+     * - 4 premières lettres du nom de la société si plus de 4 caractères
+     * - Nom de la société si moins de 4 caractères
+     */
+    #[ORM\Column(length: 10)]
+    private ?string $code = null;
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 14)] // siret est composé du n° siren et du NIC: 123 456 789 - 12345
     private ?string $siret = null;
 
     #[ORM\Column(length: 20, nullable: true)]
@@ -38,7 +46,7 @@ class TechcareCompany
     private ?string $address = null;
 
     #[ORM\Column]
-    private ?bool $active = null;
+    private ?bool $active = true;
 
     #[Vich\UploadableField(mapping: 'companyLogo', fileNameProperty: 'imageName', size: 'imageSize')]
     #[Assert\Image(
@@ -62,6 +70,21 @@ class TechcareCompany
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: TechcareUser::class)]
     private Collection $users;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?TechcareUser $owner = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $CreatedAt = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $CreatedBy = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $UpdatedAt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $UpdatedBy = null;
 
     public function __construct()
     {
@@ -239,6 +262,78 @@ class TechcareCompany
                 $user->setCompany(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOwner(): ?TechcareUser
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?TechcareUser $owner): static
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): static
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->CreatedAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $CreatedAt): static
+    {
+        $this->CreatedAt = $CreatedAt;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?string
+    {
+        return $this->CreatedBy;
+    }
+
+    public function setCreatedBy(string $CreatedBy): static
+    {
+        $this->CreatedBy = $CreatedBy;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->UpdatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $UpdatedAt): static
+    {
+        $this->UpdatedAt = $UpdatedAt;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?string
+    {
+        return $this->UpdatedBy;
+    }
+
+    public function setUpdatedBy(?string $UpdatedBy): static
+    {
+        $this->UpdatedBy = $UpdatedBy;
 
         return $this;
     }

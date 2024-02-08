@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% include '_components/main_menu.html.twig' with {'menuItems' : menuItems} %}
+    </div>
+    <main>
+        <h1>Page d'accueil admin</h1>
+    </main>
+{% endblock %}

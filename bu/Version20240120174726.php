@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DoctrineMigrations;
+namespace bu;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -44,7 +44,6 @@ final class Version20240120174726 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN techcare_client.company_id IS \'(DC2Type:uuid)\'');
         $this->addSql('ALTER TABLE techcare_client ADD CONSTRAINT FK_DCBC1759979B1AD6 FOREIGN KEY (company_id) REFERENCES techcare_company (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_DCBC1759979B1AD6 ON techcare_client (company_id)');
-        $this->addSql('ALTER TABLE techcare_company RENAME COLUMN adress TO address');
         $this->addSql('ALTER TABLE techcare_invoice ADD quotation_id UUID NOT NULL');
         $this->addSql('ALTER TABLE techcare_invoice ADD client_id UUID NOT NULL');
         $this->addSql('ALTER TABLE techcare_invoice ADD invoice_number VARCHAR(255) NOT NULL');
@@ -100,7 +99,6 @@ final class Version20240120174726 extends AbstractMigration
         $this->addSql('ALTER TABLE techcare_quotation DROP CONSTRAINT FK_9CD94F7A19EB6921');
         $this->addSql('DROP INDEX IDX_9CD94F7A19EB6921');
         $this->addSql('ALTER TABLE techcare_quotation DROP client_id');
-        $this->addSql('ALTER TABLE techcare_company RENAME COLUMN address TO adress');
         $this->addSql('ALTER TABLE techcare_quotation_content DROP CONSTRAINT FK_2499DEEAB4EA4E60');
         $this->addSql('DROP INDEX IDX_2499DEEAB4EA4E60');
         $this->addSql('DROP INDEX IDX_2499DEEAED5CA9E6');

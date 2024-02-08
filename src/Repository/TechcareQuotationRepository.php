@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\TechcareQuotation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -45,4 +46,22 @@ class TechcareQuotationRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findByNumber($value): ?TechcareQuotation
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.quotation_number = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    public function update(TechcareQuotation $quotation): void
+    {
+        $this->_em->persist($quotation);
+        $this->_em->flush();
+    }
 }

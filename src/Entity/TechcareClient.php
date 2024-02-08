@@ -6,27 +6,10 @@ use App\Repository\TechcareClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: TechcareClientRepository::class)]
-class TechcareClient
+class TechcareClient extends TechcareUser
 {
-    #[ORM\Id]
-    #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $firstname = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $lastname = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $email = null;
-
     #[ORM\Column(length: 255)]
     private ?string $billing_address = null;
 
@@ -43,11 +26,11 @@ class TechcareClient
     private Collection $invoices;
 
     #[ORM\Column]
-    private ?bool $active = null;
+    private ?bool $active = true;
 
-    #[ORM\ManyToOne(inversedBy: 'client')]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?TechcareCompany $company = null;
+    private ?TechcareUser $user = null;
 
     public function __construct()
     {
@@ -55,48 +38,22 @@ class TechcareClient
         $this->payments = new ArrayCollection();
         $this->invoices = new ArrayCollection();
     }
-
-    public function getId(): ?Uuid
+    public function getRoles(): array
     {
-        return $this->id;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_CLIENT';
+
+        return array_unique($roles);
     }
 
-    public function getFirstname(): ?string
+    public function setRoles(array $roles): static
     {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname): static
-    {
-        $this->firstname = $firstname;
+        $this->roles = $roles;
 
         return $this;
     }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(string $lastname): static
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
     public function getBillingAddress(): ?string
     {
         return $this->billing_address;
@@ -231,6 +188,18 @@ class TechcareClient
     public function setCompany(?TechcareCompany $company): static
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    public function getUser(): ?TechcareUser
+    {
+        return $this->user;
+    }
+
+    public function setUser(TechcareUser $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
