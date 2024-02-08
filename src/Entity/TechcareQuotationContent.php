@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TechcareQuotationContentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -23,10 +25,10 @@ class TechcareQuotationContent
     #[ORM\Column(length: 255)]
     private ?string $createdBy = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable:true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $updatedBy = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
@@ -41,13 +43,16 @@ class TechcareQuotationContent
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TechcareProduct $product = null;
+
+    #[ORM\Column]
+    private array $services = [];
+
     #[ORM\ManyToOne(inversedBy: 'contents')]
     #[ORM\JoinColumn(nullable: false)]
     private ?TechcareQuotation $quotation = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?TechcareService $service = null;
 
     public function getId(): ?Uuid
     {
@@ -162,14 +167,43 @@ class TechcareQuotationContent
         return $this;
     }
 
-    public function getService(): ?TechcareService
+    public function getProduct(): ?TechcareProduct
     {
-        return $this->service;
+        return $this->product;
     }
 
-    public function setService(?TechcareService $service): static
+    public function setProduct(?TechcareProduct $product): static
     {
-        $this->service = $service;
+        $this->product = $product;
+
+        return $this;
+    }
+
+    public function getServices(): array
+    {
+        return $this->services;
+    }
+
+    public function setServices(array $services): static
+    {
+        $this->services = $services;
+
+        return $this;
+    }
+
+    public function addService(string $service): static
+    {
+        $this->services[] = $service;
+
+        return $this;
+    }
+
+    public function removeService(string $service): static
+    {
+        $key = array_search($service, $this->services);
+        if($key !== false) {
+            unset($this->services[$key]);
+        }
 
         return $this;
     }

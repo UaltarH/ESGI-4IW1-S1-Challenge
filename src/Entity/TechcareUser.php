@@ -4,6 +4,9 @@ namespace App\Entity;
 
 use App\Repository\TechcareUserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
+use Doctrine\ORM\Mapping\InheritanceType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -11,6 +14,9 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: TechcareUserRepository::class)]
+#[InheritanceType('JOINED')]
+#[DiscriminatorColumn(name: 'user_type', type: 'string')]
+#[DiscriminatorMap(['user' => TechcareUser::class, 'client' => TechcareClient::class])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -18,41 +24,42 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id = null;
+    protected ?Uuid $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    private ?string $email = null;
+    protected ?string $email = null;
 
     #[ORM\Column]
-    private array $roles = [];
+    protected array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
-    private ?string $password = null;
+    protected ?string $password = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $firstname = null;
+    #[ORM\Column(length: 50)]
+    protected ?string $firstname = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $lastname = null;
+    #[ORM\Column(length: 50)]
+    protected ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
     private ?string $createdBy = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $updatedBy = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable:true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?TechcareCompany $company = null;
+    protected ?TechcareCompany $company = null;
 
+    // GETTERS AND SETTERS
     public function getId(): ?Uuid
     {
         return $this->id;

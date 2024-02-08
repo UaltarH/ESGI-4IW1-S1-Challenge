@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 #[ORM\Entity(repositoryClass: TechcareQuotationRepository::class)]
 class TechcareQuotation
 {
@@ -25,19 +26,16 @@ class TechcareQuotation
     private ?string $quotation_number = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $amount = null;
+    private ?string $amount = '0.00';
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
-    private ?string $discount = null;
+    private ?string $discount = '0.00';
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $final_amount = null;
+    private ?string $final_amount = '0.00';
 
     #[ORM\Column(length: 255)]
     private ?string $status = null;
-
-    #[ORM\Column]
-    private ?bool $water_damage = null;
 
     #[ORM\OneToMany(mappedBy: 'quotation', targetEntity: TechcareQuotationContent::class, orphanRemoval: true)]
     private Collection $contents;
@@ -48,6 +46,21 @@ class TechcareQuotation
 
     #[ORM\OneToMany(mappedBy: 'quotation', targetEntity: TechcareInvoice::class, orphanRemoval: true)]
     private Collection $invoices;
+
+    #[ORM\OneToOne(mappedBy: 'quotation', cascade: ['persist', 'remove'])]
+    private ?TechcarePayment $payment = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $createdBy = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $CreatedAt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $UpdatedBy = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $UpdatedAt = null;
 
     public function __construct()
     {
@@ -120,18 +133,6 @@ class TechcareQuotation
         return $this;
     }
 
-    public function isWaterDamage(): ?bool
-    {
-        return $this->water_damage;
-    }
-
-    public function setWaterDamage(bool $water_damage): static
-    {
-        $this->water_damage = $water_damage;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, TechcareQuotationContent>
      */
@@ -200,6 +201,71 @@ class TechcareQuotation
                 $invoice->setQuotation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPayment(): ?TechcarePayment
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(TechcarePayment $payment): static
+    {
+        // set the owning side of the relation if necessary
+        if ($payment->getQuotation() !== $this) {
+            $payment->setQuotation($this);
+        }
+
+        $this->payment = $payment;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?string
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(string $createdBy): static
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->CreatedAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $CreatedAt): static
+    {
+        $this->CreatedAt = $CreatedAt;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?string
+    {
+        return $this->UpdatedBy;
+    }
+
+    public function setUpdatedBy(?string $UpdatedBy): static
+    {
+        $this->UpdatedBy = $UpdatedBy;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->UpdatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $UpdatedAt): static
+    {
+        $this->UpdatedAt = $UpdatedAt;
 
         return $this;
     }

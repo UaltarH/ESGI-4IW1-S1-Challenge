@@ -1,0 +1,7 @@
+<nav class="main_nav">
+    <ul class="flex">
+        {% for item in menuItems %}
+            <li class="flex flex-1 basis-full"><a href="{{ path(item.route) }}">{{ item.label }}</a></li>
+        {% endfor %}
+    </ul>
+</nav>

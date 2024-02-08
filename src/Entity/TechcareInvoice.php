@@ -24,24 +24,18 @@ class TechcareInvoice
     #[ORM\Column(length: 255)]
     private ?string $createdBy = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable:true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $updatedBy = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $amount = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
-
     #[ORM\ManyToOne(inversedBy: 'invoices')]
     #[ORM\JoinColumn(nullable: false)]
     private ?TechcareQuotation $quotation = null;
-
-    #[ORM\OneToOne(mappedBy: 'invoice', cascade: ['persist', 'remove'])]
-    private ?TechcarePayment $payment = null;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
     #[ORM\JoinColumn(nullable: false)]
@@ -50,6 +44,10 @@ class TechcareInvoice
     #[ORM\Column(length: 255)]
     #[Assert\Unique]
     private ?string $invoice_number = null;
+
+    #[ORM\OneToOne(inversedBy: 'invoice', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TechcarePayment $payment = null;
 
     public function getId(): ?Uuid
     {
@@ -116,18 +114,6 @@ class TechcareInvoice
         return $this;
     }
 
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
     public function getQuotation(): ?TechcareQuotation
     {
         return $this->quotation;
@@ -136,23 +122,6 @@ class TechcareInvoice
     public function setQuotation(?TechcareQuotation $quotation): static
     {
         $this->quotation = $quotation;
-
-        return $this;
-    }
-
-    public function getPayment(): ?TechcarePayment
-    {
-        return $this->payment;
-    }
-
-    public function setPayment(TechcarePayment $payment): static
-    {
-        // set the owning side of the relation if necessary
-        if ($payment->getInvoice() !== $this) {
-            $payment->setInvoice($this);
-        }
-
-        $this->payment = $payment;
 
         return $this;
     }
@@ -177,6 +146,18 @@ class TechcareInvoice
     public function setInvoiceNumber(string $invoice_number): static
     {
         $this->invoice_number = $invoice_number;
+
+        return $this;
+    }
+
+    public function getPayment(): ?TechcarePayment
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(TechcarePayment $payment): static
+    {
+        $this->payment = $payment;
 
         return $this;
     }
