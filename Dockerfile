@@ -162,3 +162,4 @@ WORKDIR /srv/app
 COPY --from=app_caddy_builder /usr/bin/caddy /usr/bin/caddy
 COPY --from=app_php /srv/app/public public/
 COPY docker/caddy/Caddyfile /etc/caddy/Caddyfile
+# RUN php bin/console messenger:consume async
