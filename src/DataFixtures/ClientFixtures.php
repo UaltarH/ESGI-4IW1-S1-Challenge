@@ -14,23 +14,22 @@ class ClientFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create('fr_FR');
 
-        $pwd = 'test';
         for ($i = 0; $i < 10; $i++) {
-            for($j = 0; $j < 5; $j++) {
+            for ($j = 0; $j < 5; $j++) {
                 $object = (new Client())
-                    ->setCreatedAt(new \DateTimeImmutable())
-                    ->setCreatedBy("system")
-                    ->setEmail($faker->email)
-                    ->setRoles(['ROLE_CLIENT'])
-                    ->setPassword($pwd)
-                    ->setLastname($faker->lastName)
                     ->setFirstname($faker->firstName)
-                    ->setPhoneNumber($faker->phoneNumber)
+                    ->setLastname($faker->lastName)
+                    ->setEmail($faker->email)
                     ->setBillingAddress($faker->address)
-                    ->setCompany($this->getReference('company_' . $j))
-                    ->setUser($this->getReference('user_client_' . $i*5 + $j));
+                    ->setPhoneNumber($faker->phoneNumber)
+                    ->setCreatedBy("system")
+                    ->setUpdatedBy("system")
+                    ->setCreatedAt(new \DateTimeImmutable())
+                    ->setUpdatedAt(new \DateTimeImmutable())
+                    ->setCompany($this->getReference('company_' . $j));
+
                 $manager->persist($object);
-                $this->addReference('client_' . $i*5 + $j, $object);
+                $this->addReference('client_' . $i * 5 + $j, $object);
             }
         }
 

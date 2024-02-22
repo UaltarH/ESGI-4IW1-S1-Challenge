@@ -6,4 +6,11 @@
  */
 
 // any CSS you import will output into a single css file (app.css in this case)
-import './styles/app.css';
+
+// css
+import "./styles/app.scss";
+
+// js
+import $ from "jquery";
+
+import "./js/components/tables/tables.js";

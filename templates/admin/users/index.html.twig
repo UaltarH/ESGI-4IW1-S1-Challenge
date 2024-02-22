@@ -1,0 +1,15 @@
+{% extends '/admin/adminBase.html.twig' %}
+
+
+{% block title %}Administration Tech Care
+{% endblock %}
+
+{% block content_admin %}
+	<h1>Utilisateurs:</h1>
+	<button id="add-user-btn" class="btn btn-success">
+		<a href="{{ path('admin_user_create') }}">Ajouter un utilisateur</a>
+	</button>
+	{% include '_components/crudTable.html.twig' with {'title' : 'Utilisateurs', 'entityProperties': entityProperties, 'datas': datas} %}
+
+
+{% endblock %}

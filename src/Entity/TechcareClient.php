@@ -6,15 +6,48 @@ use App\Repository\TechcareClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: TechcareClientRepository::class)]
-class TechcareClient extends TechcareUser
+class TechcareClient
 {
+    #[ORM\Id]
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    protected ?Uuid $id = null;
+
+    #[ORM\Column(length: 50)]
+    protected ?string $firstname = null;
+
+    #[ORM\Column(length: 50)]
+    protected ?string $lastname = null;
+
+    #[ORM\Column(length: 180, unique: true)]
+    protected ?string $email = null;
+
     #[ORM\Column(length: 255)]
     private ?string $billing_address = null;
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $phone_number = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $createdBy = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $updatedBy = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'client')]
+    protected ?TechcareCompany $company = null;
+
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: TechcareQuotation::class)]
     private Collection $quotations;
@@ -28,9 +61,6 @@ class TechcareClient extends TechcareUser
     #[ORM\Column]
     private ?bool $active = true;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?TechcareUser $user = null;
 
     public function __construct()
     {
@@ -38,22 +68,42 @@ class TechcareClient extends TechcareUser
         $this->payments = new ArrayCollection();
         $this->invoices = new ArrayCollection();
     }
-    public function getRoles(): array
+    public function getFirstname(): ?string
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-        $roles[] = 'ROLE_CLIENT';
-
-        return array_unique($roles);
+        return $this->firstname;
     }
 
-    public function setRoles(array $roles): static
+    public function setFirstname(string $firstname): static
     {
-        $this->roles = $roles;
+        $this->firstname = $firstname;
 
         return $this;
     }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): static
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
     public function getBillingAddress(): ?string
     {
         return $this->billing_address;
@@ -74,6 +124,54 @@ class TechcareClient extends TechcareUser
     public function setPhoneNumber(?string $phone_number): static
     {
         $this->phone_number = $phone_number;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?string
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(string $createdBy): static
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?string
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(string $updatedBy): static
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -188,18 +286,6 @@ class TechcareClient extends TechcareUser
     public function setCompany(?TechcareCompany $company): static
     {
         $this->company = $company;
-
-        return $this;
-    }
-
-    public function getUser(): ?TechcareUser
-    {
-        return $this->user;
-    }
-
-    public function setUser(TechcareUser $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }

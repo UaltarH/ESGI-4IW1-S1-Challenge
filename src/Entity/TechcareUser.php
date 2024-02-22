@@ -4,8 +4,6 @@ namespace App\Entity;
 
 use App\Repository\TechcareUserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\DiscriminatorColumn;
-use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -13,10 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
-#[ORM\Entity(repositoryClass: TechcareUserRepository::class)]
-#[InheritanceType('JOINED')]
-#[DiscriminatorColumn(name: 'user_type', type: 'string')]
-#[DiscriminatorMap(['user' => TechcareUser::class, 'client' => TechcareClient::class])]
+#[ORM\Entity(repositoryClass: TechcareUserRepository::class)] #[InheritanceType('JOINED')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -53,7 +48,7 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable:true)]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
@@ -212,5 +207,29 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
         $this->company = $company;
 
         return $this;
+    }
+
+    // Custome Gettters
+    public function getRolesAsString(): string
+    {
+        $rolesWithoutUser = array_diff($this->getRoles(), ['ROLE_USER']);
+        foreach ($rolesWithoutUser as $key => $role) {
+            if ($role === 'ROLE_ADMIN') {
+                $rolesWithoutUser[$key] = 'Administrateur';
+            }
+            if ($role === 'ROLE_CLIENT') {
+                $rolesWithoutUser[$key] = 'Client';
+            }
+            if ($role === 'ROLE_ENTREPRISE') {
+                $rolesWithoutUser[$key] = 'Emplayer entreprise';
+            }
+            if ($role === 'ROLE_OWNER_ENTREPRISE') {
+                $rolesWithoutUser[$key] = 'Propriétaire entreprise';
+            }
+            if ($role === 'ROLE_COMPTABLE') {
+                $rolesWithoutUser[$key] = 'Comptable';
+            }
+        }
+        return implode(', ', $rolesWithoutUser);
     }
 }

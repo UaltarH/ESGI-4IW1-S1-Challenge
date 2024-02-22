@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration Tech Care
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		{% include '_components/main_menu.html.twig' with {'menuItems' : menuItems} %}
+	</div>
+	{% block content_admin %}{% endblock %}
+{% endblock %}
