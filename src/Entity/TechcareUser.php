@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
-#[ORM\Entity(repositoryClass: TechcareUserRepository::class)] #[InheritanceType('JOINED')]
+#[ORM\Entity(repositoryClass: TechcareUserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
 {

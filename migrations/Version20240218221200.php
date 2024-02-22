@@ -35,14 +35,12 @@ final class Version20240218221200 extends AbstractMigration
         $this->addSql('ALTER TABLE techcare_client ADD CONSTRAINT FK_DCBC1759979B1AD6 FOREIGN KEY (company_id) REFERENCES techcare_company (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_DCBC1759E7927C74 ON techcare_client (email)');
         $this->addSql('CREATE INDEX IDX_DCBC1759979B1AD6 ON techcare_client (company_id)');
-        $this->addSql('ALTER TABLE techcare_user RENAME COLUMN user_type TO dtype');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SCHEMA public');
-        $this->addSql('ALTER TABLE techcare_user RENAME COLUMN dtype TO user_type');
         $this->addSql('ALTER TABLE techcare_client DROP CONSTRAINT FK_DCBC1759979B1AD6');
         $this->addSql('DROP INDEX UNIQ_DCBC1759E7927C74');
         $this->addSql('DROP INDEX IDX_DCBC1759979B1AD6');
