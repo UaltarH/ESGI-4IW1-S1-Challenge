@@ -14,44 +14,60 @@ class UserFixtures extends Fixture
         $faker = Factory::create('fr_FR');
         $pwd = 'test';
 
-        $object = (new User())
-            ->setCreatedAt(new \DateTimeImmutable())
-            ->setCreatedBy("system")
-            ->setEmail('admin@user.fr')
-            ->setRoles(['ROLE_ADMIN'])
-            ->setPassword($pwd)
-            ->setLastname('admin')
-            ->setFirstname('admin')
-        ;
-        $manager->persist($object);
-        $this->addReference('admin', $object);
-
-        // owners of company
-        for ($i = 0; $i < 10; $i++) {
+        // admin
+        for ($i = 0; $i < 2; $i++) {
             $object = (new User())
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setCreatedBy("system")
-                ->setEmail($faker->email)
+                ->setEmail('admin' . $i . '@user.fr')
+                ->setRoles(['ROLE_ADMIN'])
                 ->setPassword($pwd)
-                ->setLastname($faker->lastName)
-                ->setFirstname($faker->firstName)
-            ;
+                ->setLastname('admin')
+                ->setFirstname('admin');
             $manager->persist($object);
-            $this->addReference('user_' . $i, $object);
+            $this->addReference('admin_' . $i, $object);
         }
 
-        // customers
-        for ($i = 0; $i < 50; $i++) {
+        // owners of company
+        for ($i = 0; $i < 15; $i++) {
             $object = (new User())
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setCreatedBy("system")
                 ->setEmail($faker->email)
+                ->setRoles(['ROLE_OWNER_ENTREPRISE'])
                 ->setPassword($pwd)
                 ->setLastname($faker->lastName)
-                ->setFirstname($faker->firstName)
-            ;
+                ->setFirstname($faker->firstName);
             $manager->persist($object);
-            $this->addReference('user_client_' . $i, $object);
+            $this->addReference('user_owner_' . $i, $object);
+        }
+
+        // employees
+        for ($i = 0; $i < 15; $i++) {
+            $object = (new User())
+                ->setCreatedAt(new \DateTimeImmutable())
+                ->setCreatedBy("system")
+                ->setEmail($faker->email)
+                ->setRoles(['ROLE_ENTREPRISE'])
+                ->setPassword($pwd)
+                ->setLastname($faker->lastName)
+                ->setFirstname($faker->firstName);
+            $manager->persist($object);
+            $this->addReference('user_employee_' . $i, $object);
+        }
+
+        // accountants
+        for ($i = 0; $i < 15; $i++) {
+            $object = (new User())
+                ->setCreatedAt(new \DateTimeImmutable())
+                ->setCreatedBy("system")
+                ->setEmail($faker->email)
+                ->setRoles(['ROLE_COMPTABLE'])
+                ->setPassword($pwd)
+                ->setLastname($faker->lastName)
+                ->setFirstname($faker->firstName);
+            $manager->persist($object);
+            $this->addReference('user_accountant_' . $i, $object);
         }
 
         $manager->flush();

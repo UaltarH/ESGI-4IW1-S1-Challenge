@@ -23,6 +23,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "jquery": "^3.7.1",
         "sass": "^1.69.5",
         "sass-loader": "^13.3.2"
     }

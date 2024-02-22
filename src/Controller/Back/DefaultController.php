@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class DefaultController extends AbstractController
 {
-    #[Route('/', name: 'default_index')]
+    #[Route('/admin', name: 'default_index')]
     public function index(): Response
     {
         $connected = $this->getUser() instanceof UserInterface;

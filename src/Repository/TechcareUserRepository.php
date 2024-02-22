@@ -40,28 +40,37 @@ class TechcareUserRepository extends ServiceEntityRepository implements Password
         $this->getEntityManager()->flush();
     }
 
-//    /**
-//     * @return TechcareUser[] Returns an array of TechcareUser objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findUsersByRoles(array $roles)
+    {
+        $users = $this->findAll();
+        return array_filter($users, function ($user) use ($roles) {
+            // Utiliser array_intersect pour vérifier si au moins un rôle correspond
+            return count(array_intersect($roles, $user->getRoles())) > 0;
+        });
+    }
 
-//    public function findOneBySomeField($value): ?TechcareUser
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    /**
+    //     * @return TechcareUser[] Returns an array of TechcareUser objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('t')
+    //            ->andWhere('t.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('t.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?TechcareUser
+    //    {
+    //        return $this->createQueryBuilder('t')
+    //            ->andWhere('t.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

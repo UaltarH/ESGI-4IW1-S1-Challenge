@@ -178,7 +178,7 @@ class TechcareCompany
         $this->imageFile = $imageFile;
 
         if (null !== $imageFile) {
-            $this->updatedAt = new \DateTime();
+            $this->UpdatedAt = new \DateTime();
         }
 
         return $this;

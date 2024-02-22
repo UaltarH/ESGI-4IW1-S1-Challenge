@@ -15,6 +15,7 @@ class EmailService
     private int $idTemplateInscription;
     private int $idTemplateQuote; //devis
     private int $idTemplateInvoice; //facture
+    private int $idTemplateResetPassword; //réinitialisation de mot de passe
 
     public function __construct(MailerInterface $mailer)
     {
@@ -24,6 +25,7 @@ class EmailService
         $this->idTemplateInscription = 1;
         $this->idTemplateQuote = 2;
         $this->idTemplateInvoice = 3;
+        $this->idTemplateResetPassword = 4;
     }
 
     public function sendEmailUsingMailer(string $subject, string $content, string $senderEmail, string $recipientEmail): void
@@ -142,6 +144,40 @@ class EmailService
             ],
             "subject" => "Votre facture en pièce jointe",
             "attachment" => [["content" => $base64Quote, "name" => $quoteName]],
+        ];
+
+        $headers = [
+            'Accept: application/json',
+            'api-key: ' . $this->apiKey,
+            'Content-Type: application/json',
+        ];
+
+        $this->sendEmailUsingBrevo($data, $headers);
+    }
+
+    public function sendEmailForResetPassword(
+        string $senderName,
+        string $senderEmail,
+        string $recipientEmail,
+        string $recipientFullName,
+        string $urlForReset
+    ): void {
+        $data = [
+            "sender" => [
+                "name" => $senderName,
+                "email" => $senderEmail,
+            ],
+            "to" => [
+                [
+                    "email" => $recipientEmail,
+                ]
+            ],
+            "templateId" => $this->idTemplateResetPassword,
+            "params" => [
+                "url" => $urlForReset,
+                "fullname" => $recipientFullName,
+            ],
+            "subject" => "Réinitialisation de mot de passe",
         ];
 
         $headers = [

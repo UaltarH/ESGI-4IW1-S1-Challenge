@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Base
+@import "common/variables";
+
+// Components
+@import "components/tables";
+
+// Layouts
+@import "layouts/header";
+@import "layouts/footer";
+
+// Pages
+
+// Utilities
+
+body {
+  background-color: lightgray;
+}
+p {
+  color: red;
+}

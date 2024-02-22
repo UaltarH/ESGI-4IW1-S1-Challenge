@@ -15,17 +15,17 @@ class CompanyFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create('fr_FR');
 
-        for ($i = 0; $i < 10; $i++) {
-            $user = $this->getReference('user_' . $i);
+        for ($i = 0; $i < 15; $i++) {
+            $user = $this->getReference('user_owner_' . $i);
             var_dump($user->getFirstName()[0]);
             var_dump($user->getLastName()[0]);
             $company = $faker->company;
             $code = strtoupper(
                 utf8_encode($user->getFirstName()[0])
-                . utf8_encode($user->getLastName()[0])
-                . '-'
+                    . utf8_encode($user->getLastName()[0])
+                    . '-'
             );
-            if(strlen($company) > 4)
+            if (strlen($company) > 4)
                 $code .= strtoupper(substr($company, 0, 4));
             else
                 $code .= strtoupper($company);
@@ -38,10 +38,24 @@ class CompanyFixtures extends Fixture implements DependentFixtureInterface
                 ->setEmail($faker->email)
                 ->setAddress($faker->address)
                 ->setOwner($user)
-                ->setCode($code)
-            ;
+                ->setCode($code);
             $manager->persist($object);
             $this->addReference('company_' . $i, $object);
+            $user->setCompany($object);
+            $manager->persist($user);
+        }
+
+        // set company to other users 
+        for ($i = 0; $i < 15; $i++) {
+            $company = $this->getReference('company_' . $i);
+
+            $user = $this->getReference('user_employee_' . $i);
+            $user->setCompany($company);
+            $manager->persist($user);
+
+            $user = $this->getReference('user_accountant_' . $i);
+            $user->setCompany($company);
+            $manager->persist($user);
         }
 
         $manager->flush();
