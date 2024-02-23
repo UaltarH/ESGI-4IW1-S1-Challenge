@@ -58,3 +58,5 @@ yarn-error.log
 ###> symfony/vich-uploader-bundle ###
 /public/uploads/
 ###< symfony/vich-uploader-bundle ###
+
+/package-lock.json
