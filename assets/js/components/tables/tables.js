@@ -1,50 +1,56 @@
 document.addEventListener("DOMContentLoaded", function () {
   const content = document.querySelector(".tableContent");
-  const itemsPerPage = 5;
-  let currentPage = 0;
-  const items = Array.from(content.getElementsByTagName("tr")).slice(1);
 
-  function showPage(page) {
-    const startIndex = page * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    items.forEach((item, index) => {
-      item.classList.toggle("hidden", index < startIndex || index >= endIndex);
-    });
-    updateActiveButtonStates();
-  }
+  if (content) {
+    const itemsPerPage = 5;
+    let currentPage = 0;
+    const items = Array.from(content.getElementsByTagName("tr")).slice(1);
 
-  function createPageButtons() {
-    const totalPages = Math.ceil(items.length / itemsPerPage);
-    const paginationContainer = document.createElement("div");
-    const paginationDiv = document.body.appendChild(paginationContainer);
-    paginationContainer.classList.add("pagination");
-
-    // Add page buttons
-    for (let i = 0; i < totalPages; i++) {
-      const pageButton = document.createElement("button");
-      pageButton.textContent = i + 1;
-      pageButton.addEventListener("click", () => {
-        currentPage = i;
-        showPage(currentPage);
-        updateActiveButtonStates();
+    function showPage(page) {
+      const startIndex = page * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      items.forEach((item, index) => {
+        item.classList.toggle(
+          "hidden",
+          index < startIndex || index >= endIndex
+        );
       });
-
-      content.appendChild(paginationContainer);
-      paginationDiv.appendChild(pageButton);
+      updateActiveButtonStates();
     }
-  }
 
-  function updateActiveButtonStates() {
-    const pageButtons = document.querySelectorAll(".pagination button");
-    pageButtons.forEach((button, index) => {
-      if (index === currentPage) {
-        button.classList.add("active");
-      } else {
-        button.classList.remove("active");
+    function createPageButtons() {
+      const totalPages = Math.ceil(items.length / itemsPerPage);
+      const paginationContainer = document.createElement("div");
+      const paginationDiv = document.body.appendChild(paginationContainer);
+      paginationContainer.classList.add("pagination");
+
+      // Ajoute des boutons de page
+      for (let i = 0; i < totalPages; i++) {
+        const pageButton = document.createElement("button");
+        pageButton.textContent = i + 1;
+        pageButton.addEventListener("click", () => {
+          currentPage = i;
+          showPage(currentPage);
+          updateActiveButtonStates();
+        });
+
+        content.appendChild(paginationContainer);
+        paginationDiv.appendChild(pageButton);
       }
-    });
-  }
+    }
 
-  createPageButtons();
-  showPage(currentPage);
+    function updateActiveButtonStates() {
+      const pageButtons = document.querySelectorAll(".pagination button");
+      pageButtons.forEach((button, index) => {
+        if (index === currentPage) {
+          button.classList.add("active");
+        } else {
+          button.classList.remove("active");
+        }
+      });
+    }
+
+    createPageButtons();
+    showPage(currentPage);
+  }
 });

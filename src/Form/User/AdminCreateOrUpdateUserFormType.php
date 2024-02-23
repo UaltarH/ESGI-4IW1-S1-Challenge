@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\User;
 
 use App\Entity\TechcareUser;
+use App\Entity\TechcareCompany;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -10,11 +11,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use App\Entity\TechcareCompany;
 
 
 
-class UserFormType extends AbstractType
+class AdminCreateOrUpdateUserFormType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
