@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TechcareProduct{% endblock %}
+
+{% block body %}
+    <h1>Edit TechcareProduct</h1>
+
+    {{ include('techcare_product/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_techcare_product_index') }}">back to list</a>
+
+    {{ include('techcare_product/_delete_form.html.twig') }}
+{% endblock %}

@@ -15,11 +15,13 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
         $faker = Factory::create('fr_FR');
 
         // iphone
-        for($i = 1; $i < 16; $i++) {
+        for ($i = 1; $i < 16; $i++) {
             $object = (new Product())
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setCreatedBy("system")
-                ->setName('Iphone'.$i)
+                ->setUpdatedAt(new \DateTimeImmutable())
+                ->setUpdatedBy("system")
+                ->setName('Iphone' . $i)
                 ->setReleaseYear($faker->year)
                 ->setProductCategory($this->getReference("product-category-smartphone"))
                 ->addComponent($this->getReference("component-ecran"))
@@ -36,24 +38,25 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 ->addComponent($this->getReference("component-bouton-power"))
                 ->addComponent($this->getReference("component-bouton-volume"))
                 ->addComponent($this->getReference("component-compartiment-sim"))
-                ->setBrand($this->getReference("brand-apple"))
-            ;
-            if($i > 10) {
+                ->setBrand($this->getReference("brand-apple"));
+            if ($i > 10) {
                 $object->addComponent($this->getReference("component-capteur-empreinte-digitale"));
             }
-            if($i < 10) {
+            if ($i < 10) {
                 $object->addComponent($this->getReference("component-bouton-home"));
             }
             $manager->persist($object);
-            $this->addReference("product-iphone-".$i, $object);
+            $this->addReference("product-iphone-" . $i, $object);
         }
 
         // android
-        for($i = 1; $i < 24; $i++) {
+        for ($i = 1; $i < 24; $i++) {
             $object = (new Product())
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setCreatedBy("system")
-                ->setName('Samsung'.$i)
+                ->setUpdatedAt(new \DateTimeImmutable())
+                ->setUpdatedBy("system")
+                ->setName('Samsung' . $i)
                 ->setReleaseYear($faker->year)
                 ->setProductCategory($this->getReference("product-category-smartphone"))
                 ->addComponent($this->getReference("component-ecran"))
@@ -70,23 +73,24 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 ->addComponent($this->getReference("component-bouton-power"))
                 ->addComponent($this->getReference("component-bouton-volume"))
                 ->addComponent($this->getReference("component-compartiment-sim"))
-                ->setBrand($this->getReference("brand-samsung"))
-            ;
-            if($i > 10) {
+                ->setBrand($this->getReference("brand-samsung"));
+            if ($i > 10) {
                 $object->addComponent($this->getReference("component-capteur-empreinte-digitale"));
             }
-            if($i < 10) {
+            if ($i < 10) {
                 $object->addComponent($this->getReference("component-bouton-home"));
             }
             $manager->persist($object);
-            $this->addReference("product-samsung-".$i, $object);
+            $this->addReference("product-samsung-" . $i, $object);
         }
         // android
-        for($i = 1; $i < 10; $i++) {
+        for ($i = 1; $i < 10; $i++) {
             $object = (new Product())
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setCreatedBy("system")
-                ->setName('H'.$i)
+                ->setUpdatedAt(new \DateTimeImmutable())
+                ->setUpdatedBy("system")
+                ->setName('H' . $i)
                 ->setReleaseYear($faker->year)
                 ->setProductCategory($this->getReference("product-category-smartphone"))
                 ->addComponent($this->getReference("component-ecran"))
@@ -103,23 +107,24 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 ->addComponent($this->getReference("component-bouton-power"))
                 ->addComponent($this->getReference("component-bouton-volume"))
                 ->addComponent($this->getReference("component-compartiment-sim"))
-                ->setBrand($this->getReference("brand-huawei"))
-            ;
-            if($i > 8) {
+                ->setBrand($this->getReference("brand-huawei"));
+            if ($i > 8) {
                 $object->addComponent($this->getReference("component-capteur-empreinte-digitale"));
             }
-            if($i < 8) {
+            if ($i < 8) {
                 $object->addComponent($this->getReference("component-bouton-home"));
             }
             $manager->persist($object);
-            $this->addReference("product-huawei-".$i, $object);
+            $this->addReference("product-huawei-" . $i, $object);
         }
 
         // mac
-        for($i = 1; $i < 10; $i++) {
+        for ($i = 1; $i < 10; $i++) {
             $object = (new Product())
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setCreatedBy("system")
+                ->setUpdatedAt(new \DateTimeImmutable())
+                ->setUpdatedBy("system")
                 ->setName('MacBook' . $i)
                 ->setReleaseYear($faker->year)
                 ->setProductCategory($this->getReference("product-category-ordinateur"))
@@ -151,11 +156,13 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
         }
 
         // pc portable
-        for($i = 100; $i <= 1000; $i += 50) {
+        for ($i = 100; $i <= 1000; $i += 50) {
             $object = (new Product())
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setCreatedBy("system")
-                ->setName('Lenovo'.$i)
+                ->setUpdatedAt(new \DateTimeImmutable())
+                ->setUpdatedBy("system")
+                ->setName('Lenovo' . $i)
                 ->setReleaseYear($faker->year)
                 ->setProductCategory($this->getReference("product-category-ordinateur"))
                 ->addComponent($this->getReference("component-ecran"))
@@ -170,23 +177,24 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 ->addComponent($this->getReference("component-bouton-power"))
                 ->addComponent($this->getReference("component-bouton-volume"))
                 ->addComponent($this->getReference("component-camera-frontale"))
-                ->setBrand($this->getReference("brand-lenovo"))
-            ;
-            if($i > 700) {
+                ->setBrand($this->getReference("brand-lenovo"));
+            if ($i > 700) {
                 $object->addComponent($this->getReference("component-capteur-empreinte-digitale"));
             }
-            if($i < 850) {
-                $object ->addComponent($this->getReference("component-prise-jack-audio-micro"));
+            if ($i < 850) {
+                $object->addComponent($this->getReference("component-prise-jack-audio-micro"));
             }
             $manager->persist($object);
-            $this->addReference("product-lenovo-".$i, $object);
+            $this->addReference("product-lenovo-" . $i, $object);
         }
         // tablette
-        for($i = 1; $i < 10; $i++) {
+        for ($i = 1; $i < 10; $i++) {
             $object = (new Product())
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setCreatedBy("system")
-                ->setName('Tablette'.$i)
+                ->setUpdatedAt(new \DateTimeImmutable())
+                ->setUpdatedBy("system")
+                ->setName('Tablette' . $i)
                 ->setReleaseYear($faker->year)
                 ->setProductCategory($this->getReference("product-category-tablette"))
                 ->addComponent($this->getReference("component-ecran"))
@@ -206,16 +214,15 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 ->addComponent($this->getReference("component-port-hdmi-dp-vga"))
                 ->addComponent($this->getReference("component-webcam"))
                 ->addComponent($i > 7 ? $this->getReference("component-camera-arriere-triple-ou-plus") : ($i > 5 ? $this->getReference("component-camera-arriere-double") : $this->getReference("component-camera-arriere-simple")))
-                ->setBrand($this->getReference("brand-apple"))
-            ;
-            if($i > 9) {
+                ->setBrand($this->getReference("brand-apple"));
+            if ($i > 9) {
                 $object->addComponent($this->getReference("component-capteur-empreinte-digitale"));
             }
-            if($i < 5) {
-                $object ->addComponent($this->getReference("component-prise-jack-audio-micro"));
+            if ($i < 5) {
+                $object->addComponent($this->getReference("component-prise-jack-audio-micro"));
             }
             $manager->persist($object);
-            $this->addReference("product-tablette-".$i, $object);
+            $this->addReference("product-tablette-" . $i, $object);
         }
 
         $manager->flush();

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductsManagerController!
+{% endblock %}
+
+{% block body %}
+
+	<div class="example-wrapper">
+		<h1>Hello
+			{{ controller_name }}! ✅</h1>
+
+
+		<button id="add-user-btn" class="btn btn-success">
+			<a href="{{ path('app_products_manager_new') }}">Ajouter un produit</a>
+		</button>
+
+		{% include '_components/crudTable.html.twig' with {'title' : 'Produit prise en charge', 'entityProperties': entityProperties, 'datas': datas} %}
+	</div>
+{% endblock %}

@@ -27,19 +27,21 @@ class UsersController extends AbstractController
                 'firstname' => $user->getFirstname(),
                 'lastname' => $user->getLastname(),
                 'email' => $user->getEmail(),
-                'roles' => $user->getRolesAsString(),
+                'roles' => $user->getRolesAsArrayName(),
                 'company' => $user->getCompany() ? $user->getCompany()->getId() : 'Aucune',
-                'createdAt' => $user->getCreatedAt()->format('d/m/Y'),
+                'createdAt' => $user->getCreatedAt()->format('d/m/Y H:i:s'),
                 'actions' => [
                     'update' => [
                         'type' => 'button',
                         'path' => 'admin_user_update',
                         'label' => 'Modifier',
+                        'id' => $user->getId(),
                     ],
                     'delete' => [
                         'type' => 'form',
                         'path' => 'admin_user_delete',
                         'label' => 'Supprimer',
+                        'id' => $user->getId(),
                     ]
                 ]
             ];
