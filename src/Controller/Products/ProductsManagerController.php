@@ -19,6 +19,7 @@ class ProductsManagerController extends AbstractController
     public function index(TechcareProductRepository $techcareProductRepository): Response
     {
         $products = $techcareProductRepository->findAll();
+        // dd($products[0]->getTechcareProductComponentPrices()[0]->getPrice());
         $productsMapped = array_map(function ($product) {
             return [
                 'name' => $product->getName(),

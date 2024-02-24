@@ -48,9 +48,13 @@ class TechcareProduct
     #[ORM\JoinColumn(nullable: false)]
     private ?TechcareProductCategory $productCategory = null;
 
+    #[ORM\ManyToMany(targetEntity: TechcareProductComponentPrice::class, mappedBy: 'product_id')]
+    private Collection $techcareProductComponentPrices;
+
     public function __construct()
     {
         $this->components = new ArrayCollection();
+        $this->techcareProductComponentPrices = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -177,6 +181,33 @@ class TechcareProduct
     public function setProductCategory(?TechcareProductCategory $productCategory): static
     {
         $this->productCategory = $productCategory;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TechcareProductComponentPrice>
+     */
+    public function getTechcareProductComponentPrices(): Collection
+    {
+        return $this->techcareProductComponentPrices;
+    }
+
+    public function addTechcareProductComponentPrice(TechcareProductComponentPrice $techcareProductComponentPrice): static
+    {
+        if (!$this->techcareProductComponentPrices->contains($techcareProductComponentPrice)) {
+            $this->techcareProductComponentPrices->add($techcareProductComponentPrice);
+            $techcareProductComponentPrice->addProductId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTechcareProductComponentPrice(TechcareProductComponentPrice $techcareProductComponentPrice): static
+    {
+        if ($this->techcareProductComponentPrices->removeElement($techcareProductComponentPrice)) {
+            $techcareProductComponentPrice->removeProductId($this);
+        }
 
         return $this;
     }
