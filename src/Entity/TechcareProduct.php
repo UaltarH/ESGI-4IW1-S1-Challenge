@@ -25,21 +25,17 @@ class TechcareProduct
     #[ORM\Column(length: 255)]
     private ?string $createdBy = null;
 
-    #[ORM\Column(nullable:true)]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $updatedBy = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\Unique]
     private ?string $name = null;
 
     #[ORM\Column(length: 4, nullable: true)]
     private ?string $release_year = null;
-
-    #[ORM\ManyToMany(targetEntity: TechcareComponent::class, mappedBy: 'product')]
-    private Collection $components;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?TechcareBrand $brand = null;
@@ -48,9 +44,12 @@ class TechcareProduct
     #[ORM\JoinColumn(nullable: false)]
     private ?TechcareProductCategory $productCategory = null;
 
+    #[ORM\ManyToMany(targetEntity: TechcareProductComponentPrice::class, mappedBy: 'product_id')]
+    private Collection $techcareProductComponentPrices;
+
     public function __construct()
     {
-        $this->components = new ArrayCollection();
+        $this->techcareProductComponentPrices = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -130,33 +129,6 @@ class TechcareProduct
         return $this;
     }
 
-    /**
-     * @return Collection<int, TechcareComponent>
-     */
-    public function getComponents(): Collection
-    {
-        return $this->components;
-    }
-
-    public function addComponent(TechcareComponent $component): static
-    {
-        if (!$this->components->contains($component)) {
-            $this->components->add($component);
-            $component->addProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComponent(TechcareComponent $component): static
-    {
-        if ($this->components->removeElement($component)) {
-            $component->removeProduct($this);
-        }
-
-        return $this;
-    }
-
     public function getBrand(): ?TechcareBrand
     {
         return $this->brand;
@@ -177,6 +149,33 @@ class TechcareProduct
     public function setProductCategory(?TechcareProductCategory $productCategory): static
     {
         $this->productCategory = $productCategory;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TechcareProductComponentPrice>
+     */
+    public function getTechcareProductComponentPrices(): Collection
+    {
+        return $this->techcareProductComponentPrices;
+    }
+
+    public function addTechcareProductComponentPrice(TechcareProductComponentPrice $techcareProductComponentPrice): static
+    {
+        if (!$this->techcareProductComponentPrices->contains($techcareProductComponentPrice)) {
+            $this->techcareProductComponentPrices->add($techcareProductComponentPrice);
+            $techcareProductComponentPrice->addProductId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTechcareProductComponentPrice(TechcareProductComponentPrice $techcareProductComponentPrice): static
+    {
+        if ($this->techcareProductComponentPrices->removeElement($techcareProductComponentPrice)) {
+            $techcareProductComponentPrice->removeProductId($this);
+        }
 
         return $this;
     }

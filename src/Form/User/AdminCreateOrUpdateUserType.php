@@ -11,10 +11,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\CallbackTransformer;
 
 
 
-class AdminCreateOrUpdateUserFormType extends AbstractType
+class AdminCreateOrUpdateUserType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -25,10 +26,19 @@ class AdminCreateOrUpdateUserFormType extends AbstractType
                 'choices' => $options['role_choices'],
                 'multiple' => false,
                 'expanded' => false,
-                'mapped' => false,
             ])
             ->add('firstname')
             ->add('lastname');
+
+        $builder->get('roles')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($rolesArray) {
+                    return count($rolesArray) ? $rolesArray[0] : null;
+                },
+                function ($rolesString) {
+                    return [$rolesString];
+                }
+            ));
 
         if ($options['new'] == true) {
             $builder

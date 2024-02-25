@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter des composants a votre produit:
+{% endblock %}
+
+{% block body %}
+
+	<h1>Composant de votre produit
+		{{productName}}:</h1><br>
+
+	selectionner les composants et ajouter leurs prix
+
+	<div id="componentList" class="flex">
+		{% for component in components %}
+			{% if component.checked == true %}
+				<div class="flex items-center items-start mb-4">
+					<input data-price="{{ component.price}}" id="checkbox-{{ component.id }}" name="selectedComponents[]" value="{{ component.id }}" type="checkbox" class="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-blue-300 h-4 w-4 rounded" checked>
+					<label for="checkbox-{{ component.id }}" class="text-sm ml-3 font-medium text-gray-900">
+						{{ component.name }}
+					</label>
+				</div>
+			{% else %}
+				<div class="flex items-center items-start mb-4">
+					<input data-price="{{ component.price}}" id="checkbox-{{ component.id }}" name="selectedComponents[]" value="{{ component.id }}" type="checkbox" class="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-blue-300 h-4 w-4 rounded">
+					<label for="checkbox-{{ component.id }}" class="text-sm ml-3 font-medium text-gray-900">
+						{{ component.name }}
+					</label>
+				</div>
+			{% endif %}
+		{% endfor %}
+	</div>
+
+	<ul id="componentsAddedList">
+		{% for component in components %}
+			{% if component.checked == true %}
+				<li data-id="{{ component.id }}">
+					{{ component.name}}
+					<input type="number" min="1" value="{{ component.price }}">
+				</li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+
+	<a href="#" id="btnAddComponents">Ajuster les composants de votre produit</a>
+
+	<a href="{{ path('app_products_manager') }}">back to list</a>
+{% endblock %}

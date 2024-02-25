@@ -17,15 +17,21 @@
 							{% if key == 'actions' %}
 								{% for action in attribute(data, key) %}
 									{% if action.type == 'button' %}
-										<a href="{{ path(action.path, {'id': data.id}) }}" class="btn btn-primary">{{ action.label }}</a>
+										<a href="{{ path(action.path, {'id': action.id}) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{ action.label }}</a>
 									{% endif %}
 
 									{% if action.type == 'form' %}
-										<form method="post" action="{{ path(action.path, {'id': data.id}) }}">
-											<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ data.id) }}">
-											<button class="btn">{{ action.label}}</button>
+										<form method="post" action="{{ path(action.path, {'id': action.id}) }}">
+											<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ action.id) }}">
+											<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{ action.label}}</button>
 										</form>
 									{% endif %}
+								{% endfor %}
+							{% elseif attribute(data, key) is iterable %}
+								{% for item in attribute(data, key) %}
+									<span class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mr-2">
+										{{item}}
+									</span>
 								{% endfor %}
 							{% else %}
 								{{ attribute(data, key) }}
@@ -36,4 +42,5 @@
 			{% endfor %}
 		</tbody>
 	</table>
+
 </article>

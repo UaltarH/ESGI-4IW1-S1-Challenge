@@ -210,7 +210,7 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     // Custome Gettters
-    public function getRolesAsString(): string
+    public function getRolesAsArrayName(): array
     {
         $rolesWithoutUser = array_diff($this->getRoles(), ['ROLE_USER']);
         foreach ($rolesWithoutUser as $key => $role) {
@@ -230,6 +230,6 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
                 $rolesWithoutUser[$key] = 'Comptable';
             }
         }
-        return implode(', ', $rolesWithoutUser);
+        return $rolesWithoutUser;
     }
 }

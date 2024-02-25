@@ -25,7 +25,7 @@ class TechcareQuotationContent
     #[ORM\Column(length: 255)]
     private ?string $createdBy = null;
 
-    #[ORM\Column(nullable:true)]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -44,7 +44,7 @@ class TechcareQuotationContent
     private ?string $description = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?TechcareProduct $product = null;
 
     #[ORM\Column]
@@ -201,7 +201,7 @@ class TechcareQuotationContent
     public function removeService(string $service): static
     {
         $key = array_search($service, $this->services);
-        if($key !== false) {
+        if ($key !== false) {
             unset($this->services[$key]);
         }
 

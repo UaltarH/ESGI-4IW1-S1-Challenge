@@ -1,4 +1,4 @@
-{% use '/admin/adminBase.html.twig' %}
+{% extends '/admin/adminBase.html.twig' %}
 
 {% block title %}Créer un nouvel utilisateur
 {% endblock %}
@@ -11,4 +11,7 @@
 	{{ form_row(form.firstname) }}
 	{{ form_row(form.lastname) }}
 	{{ form_row(form.company) }}
+
+	<button type="submit">Ajouter</button>
+	{{ form_end(form) }}
 {% endblock %}
