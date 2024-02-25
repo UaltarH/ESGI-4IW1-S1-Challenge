@@ -220,13 +220,13 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
             if ($role === 'ROLE_CLIENT') {
                 $rolesWithoutUser[$key] = 'Client';
             }
-            if ($role === 'ROLE_ENTREPRISE') {
+            if ($role === 'ROLE_COMPANY') {
                 $rolesWithoutUser[$key] = 'Emplayer entreprise';
             }
-            if ($role === 'ROLE_OWNER_ENTREPRISE') {
+            if ($role === 'ROLE_OWNER_COMPANY') {
                 $rolesWithoutUser[$key] = 'Propriétaire entreprise';
             }
-            if ($role === 'ROLE_COMPTABLE') {
+            if ($role === 'ROLE_ACCOUNTANT') {
                 $rolesWithoutUser[$key] = 'Comptable';
             }
         }

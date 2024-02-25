@@ -1,0 +1,27 @@
+{% use '/base.html.twig' %}
+
+{% block title %}
+	Hello RegisterOwnerController!
+{% endblock %}
+
+{% block body %}
+	<h1>Créer votre compte:</h1>
+
+	{{ form_start(form) }}
+	{{ form_row(form.firstName) }}
+	{{ form_row(form.lastName) }}
+	{{ form_row(form.email) }}
+	{{ form_row(form.password) }}
+	<h2>
+		Company:
+	</h2>
+	<br>
+	{{ form_row(form.companyName) }}
+	{{ form_row(form.companySiret) }}
+	{{ form_row(form.companyPhoneNumber) }}
+	{{ form_row(form.companyEmail) }}
+	{{ form_row(form.companyAddress) }}
+
+	<button type="submit">Créer</button>
+	{{ form_end(form) }}
+{% endblock %}

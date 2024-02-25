@@ -34,7 +34,7 @@ class UserFixtures extends Fixture
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setCreatedBy("system")
                 ->setEmail($faker->email)
-                ->setRoles(['ROLE_OWNER_ENTREPRISE'])
+                ->setRoles(['ROLE_OWNER_COMPANY'])
                 ->setPassword($pwd)
                 ->setLastname($faker->lastName)
                 ->setFirstname($faker->firstName);
@@ -48,7 +48,7 @@ class UserFixtures extends Fixture
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setCreatedBy("system")
                 ->setEmail($faker->email)
-                ->setRoles(['ROLE_ENTREPRISE'])
+                ->setRoles(['ROLE_COMPANY'])
                 ->setPassword($pwd)
                 ->setLastname($faker->lastName)
                 ->setFirstname($faker->firstName);
@@ -62,7 +62,7 @@ class UserFixtures extends Fixture
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setCreatedBy("system")
                 ->setEmail($faker->email)
-                ->setRoles(['ROLE_COMPTABLE'])
+                ->setRoles(['ROLE_ACCOUNTANT'])
                 ->setPassword($pwd)
                 ->setLastname($faker->lastName)
                 ->setFirstname($faker->firstName);
