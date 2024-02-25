@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\TechcareComponentRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -26,7 +24,7 @@ class TechcareComponent
     #[ORM\Column(length: 255)]
     private ?string $createdBy = null;
 
-    #[ORM\Column(nullable:true)]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -39,12 +37,8 @@ class TechcareComponent
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $price = null;
 
-    #[ORM\ManyToMany(targetEntity: TechcareProduct::class, inversedBy: 'components')]
-    private Collection $product;
-
     public function __construct()
     {
-        $this->product = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -120,30 +114,6 @@ class TechcareComponent
     public function setPrice(string $price): static
     {
         $this->price = $price;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, TechcareProduct>
-     */
-    public function getProduct(): Collection
-    {
-        return $this->product;
-    }
-
-    public function addProduct(TechcareProduct $product): static
-    {
-        if (!$this->product->contains($product)) {
-            $this->product->add($product);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(TechcareProduct $product): static
-    {
-        $this->product->removeElement($product);
 
         return $this;
     }

@@ -25,21 +25,17 @@ class TechcareProduct
     #[ORM\Column(length: 255)]
     private ?string $createdBy = null;
 
-    #[ORM\Column(nullable:true)]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $updatedBy = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\Unique]
     private ?string $name = null;
 
     #[ORM\Column(length: 4, nullable: true)]
     private ?string $release_year = null;
-
-    #[ORM\ManyToMany(targetEntity: TechcareComponent::class, mappedBy: 'product')]
-    private Collection $components;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?TechcareBrand $brand = null;
@@ -53,7 +49,6 @@ class TechcareProduct
 
     public function __construct()
     {
-        $this->components = new ArrayCollection();
         $this->techcareProductComponentPrices = new ArrayCollection();
     }
 
@@ -130,33 +125,6 @@ class TechcareProduct
     public function setReleaseYear(?string $release_year): static
     {
         $this->release_year = $release_year;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, TechcareComponent>
-     */
-    public function getComponents(): Collection
-    {
-        return $this->components;
-    }
-
-    public function addComponent(TechcareComponent $component): static
-    {
-        if (!$this->components->contains($component)) {
-            $this->components->add($component);
-            $component->addProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComponent(TechcareComponent $component): static
-    {
-        if ($this->components->removeElement($component)) {
-            $component->removeProduct($this);
-        }
 
         return $this;
     }

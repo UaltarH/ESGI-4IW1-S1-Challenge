@@ -1,11 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New TechcareProduct{% endblock %}
+{% block title %}Ajouter un nouveau produit:
+{% endblock %}
 
 {% block body %}
-    <h1>Create new TechcareProduct</h1>
 
-    {{ include('techcare_product/_form.html.twig') }}
+	{{ form_start(form) }}
+	{{ form_row(form.name) }}
+	{{ form_row(form.brand) }}
+	{{ form_row(form.productCategory) }}
+	{{ form_row(form.release_year) }}
 
-    <a href="{{ path('app_techcare_product_index') }}">back to list</a>
+	<button type="submit">Suivant</button>
+	{{ form_end(form) }}
+
+	<a href="{{ path('app_products_manager') }}">back to list</a>
 {% endblock %}

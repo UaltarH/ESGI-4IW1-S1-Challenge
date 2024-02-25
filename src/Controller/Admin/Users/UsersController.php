@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\TechcareUser;
-use App\Form\User\AdminCreateOrUpdateUserFormType;
+use App\Form\User\AdminCreateOrUpdateUserType;
 use App\Service\EmailService;
 
 class UsersController extends AbstractController
@@ -68,7 +68,7 @@ class UsersController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/users/{id}', name: 'admin_user_delete', methods: ['POST'])]
+    #[Route('/admin/users/delete/{id}', name: 'admin_user_delete', methods: ['POST'])]
     public function delete(Request $request, TechcareUser $techcareUser, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $techcareUser->getId(), $request->request->get('_token'))) {
@@ -85,7 +85,7 @@ class UsersController extends AbstractController
     {
         $newUser = new TechcareUser();
 
-        $form = $this->createForm(AdminCreateOrUpdateUserFormType::class, $newUser, [
+        $form = $this->createForm(AdminCreateOrUpdateUserType::class, $newUser, [
             'role_choices' => [
                 'Employé entreprise' => 'ROLE_ENTREPRISE',
                 'Comptable' => 'ROLE_COMPTABLE',
@@ -119,14 +119,9 @@ class UsersController extends AbstractController
     }
 
     #[Route('/admin/users/{id}', name: 'admin_user_update', methods: ['POST', 'GET'])]
-    public function updateUser(Request $request, TechcareUserRepository $techcareUserRepository, EntityManagerInterface $entityManager, $id): Response
+    public function updateUser(TechcareUser $techcareUser, Request $request, TechcareUserRepository $techcareUserRepository, EntityManagerInterface $entityManager): Response
     {
-        $user = $techcareUserRepository->find($id);
-        if (!$user) {
-            return $this->redirectToRoute('acceuil_admin_users');
-        }
-
-        $form = $this->createForm(AdminCreateOrUpdateUserFormType::class, $user, [
+        $form = $this->createForm(AdminCreateOrUpdateUserType::class, $techcareUser, [
             'role_choices' => [
                 'Employé entreprise' => 'ROLE_ENTREPRISE',
                 'Comptable' => 'ROLE_COMPTABLE',
@@ -136,20 +131,20 @@ class UsersController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setUpdatedAt(new \DateTimeImmutable());
-            $user->setUpdatedBy($this->getUser()->getId());
+            $techcareUser->setUpdatedAt(new \DateTimeImmutable());
+            $techcareUser->setUpdatedBy($this->getUser()->getId());
             $entityManager->flush();
 
             return $this->redirectToRoute('acceuil_admin_users');
         }
         return $this->render('admin/users/updateFromAdmin.html.twig', [
             'form' => $form->createView(),
-            'userId' => $id,
+            'userId' => $techcareUser->getId(),
         ]);
     }
 
-    #[Route('/admin/users/send_email/{idUser}', name: 'admin_user_send_email', methods: ['POST'])]
-    public function sendEmailToUser(Request $request, TechcareUser $techcareUser, EntityManagerInterface $entityManager, EmailService $emailService): Response
+    #[Route('/admin/users/send_email/{id}', name: 'admin_user_send_email', methods: ['POST'])]
+    public function sendEmailToUser(Request $request, TechcareUser $techcareUser, EmailService $emailService): Response
     {
         if ($this->isCsrfTokenValid('resetPwdRequest' . $techcareUser->getId(), $request->request->get('_token'))) {
             // TODO : send mail

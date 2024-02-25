@@ -14,3 +14,7 @@ import "./styles/app.scss";
 import $ from "jquery";
 
 import "./js/components/tables/tables.js";
+import "./js/product/productComponentsManage.js";
+
+
+

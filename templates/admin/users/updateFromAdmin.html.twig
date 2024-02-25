@@ -18,7 +18,7 @@
 
 	<a href="{{ path('acceuil_admin_users') }}">Retour à la liste des utilisateurs</a>
 	<br>
-	<form method="post" action="{{ path('admin_user_send_email', {'idUser': userId}) }}">
+	<form method="post" action="{{ path('admin_user_send_email', {'id': userId}) }}">
 		<input type="hidden" name="_token" value="{{ csrf_token('resetPwdRequest' ~ userId) }}">
 		<button class="btn">Envoyer un mail pour réinitialiser le mot de passe</button>
 	</form>
