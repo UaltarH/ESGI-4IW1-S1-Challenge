@@ -20,7 +20,7 @@ class UsersController extends AbstractController
     #[Route('/admin/users', name: 'acceuil_admin_users')]
     public function index(TechcareUserRepository $techcareUserRepository): Response
     {
-        $usersFiltered = $techcareUserRepository->findUsersByRoles(['ROLE_ENTREPRISE', 'ROLE_COMPTABLE', 'ROLE_OWNER_COMPANY']);
+        $usersFiltered = $techcareUserRepository->findUsersByRoles(['ROLE_COMPANY', 'ROLE_ACCOUNTANT', 'ROLE_OWNER_COMPANY']);
         $usersFilteredMapped = array_map(function ($user) {
             return [
                 'id' => $user->getId(),
@@ -87,8 +87,8 @@ class UsersController extends AbstractController
 
         $form = $this->createForm(AdminCreateOrUpdateUserType::class, $newUser, [
             'role_choices' => [
-                'Employé entreprise' => 'ROLE_ENTREPRISE',
-                'Comptable' => 'ROLE_COMPTABLE',
+                'Employé entreprise' => 'ROLE_COMPANY',
+                'Comptable' => 'ROLE_ACCOUNTANT',
             ],
             'new' => true
         ]);
@@ -123,8 +123,8 @@ class UsersController extends AbstractController
     {
         $form = $this->createForm(AdminCreateOrUpdateUserType::class, $techcareUser, [
             'role_choices' => [
-                'Employé entreprise' => 'ROLE_ENTREPRISE',
-                'Comptable' => 'ROLE_COMPTABLE',
+                'Employé entreprise' => 'ROLE_COMPANY',
+                'Comptable' => 'ROLE_ACCOUNTANT',
             ],
             'new' => false
         ]);
