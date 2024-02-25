@@ -34,9 +34,6 @@ class TechcareComponent
     #[Assert\Unique]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $price = null;
-
     public function __construct()
     {
     }
@@ -102,18 +99,6 @@ class TechcareComponent
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getPrice(): ?string
-    {
-        return $this->price;
-    }
-
-    public function setPrice(string $price): static
-    {
-        $this->price = $price;
 
         return $this;
     }
