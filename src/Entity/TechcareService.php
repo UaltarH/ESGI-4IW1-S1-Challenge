@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: TechcareServiceRepository::class)]
 class TechcareService
@@ -24,7 +26,7 @@ class TechcareService
     #[ORM\Column(length: 255)]
     private ?string $createdBy = null;
 
-    #[ORM\Column(nullable:true)]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -34,8 +36,13 @@ class TechcareService
     #[Assert\Unique]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $price = null;
+    #[ORM\OneToMany(mappedBy: 'service', targetEntity: TechcareQuotationContent::class, orphanRemoval: true)]
+    private Collection $contents;
+
+    public function __construct()
+    {
+        $this->contents = new ArrayCollection();
+    }
 
     public function getId(): ?Uuid
     {
@@ -102,14 +109,32 @@ class TechcareService
         return $this;
     }
 
-    public function getPrice(): ?string
+    /**
+     * @return Collection<int, TechcareQuotationContent>
+     */
+    public function getContents(): Collection
     {
-        return $this->price;
+        return $this->contents;
     }
 
-    public function setPrice(string $price): static
+    public function addContent(TechcareQuotationContent $content): static
     {
-        $this->price = $price;
+        if (!$this->contents->contains($content)) {
+            $this->contents->add($content);
+            $content->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContent(TechcareQuotationContent $content): static
+    {
+        if ($this->contents->removeElement($content)) {
+            // set the owning side to null (unless already changed)
+            if ($content->getService() === $this) {
+                $content->setService(null);
+            }
+        }
 
         return $this;
     }

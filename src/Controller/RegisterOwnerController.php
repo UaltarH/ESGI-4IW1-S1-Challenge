@@ -14,7 +14,7 @@ use App\Entity\TechcareCompany;
 
 class RegisterOwnerController extends AbstractController
 {
-    #[Route('/register', name: 'app_registerV2', methods: ['POST', 'GET'])]
+    #[Route('/register', name: 'app_register', methods: ['POST', 'GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(registerCompany::class);

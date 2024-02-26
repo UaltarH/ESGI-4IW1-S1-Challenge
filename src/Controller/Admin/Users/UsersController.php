@@ -104,7 +104,6 @@ class UsersController extends AbstractController
             $newUser->setPassword(
                 password_hash($form->get('password')->getData(), PASSWORD_BCRYPT)
             );
-            $newUser->setRoles([$form->get('roles')->getData()]);
             $entityManager->persist($newUser);
             $entityManager->flush();
 

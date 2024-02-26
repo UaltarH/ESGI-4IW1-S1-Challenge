@@ -25,14 +25,11 @@ class TechcareQuotation
     #[Assert\Unique]
     private ?string $quotation_number = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $amount = '0.00';
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
-    private ?string $discount = '0.00';
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $final_amount = '0.00';
 
     #[ORM\Column(length: 255)]
     private ?string $status = null;
@@ -73,6 +70,16 @@ class TechcareQuotation
         return $this->id;
     }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
     public function getQuotationNumber(): ?string
     {
         return $this->quotation_number;
@@ -93,30 +100,6 @@ class TechcareQuotation
     public function setAmount(string $amount): static
     {
         $this->amount = $amount;
-
-        return $this;
-    }
-
-    public function getDiscount(): ?string
-    {
-        return $this->discount;
-    }
-
-    public function setDiscount(?string $discount): static
-    {
-        $this->discount = $discount;
-
-        return $this;
-    }
-
-    public function getFinalAmount(): ?string
-    {
-        return $this->final_amount;
-    }
-
-    public function setFinalAmount(string $final_amount): static
-    {
-        $this->final_amount = $final_amount;
 
         return $this;
     }

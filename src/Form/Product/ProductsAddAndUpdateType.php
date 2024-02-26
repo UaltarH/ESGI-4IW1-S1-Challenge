@@ -6,11 +6,8 @@ use App\Entity\TechcareBrand;
 use App\Entity\TechcareComponent;
 use App\Entity\TechcareProduct;
 use App\Entity\TechcareProductCategory;
-use Doctrine\DBAL\Types\TextType;
-use Faker\Provider\ar_EG\Text;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -30,7 +27,14 @@ class ProductsAddAndUpdateType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => 'Sélectionnez une catégorie de produit',
             ])
-            ->add('release_year');
+            ->add('componentsList', EntityType::class, [
+                'class' => TechcareComponent::class,
+                'choice_label' => 'name',
+                'placeholder' => 'Sélectionnez des composants',
+                'multiple' => true,
+                'required' => false,
+                'mapped' => false,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

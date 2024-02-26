@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: TechcareComponentRepository::class)]
 class TechcareComponent
@@ -34,8 +36,12 @@ class TechcareComponent
     #[Assert\Unique]
     private ?string $name = null;
 
+    #[ORM\ManyToMany(targetEntity: TechcareProduct::class, inversedBy: 'components')]
+    private Collection $product;
+
     public function __construct()
     {
+        $this->product = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -99,6 +105,30 @@ class TechcareComponent
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TechcareProduct>
+     */
+    public function getProduct(): Collection
+    {
+        return $this->product;
+    }
+
+    public function addProduct(TechcareProduct $product): static
+    {
+        if (!$this->product->contains($product)) {
+            $this->product->add($product);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(TechcareProduct $product): static
+    {
+        $this->product->removeElement($product);
 
         return $this;
     }
