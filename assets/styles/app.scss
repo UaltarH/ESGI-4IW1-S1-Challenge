@@ -4,6 +4,9 @@
 
 // Base
 @import "common/variables";
+@import 'partials/variables';
+@import 'partials/globals';
+@import 'partials/fonts';
 
 // Components
 @import "components/tables";

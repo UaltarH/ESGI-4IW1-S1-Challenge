@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 	<head>
 		<meta charset="UTF-8">
 		<title>
@@ -18,6 +18,8 @@
 		{% endblock %}
 	</head>
 	<body>
+		{% include '_components/main_menu.html.twig' with {'menuItems' : menuItems} %}
+
 		{% block body %}{% endblock %}
 	</body>
 </html>

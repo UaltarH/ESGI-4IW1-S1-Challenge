@@ -1,7 +1,23 @@
-<nav class="main_nav">
-    <ul class="flex">
-        {% for item in menuItems %}
-            <li class="flex flex-1 basis-full"><a href="{{ path(item.route) }}">{{ item.label }}</a></li>
-        {% endfor %}
-    </ul>
-</nav>
+<header>
+    <nav class="main-nav relative flex sm:flex-col lg:flex-row items-center h-10 bg-primary text-white">
+        <div class="flex-1 flex items-center justify-center"><a href="{{ path('default_index') }}"><h1>TECH CARE</h1></a></div>
+        <span class="menu-burger lg:hidden absolute right-0 top-0 z-10">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M33.3333 11.6667H6.66663M33.3333 20H6.66663M33.3333 28.3333H6.66663" stroke="white" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+        </span>
+        <ul class="sm:absolute lg:relative sm:-left-full lg:left-0 sm:top-0 sm:bg-primary lg:bg-none sm:flex-col lg:flex-row sm:h-screen lg:h-max sm:w-screen lg:w-auto flex items-center flex-2 text-center">
+            {% for item in menuItems %}
+                {% if not is_granted('ROLE_USER') %}
+                    {% if item.route != 'app_dashboard' and item.route != 'app_logout' %}
+                        <li class="flex justify-center lg:flex-1 sm:py-2 lg:py-0"><a href="{{ path(item.route) }}">{{ item.label }}</a></li>
+                    {% endif %}
+                {% else %}
+                    {% if item.route != 'app_login' and item.route != 'app_register' %}
+                        <li class="flex justify-center lg:flex-1 sm:py-2 lg:py-0"><a href="{{ path(item.route) }}">{{ item.label }}</a></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+</header>
