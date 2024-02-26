@@ -27,13 +27,14 @@ class ProductsAddAndUpdateType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => 'Sélectionnez une catégorie de produit',
             ])
-            ->add('componentsList', EntityType::class, [
+            ->add('components', EntityType::class, [
                 'class' => TechcareComponent::class,
                 'choice_label' => 'name',
                 'placeholder' => 'Sélectionnez des composants',
                 'multiple' => true,
                 'required' => false,
-                'mapped' => false,
+                'mapped' => true,
+                'data' => $options['componentsList'],
             ]);
     }
 
@@ -41,6 +42,7 @@ class ProductsAddAndUpdateType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => TechcareProduct::class,
+            'componentsList' => null,
         ]);
     }
 }

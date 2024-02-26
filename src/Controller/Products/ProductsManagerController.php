@@ -88,11 +88,6 @@ class ProductsManagerController extends AbstractController
             $techcareProduct->setUpdatedAt(new \DateTimeImmutable());
             $techcareProduct->setCompany($this->getUser()->getCompany());
 
-            $newComponentsSelected = $form->get('componentsList')->getData();
-            foreach ($newComponentsSelected as $component) {
-                $techcareProduct->addComponent($component);
-            }
-
             $entityManager->persist($techcareProduct);
             $entityManager->flush();
             return $this->redirectToRoute('app_products_manager');
@@ -103,23 +98,6 @@ class ProductsManagerController extends AbstractController
         ]);
     }
 
-    #[Route('/products/manager/add/component/{id}', name: 'app_products_manager_add_component', methods: ['GET'])]
-    public function addComponent(TechcareProduct $techcareProduct, TechcareComponentRepository $techcareComponentRepository): Response
-    {
-        $allComponents = $techcareComponentRepository->findAll();
-        $allComponentsMapped = array_map(function ($component) {
-            return [
-                'id' => $component->getId(),
-                'name' => $component->getName(),
-                'price' => 1,
-                'checked' => false,
-            ];
-        }, $allComponents);
-        return $this->render('products_manager/componentsProductManage.html.twig', [
-            'components' => $allComponentsMapped,
-            'productName' => $techcareProduct->getName(),
-        ]);
-    }
 
     #[Route('/products/manager/componentpost', name: 'app_products_manager_add_component_post', methods: ['POST', 'GET'])]
     public function addComponentPost(Request $request, EntityManagerInterface $entityManager, TechcareProductRepository $techcareProductRepository, TechcareComponentRepository $techcareComponentRepository): Response
@@ -158,7 +136,9 @@ class ProductsManagerController extends AbstractController
     #[Route('/products/manager/edit/{id}', name: 'app_products_manager_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, TechcareProduct $techcareProduct, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(ProductsAddAndUpdateType::class, $techcareProduct);
+        $componentsOftheProduct = $techcareProduct->getComponents()->toArray();
+        //meme si on specifie componentsList en mapped false, il vas quand meme lié les composants au produit car les composants qu'on lui fourni sont deja lié au produit qu'on modifie
+        $form = $this->createForm(ProductsAddAndUpdateType::class, $techcareProduct, ['componentsList' => $componentsOftheProduct]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -167,37 +147,13 @@ class ProductsManagerController extends AbstractController
 
             $entityManager->persist($techcareProduct);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_products_manager', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_products_manager');
         }
 
         return $this->render('products_manager/edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }
-
-    #[Route('/products/manager/edit/components/{id}', name: 'app_products_manager_edit_components', methods: ['GET'])]
-    public function editComponents(TechcareProduct $techcareProduct, TechcareComponentRepository $techcareComponentRepository): Response
-    {
-        $productComponentPriceObjects = $techcareProduct->getTechcareProductComponentPrices();
-        $productComponents = $productComponentPriceObjects->map(function ($componentProductPrice) {
-            $componentsId = $componentProductPrice->getComponentId();
-            foreach ($componentsId as $componentId) {
-                return [
-                    'id' => $componentId->getId(),
-                    'name' => $componentId->getName(),
-                    'price' => $componentProductPrice->getPrice(),
-                    'checked' => true,
-                ];
-            }
-        })->toArray();
-
-        return $this->render('products_manager/componentsProductManage.html.twig', [
-            'components' => $productComponents,
-            'productName' => $techcareProduct->getName(),
-        ]);
-    }
-
 
     #[Route('/products/manager/delete/{id}', name: 'app_products_manager_delete', methods: ['POST'])]
     public function delete(Request $request, TechcareProduct $techcareProduct, EntityManagerInterface $entityManager, TechcareProductComponentPriceRepository $techcareProductComponentPriceRepository): Response
@@ -209,4 +165,46 @@ class ProductsManagerController extends AbstractController
 
         return $this->redirectToRoute('app_products_manager', [], Response::HTTP_SEE_OTHER);
     }
+
+
+    //n'est plus utilisé 
+    // #[Route('/products/manager/add/component/{id}', name: 'app_products_manager_add_component', methods: ['GET'])]
+    // public function addComponent(TechcareProduct $techcareProduct, TechcareComponentRepository $techcareComponentRepository): Response
+    // {
+    //     $allComponents = $techcareComponentRepository->findAll();
+    //     $allComponentsMapped = array_map(function ($component) {
+    //         return [
+    //             'id' => $component->getId(),
+    //             'name' => $component->getName(),
+    //             'price' => 1,
+    //             'checked' => false,
+    //         ];
+    //     }, $allComponents);
+    //     return $this->render('products_manager/componentsProductManage.html.twig', [
+    //         'components' => $allComponentsMapped,
+    //         'productName' => $techcareProduct->getName(),
+    //     ]);
+    // }
+
+    // #[Route('/products/manager/edit/components/{id}', name: 'app_products_manager_edit_components', methods: ['GET'])]
+    // public function editComponents(TechcareProduct $techcareProduct, TechcareComponentRepository $techcareComponentRepository): Response
+    // {
+    //     $productComponentPriceObjects = $techcareProduct->getTechcareProductComponentPrices();
+    //     $productComponents = $productComponentPriceObjects->map(function ($componentProductPrice) {
+    //         $componentsId = $componentProductPrice->getComponentId();
+    //         foreach ($componentsId as $componentId) {
+    //             return [
+    //                 'id' => $componentId->getId(),
+    //                 'name' => $componentId->getName(),
+    //                 'price' => $componentProductPrice->getPrice(),
+    //                 'checked' => true,
+    //             ];
+    //         }
+    //     })->toArray();
+
+    //     return $this->render('products_manager/componentsProductManage.html.twig', [
+    //         'components' => $productComponents,
+    //         'productName' => $techcareProduct->getName(),
+    //     ]);
+    // }
 }
