@@ -40,12 +40,6 @@ class ProductsManagerController extends AbstractController
                         'label' => 'Modifier le produit',
                         'id' => $product->getId(),
                     ],
-                    'updateComponents' => [
-                        'type' => 'button',
-                        'path' => 'app_products_manager_edit_components',
-                        'label' => 'Modifier les composants du produit',
-                        'id' => $product->getId(),
-                    ],
                     'delete' => [
                         'type' => 'form',
                         'path' => 'app_products_manager_delete',
@@ -96,41 +90,6 @@ class ProductsManagerController extends AbstractController
         return $this->render('products_manager/new.html.twig', [
             'form' => $form->createView(),
         ]);
-    }
-
-
-    #[Route('/products/manager/componentpost', name: 'app_products_manager_add_component_post', methods: ['POST', 'GET'])]
-    public function addComponentPost(Request $request, EntityManagerInterface $entityManager, TechcareProductRepository $techcareProductRepository, TechcareComponentRepository $techcareComponentRepository): Response
-    {
-        $jsonContent = $request->getContent();
-        $dataArray = json_decode($jsonContent, true);
-
-        $newComponentsSelected = $dataArray['components'];
-        $techcareProduct = $techcareProductRepository->find($dataArray['product']);
-
-        if (is_iterable($newComponentsSelected)) {
-            foreach ($newComponentsSelected as $componentId => $componentPrice) {
-                //clear the previous components associated with the product
-                $productComponentPriceObjects = $techcareProduct->getTechcareProductComponentPrices();
-                foreach ($productComponentPriceObjects as $productComponentPriceObject) {
-                    $entityManager->remove($productComponentPriceObject);
-                }
-
-                //add the new components
-                $techcareProductComponentPrice = new TechcareProductComponentPrice();
-
-                $componentObject = $techcareComponentRepository->find($componentId);
-
-                $techcareProductComponentPrice->addComponentId($componentObject);
-                $techcareProductComponentPrice->addProductId($techcareProduct);
-                $techcareProductComponentPrice->setPrice($componentPrice);
-
-                $entityManager->persist($techcareProductComponentPrice);
-            }
-            $entityManager->flush();
-            $responseJson = json_encode(['status' => 'success', 'message' => 'Composants ajoutés avec succès']);
-            return new Response($responseJson, 200, ['Content-Type' => 'application/json']);
-        }
     }
 
     #[Route('/products/manager/edit/{id}', name: 'app_products_manager_edit', methods: ['GET', 'POST'])]
@@ -186,6 +145,7 @@ class ProductsManagerController extends AbstractController
     //     ]);
     // }
 
+
     // #[Route('/products/manager/edit/components/{id}', name: 'app_products_manager_edit_components', methods: ['GET'])]
     // public function editComponents(TechcareProduct $techcareProduct, TechcareComponentRepository $techcareComponentRepository): Response
     // {
@@ -206,5 +166,39 @@ class ProductsManagerController extends AbstractController
     //         'components' => $productComponents,
     //         'productName' => $techcareProduct->getName(),
     //     ]);
+    // }
+
+    // #[Route('/products/manager/componentpost', name: 'app_products_manager_add_component_post', methods: ['POST', 'GET'])]
+    // public function addComponentPost(Request $request, EntityManagerInterface $entityManager, TechcareProductRepository $techcareProductRepository, TechcareComponentRepository $techcareComponentRepository): Response
+    // {
+    //     $jsonContent = $request->getContent();
+    //     $dataArray = json_decode($jsonContent, true);
+
+    //     $newComponentsSelected = $dataArray['components'];
+    //     $techcareProduct = $techcareProductRepository->find($dataArray['product']);
+
+    //     if (is_iterable($newComponentsSelected)) {
+    //         foreach ($newComponentsSelected as $componentId => $componentPrice) {
+    //             //clear the previous components associated with the product
+    //             $productComponentPriceObjects = $techcareProduct->getTechcareProductComponentPrices();
+    //             foreach ($productComponentPriceObjects as $productComponentPriceObject) {
+    //                 $entityManager->remove($productComponentPriceObject);
+    //             }
+
+    //             //add the new components
+    //             $techcareProductComponentPrice = new TechcareProductComponentPrice();
+
+    //             $componentObject = $techcareComponentRepository->find($componentId);
+
+    //             $techcareProductComponentPrice->addComponentId($componentObject);
+    //             $techcareProductComponentPrice->addProductId($techcareProduct);
+    //             $techcareProductComponentPrice->setPrice($componentPrice);
+
+    //             $entityManager->persist($techcareProductComponentPrice);
+    //         }
+    //         $entityManager->flush();
+    //         $responseJson = json_encode(['status' => 'success', 'message' => 'Composants ajoutés avec succès']);
+    //         return new Response($responseJson, 200, ['Content-Type' => 'application/json']);
+    //     }
     // }
 }
