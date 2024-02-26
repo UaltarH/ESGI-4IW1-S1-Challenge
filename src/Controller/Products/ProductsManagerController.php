@@ -22,17 +22,15 @@ class ProductsManagerController extends AbstractController
     #[Route('/products/manager', name: 'app_products_manager')]
     public function index(TechcareProductRepository $techcareProductRepository): Response
     {
-        $products = $techcareProductRepository->findAll();
+        $company = $this->getUser()->getCompany();
+        $products = $techcareProductRepository->findBy(['company' => $company]);
         $productsMapped = array_map(function ($product) {
             return [
                 'name' => $product->getName(),
                 'brandName' => $product->getBrand()->getName(),
                 'categoryName' => $product->getProductCategory()->getName(),
-                'ArrayComponents' => $product->getTechcareProductComponentPrices()->map(function ($componentProductPrice) {
-                    $componentsId = $componentProductPrice->getComponentId();
-                    foreach ($componentsId as $componentId) {
-                        return $componentId->getName();
-                    }
+                'ArrayComponents' => $product->getComponents()->map(function ($component) {
+                    return $component->getName();
                 })->toArray(),
                 'updatedAt' => $product->getUpdatedAt()->format('d/m/Y H:i:s'),
                 'actions' => [
@@ -88,11 +86,16 @@ class ProductsManagerController extends AbstractController
             $techcareProduct->setCreatedAt(new \DateTimeImmutable());
             $techcareProduct->setCreatedBy($this->getUser()->getFirstname() . ' ' . $this->getUser()->getLastname());
             $techcareProduct->setUpdatedAt(new \DateTimeImmutable());
+            $techcareProduct->setCompany($this->getUser()->getCompany());
 
+            $newComponentsSelected = $form->get('componentsList')->getData();
+            foreach ($newComponentsSelected as $component) {
+                $techcareProduct->addComponent($component);
+            }
 
             $entityManager->persist($techcareProduct);
             $entityManager->flush();
-            return $this->redirectToRoute('app_products_manager_add_component', ['id' => $techcareProduct->getId()]);
+            return $this->redirectToRoute('app_products_manager');
         }
 
         return $this->render('products_manager/new.html.twig', [
@@ -200,13 +203,7 @@ class ProductsManagerController extends AbstractController
     public function delete(Request $request, TechcareProduct $techcareProduct, EntityManagerInterface $entityManager, TechcareProductComponentPriceRepository $techcareProductComponentPriceRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $techcareProduct->getId(), $request->request->get('_token'))) {
-
-            $productComponentPriceObjects = $techcareProduct->getTechcareProductComponentPrices();
             $entityManager->remove($techcareProduct);
-
-            foreach ($productComponentPriceObjects as $productComponentPriceObject) {
-                $entityManager->remove($productComponentPriceObject);
-            }
             $entityManager->flush();
         }
 
