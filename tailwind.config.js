@@ -7,22 +7,24 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // 'primary': '#160F29',
-        // 'secondary': '#246A73',
-        // 'accent': '#368F8B',
-        // 'bg': '#F3DFC1',
-        // 'bg-variant': '#DDBEA8',
         'primary': 'var(--primary-color)',
         'secondary': 'var(--secondary-color)',
         'accent': 'var(--accent-color)',
         'white': 'var(--white)',
+        'gray': 'var(--gray)',
       },
       fontFamily: {
-        'body': ['Popping', 'sans-serif'],
+        'body': ['Poppins', 'sans-serif'],
       },
       flex : {
         '2': '2 2 0%',
       },
+      width: {
+      },
+      lineHeight: {
+        '12': '3rem',
+        '16': '4rem',
+      }
     },
   },
   plugins: [],
