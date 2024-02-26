@@ -71,6 +71,9 @@ class TechcareCompany
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: TechcareUser::class)]
     private Collection $users;
 
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: TechcareProduct::class)]
+    private Collection $products;
+
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?TechcareUser $owner = null;
 
@@ -90,6 +93,7 @@ class TechcareCompany
     {
         $this->client = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -260,6 +264,36 @@ class TechcareCompany
             // set the owning side to null (unless already changed)
             if ($user->getCompany() === $this) {
                 $user->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TechcareProduct>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(TechcareProduct $product): static
+    {
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(TechcareProduct $product): static
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getCompany() === $this) {
+                $product->setCompany(null);
             }
         }
 

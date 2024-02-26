@@ -34,9 +34,6 @@ class TechcareProduct
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 4, nullable: true)]
-    private ?string $release_year = null;
-
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?TechcareBrand $brand = null;
 
@@ -44,12 +41,15 @@ class TechcareProduct
     #[ORM\JoinColumn(nullable: false)]
     private ?TechcareProductCategory $productCategory = null;
 
-    #[ORM\ManyToMany(targetEntity: TechcareProductComponentPrice::class, mappedBy: 'product_id')]
-    private Collection $techcareProductComponentPrices;
+    #[ORM\ManyToMany(targetEntity: TechcareComponent::class, mappedBy: 'product')]
+    private Collection $components;
+
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    protected ?TechcareCompany $company = null;
 
     public function __construct()
     {
-        $this->techcareProductComponentPrices = new ArrayCollection();
+        $this->components = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -117,18 +117,6 @@ class TechcareProduct
         return $this;
     }
 
-    public function getReleaseYear(): ?string
-    {
-        return $this->release_year;
-    }
-
-    public function setReleaseYear(?string $release_year): static
-    {
-        $this->release_year = $release_year;
-
-        return $this;
-    }
-
     public function getBrand(): ?TechcareBrand
     {
         return $this->brand;
@@ -154,28 +142,40 @@ class TechcareProduct
     }
 
     /**
-     * @return Collection<int, TechcareProductComponentPrice>
+     * @return Collection<int, TechcareComponent>
      */
-    public function getTechcareProductComponentPrices(): Collection
+    public function getComponents(): Collection
     {
-        return $this->techcareProductComponentPrices;
+        return $this->components;
     }
 
-    public function addTechcareProductComponentPrice(TechcareProductComponentPrice $techcareProductComponentPrice): static
+    public function addComponent(TechcareComponent $component): static
     {
-        if (!$this->techcareProductComponentPrices->contains($techcareProductComponentPrice)) {
-            $this->techcareProductComponentPrices->add($techcareProductComponentPrice);
-            $techcareProductComponentPrice->addProductId($this);
+        if (!$this->components->contains($component)) {
+            $this->components->add($component);
+            $component->addProduct($this);
         }
 
         return $this;
     }
 
-    public function removeTechcareProductComponentPrice(TechcareProductComponentPrice $techcareProductComponentPrice): static
+    public function removeComponent(TechcareComponent $component): static
     {
-        if ($this->techcareProductComponentPrices->removeElement($techcareProductComponentPrice)) {
-            $techcareProductComponentPrice->removeProductId($this);
+        if ($this->components->removeElement($component)) {
+            $component->removeProduct($this);
         }
+
+        return $this;
+    }
+
+    public function getCompany(): ?TechcareCompany
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?TechcareCompany $company): static
+    {
+        $this->company = $company;
 
         return $this;
     }

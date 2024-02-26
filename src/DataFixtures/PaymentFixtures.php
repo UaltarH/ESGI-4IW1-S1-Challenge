@@ -24,13 +24,13 @@ class PaymentFixtures extends Fixture implements DependentFixtureInterface
 
         $paymentCpt = 0;
 
-        for($i = 1; $i<=$smartphoneQuoteCounter; $i++) {
+        for ($i = 1; $i <= $smartphoneQuoteCounter; $i++) {
             $quotation = $this->getReference('quotation-smartphone-' . $i);
-            if($quotation->getStatus() !== QuotationStatus::paid->value)
+            if ($quotation->getStatus() !== QuotationStatus::paid->value)
                 continue;
             $payment = (new Payment())
                 ->setDate($faker->dateTime)
-                ->setAmount($quotation->getFinalAmount())
+                ->setAmount($quotation->getAmount())
                 ->setMethod($faker->randomElement(PaymentMethod::cases())->value)
                 ->setPaymentNumber($faker->uuid)
                 ->setClient($quotation->getClient())
@@ -39,13 +39,13 @@ class PaymentFixtures extends Fixture implements DependentFixtureInterface
             $this->addReference('payment-' . ++$paymentCpt, $payment);
         }
 
-        for($i = 1; $i<=$computerQuoteCounter; $i++) {
+        for ($i = 1; $i <= $computerQuoteCounter; $i++) {
             $quotation = $this->getReference('quotation-computer-' . $i);
-            if($quotation->getStatus() !== QuotationStatus::paid->value)
+            if ($quotation->getStatus() !== QuotationStatus::paid->value)
                 continue;
             $payment = (new Payment())
                 ->setDate($faker->dateTime)
-                ->setAmount($quotation->getFinalAmount())
+                ->setAmount($quotation->getAmount())
                 ->setMethod($faker->randomElement(PaymentMethod::cases())->value)
                 ->setPaymentNumber($faker->uuid)
                 ->setClient($quotation->getClient())
@@ -54,13 +54,13 @@ class PaymentFixtures extends Fixture implements DependentFixtureInterface
             $this->addReference('payment-' . ++$paymentCpt, $payment);
         }
 
-        for($i = 1; $i<=$tabletQuoteCounter; $i++) {
+        for ($i = 1; $i <= $tabletQuoteCounter; $i++) {
             $quotation = $this->getReference('quotation-tablet-' . $i);
-            if($quotation->getStatus() !== QuotationStatus::paid->value)
+            if ($quotation->getStatus() !== QuotationStatus::paid->value)
                 continue;
             $payment = (new Payment())
                 ->setDate($faker->dateTime)
-                ->setAmount($quotation->getFinalAmount())
+                ->setAmount($quotation->getAmount())
                 ->setMethod($faker->randomElement(PaymentMethod::cases())->value)
                 ->setPaymentNumber($faker->uuid)
                 ->setClient($quotation->getClient())
