@@ -1,7 +1,55 @@
-<nav class="main_nav">
-    <ul class="flex">
-        {% for item in menuItems %}
-            <li class="flex flex-1 basis-full"><a href="{{ path(item.route) }}">{{ item.label }}</a></li>
-        {% endfor %}
-    </ul>
-</nav>
+<header class="bg-secondary">
+    <nav class="sm:w-full lg:max-w-screen-lg m-auto main-nav relative flex sm:flex-col lg:flex-row items-center h-16 text-white [&>*]:transition-all">
+        <div class="flex-1 flex items-center justify-start text-2xl">
+            <a href="{{ path('default_index') }}" class="flex items-center h-full">
+                <h1>TECH CARE</h1>
+            </a>
+        </div>
+        <span class="menu-burger lg:hidden absolute right-0 top-0 z-10">
+            <svg width="64" height="65" viewBox="0 0 64 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M53.3333 19.1667H10.6667M53.3333 32.5H10.6667M53.3333 45.8333H10.6667" stroke="white" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+        </span>
+        <ul class="sm:absolute lg:relative sm:-left-full lg:left-0 sm:top-0 sm:bg-secondary lg:bg-none sm:flex-col lg:flex-row sm:h-screen lg:h-max sm:w-screen lg:w-auto flex items-center flex-2 text-center [&>*]:transition-all">
+            <li class="flex items-center justify-center text-2xl text-white h-16 lg:hidden sm:mb-8">
+                <a href="{{ path('default_index') }}" class="flex items-center h-full">
+                    <h1>TECH CARE</h1>
+                </a>
+            </li>
+            {% for item in menuItems %}
+                {% if not is_granted('ROLE_USER') %}
+                    {% if item.route != 'app_dashboard' and item.route != 'app_logout' and item.route != 'app_login' and item.route != 'app_register' %}
+                        <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full"><a href="{{ path(item.route) }}" class="h-full w-full sm:leading-12 lg:leading-16">{{ item.label }}</a></li>
+                    {% endif %}
+                {% else %}
+                    {% if item.route != 'app_login' and item.route != 'app_register' and item.route != 'app_logout' %}
+                        <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full"><a href="{{ path(item.route) }}" class="h-full w-full sm:leading-12 lg:leading-16">{{ item.label }}</a></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            {% if is_granted('ROLE_USER') %}
+                <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
+                    <a href="{{ path('app_logout') }}" class="h-full w-full sm:leading-12 lg:leading-16">Déconnexion</a>
+                </li>
+            {% else %}
+                <li class="group sm:hidden lg:flex flex-col lg:flex-1 lg:h-16 justify-center items-center relative hover:bg-accent w-full">
+                    <span class="">Mon Compte</span>
+                    <ul class="flex-col absolute -top-16 group-hover:top-16 w-full h-32 bg-secondary hidden group-hover:flex [&>*]:transition-all">
+                        <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
+                            <a href="{{ path('app_login') }}" class="h-full w-full leading-16">Connexion</a>
+                        </li>
+                        <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
+                            <a href="{{ path('app_register') }}" class="h-full w-full leading-16">Inscription</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sm:flex lg:hidden justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
+                    <a href="{{ path('app_login') }}" class="h-full w-full leading-12">Connexion</a>
+                </li>
+                <li class="sm:flex lg:hidden justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
+                    <a href="{{ path('app_register') }}" class="h-full w-full leading-12">Inscription</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>

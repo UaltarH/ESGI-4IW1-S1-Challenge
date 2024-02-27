@@ -15,6 +15,15 @@ import $ from "jquery";
 
 import "./js/components/tables/tables.js";
 import "./js/product/productComponentsManage.js";
+document.addEventListener("DOMContentLoaded", function() {
+    // main menu toggle
+    const mainNav = document.querySelector('.main-nav ul');
+    const burger = document.querySelector('.menu-burger');
 
-
-
+    burger.addEventListener('click', () => {
+        console.log('clicked');
+        console.log(mainNav);
+        console.log(burger);
+        mainNav.classList.toggle('sm:-left-full');
+    });
+});

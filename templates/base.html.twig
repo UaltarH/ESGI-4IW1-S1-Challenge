@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 	<head>
 		<meta charset="UTF-8">
 		<title>
@@ -18,6 +18,10 @@
 		{% endblock %}
 	</head>
 	<body>
-		{% block body %}{% endblock %}
+
+		{% include '_components/main_menu.html.twig' with {'menuItems' : menuItems} %}
+		<div class="sm:w-full lg:max-w-screen-lg m-auto">
+			{% block body %}{% endblock %}
+		</div>
 	</body>
 </html>
