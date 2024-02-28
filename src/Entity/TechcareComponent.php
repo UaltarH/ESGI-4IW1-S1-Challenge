@@ -39,9 +39,13 @@ class TechcareComponent
     #[ORM\ManyToMany(targetEntity: TechcareProduct::class, inversedBy: 'components')]
     private Collection $product;
 
+    #[ORM\OneToMany(mappedBy: 'component', targetEntity: TechcareQuotationContent::class, orphanRemoval: true)]
+    private Collection $contents;
+
     public function __construct()
     {
         $this->product = new ArrayCollection();
+        $this->contents = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -129,6 +133,36 @@ class TechcareComponent
     public function removeProduct(TechcareProduct $product): static
     {
         $this->product->removeElement($product);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TechcareQuotationContent>
+     */
+    public function getContents(): Collection
+    {
+        return $this->contents;
+    }
+
+    public function addContent(TechcareQuotationContent $content): static
+    {
+        if (!$this->contents->contains($content)) {
+            $this->contents->add($content);
+            $content->setComponent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContent(TechcareQuotationContent $content): static
+    {
+        if ($this->contents->removeElement($content)) {
+            // set the owning side to null (unless already changed)
+            if ($content->getComponent() === $this) {
+                $content->setComponent(null);
+            }
+        }
 
         return $this;
     }

@@ -19,7 +19,7 @@ class TechcareQuotationContent
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $amount = null;
 
     #[ORM\ManyToOne]
@@ -34,6 +34,10 @@ class TechcareQuotationContent
     #[ORM\JoinColumn(nullable: false)]
     private ?TechcareService $service = null;
 
+    #[ORM\ManyToOne(inversedBy: 'contents')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?TechcareComponent $component = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -44,7 +48,7 @@ class TechcareQuotationContent
         return $this->amount;
     }
 
-    public function setAmount(string $amount): static
+    public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
 
@@ -83,6 +87,18 @@ class TechcareQuotationContent
     public function setProduct(?TechcareProduct $product): static
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    public function getComponent(): ?TechcareComponent
+    {
+        return $this->component;
+    }
+
+    public function setComponent(?TechcareComponent $component): static
+    {
+        $this->component = $component;
 
         return $this;
     }

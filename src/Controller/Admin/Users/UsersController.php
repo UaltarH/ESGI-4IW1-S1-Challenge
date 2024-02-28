@@ -113,6 +113,7 @@ class UsersController extends AbstractController
         }
 
         return $this->render('admin/users/addUserFromAdmin.html.twig', [
+            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
             'form' => $form->createView(),
         ]);
     }
@@ -120,6 +121,7 @@ class UsersController extends AbstractController
     #[Route('/admin/users/{id}', name: 'admin_user_update', methods: ['POST', 'GET'])]
     public function updateUser(TechcareUser $techcareUser, Request $request, TechcareUserRepository $techcareUserRepository, EntityManagerInterface $entityManager): Response
     {
+        $userConnected = $this->getUser();
         $form = $this->createForm(AdminCreateOrUpdateUserType::class, $techcareUser, [
             'role_choices' => [
                 'Employé entreprise' => 'ROLE_COMPANY',
@@ -137,6 +139,7 @@ class UsersController extends AbstractController
             return $this->redirectToRoute('acceuil_admin_users');
         }
         return $this->render('admin/users/updateFromAdmin.html.twig', [
+            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
             'form' => $form->createView(),
             'userId' => $techcareUser->getId(),
         ]);

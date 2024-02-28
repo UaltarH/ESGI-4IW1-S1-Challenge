@@ -68,6 +68,12 @@ class TechcareClient
         $this->payments = new ArrayCollection();
         $this->invoices = new ArrayCollection();
     }
+
+    public function getId(): ?Uuid
+    {
+        return $this->id;
+    }
+
     public function getFirstname(): ?string
     {
         return $this->firstname;

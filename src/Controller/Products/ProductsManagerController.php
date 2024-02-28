@@ -71,6 +71,7 @@ class ProductsManagerController extends AbstractController
     #[Route('/products/manager/add', name: 'app_products_manager_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $userConnected = $this->getUser() instanceof UserInterface;
         $techcareProduct = new TechcareProduct();
         $form = $this->createForm(ProductsAddAndUpdateType::class, $techcareProduct);
         $form->handleRequest($request);
@@ -88,6 +89,7 @@ class ProductsManagerController extends AbstractController
         }
 
         return $this->render('products_manager/new.html.twig', [
+            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
             'form' => $form->createView(),
         ]);
     }
@@ -95,6 +97,7 @@ class ProductsManagerController extends AbstractController
     #[Route('/products/manager/edit/{id}', name: 'app_products_manager_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, TechcareProduct $techcareProduct, EntityManagerInterface $entityManager): Response
     {
+        $userConnected = $this->getUser() instanceof UserInterface;
         $componentsOftheProduct = $techcareProduct->getComponents()->toArray();
         //meme si on specifie componentsList en mapped false, il vas quand meme lié les composants au produit car les composants qu'on lui fourni sont deja lié au produit qu'on modifie
         $form = $this->createForm(ProductsAddAndUpdateType::class, $techcareProduct, ['componentsList' => $componentsOftheProduct]);
@@ -110,6 +113,7 @@ class ProductsManagerController extends AbstractController
         }
 
         return $this->render('products_manager/edit.html.twig', [
+            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
             'form' => $form->createView(),
         ]);
     }
