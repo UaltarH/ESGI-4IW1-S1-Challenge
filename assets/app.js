@@ -15,6 +15,4 @@ import $ from "jquery";
 
 import "./js/components/tables/tables.js";
 import "./js/product/productComponentsManage.js";
-
-
-
+import "./js/quotation/createQuotation.js";
