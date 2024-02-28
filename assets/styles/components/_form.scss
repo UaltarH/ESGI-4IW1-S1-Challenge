@@ -1,0 +1,18 @@
+@layer components {
+  .form-input-col {
+    @apply flex flex-col w-full justify-start items-center [&>*]:w-64;
+    label {
+        @apply text-left;
+    }
+  }
+  .form-control {
+    @apply w-full px-4 py-2 border-b border-secondary;
+    &-small {
+      @apply w-1/2;
+    }
+    &:focus, &:focus-visible {
+      @apply border-secondary bg-light-gray border-b outline-0;
+    }
+
+  }
+}

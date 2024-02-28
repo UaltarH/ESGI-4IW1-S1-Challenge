@@ -1,0 +1,14 @@
+@layer components {
+  .btn {
+    @apply px-4 py-2 bg-secondary text-white rounded-md shadow-md;
+    &:hover {
+      @apply bg-accent;
+    }
+  }
+  .btn-lg {
+    @apply px-6 py-3 text-lg;
+  }
+  .btn-primary {
+    @apply bg-secondary text-white;
+  }
+}

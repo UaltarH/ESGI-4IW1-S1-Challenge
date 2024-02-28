@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Menu\MenuBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,6 +18,7 @@ class RegisterOwnerController extends AbstractController
     #[Route('/register', name: 'app_register', methods: ['POST', 'GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
+//        $this->denyAccessUnlessGranted('IS_ANONYMOUS');
         $form = $this->createForm(registerCompany::class);
         $form->handleRequest($request);
 
@@ -59,6 +61,7 @@ class RegisterOwnerController extends AbstractController
 
         return $this->render('register/index.html.twig', [
             'form' => $form->createView(),
+            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
         ]);
     }
 }

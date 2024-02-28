@@ -17,7 +17,7 @@ use App\Service\EmailService;
 
 class UsersController extends AbstractController
 {
-    #[Route('/admin/users', name: 'acceuil_admin_users')]
+    #[Route('/admin/users', name: 'accueil_admin_users')]
     public function index(TechcareUserRepository $techcareUserRepository): Response
     {
         $usersFiltered = $techcareUserRepository->findUsersByRoles(['ROLE_COMPANY', 'ROLE_ACCOUNTANT', 'ROLE_OWNER_COMPANY']);
@@ -76,7 +76,7 @@ class UsersController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('acceuil_admin_users', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('accueil_admin_users', [], Response::HTTP_SEE_OTHER);
     }
 
 
@@ -109,7 +109,7 @@ class UsersController extends AbstractController
 
             // TODO : send mail 
 
-            return $this->redirectToRoute('acceuil_admin_users');
+            return $this->redirectToRoute('accueil_admin_users');
         }
 
         return $this->render('admin/users/addUserFromAdmin.html.twig', [
@@ -136,7 +136,7 @@ class UsersController extends AbstractController
             $techcareUser->setUpdatedBy($this->getUser()->getId());
             $entityManager->flush();
 
-            return $this->redirectToRoute('acceuil_admin_users');
+            return $this->redirectToRoute('accueil_admin_users');
         }
         return $this->render('admin/users/updateFromAdmin.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
@@ -159,7 +159,7 @@ class UsersController extends AbstractController
             // );
         }
 
-        return $this->redirectToRoute('acceuil_admin_users', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('accueil_admin_users', [], Response::HTTP_SEE_OTHER);
 
 
         return new Response('Email sent', 200);

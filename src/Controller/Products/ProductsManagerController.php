@@ -22,6 +22,7 @@ class ProductsManagerController extends AbstractController
     #[Route('/products/manager', name: 'app_products_manager')]
     public function index(TechcareProductRepository $techcareProductRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_COMPANY');
         $company = $this->getUser()->getCompany();
         $products = $techcareProductRepository->findBy(['company' => $company]);
         $productsMapped = array_map(function ($product) {

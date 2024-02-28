@@ -2,6 +2,7 @@
 
 namespace App\Form\Abstract;
 
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -30,7 +31,7 @@ class registerCompany extends AbstractType
                     new Length(['min' => 3]),
                 ],
             ])
-            ->add('email', TextType::class, [
+            ->add('email', EmailType::class, [
                 'constraints' => [
                     new NotBlank(),
                     new Length(['min' => 3]),
