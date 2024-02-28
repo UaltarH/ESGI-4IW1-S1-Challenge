@@ -17,8 +17,6 @@ class CompanyFixtures extends Fixture implements DependentFixtureInterface
 
         for ($i = 0; $i < 15; $i++) {
             $user = $this->getReference('user_owner_' . $i);
-            var_dump($user->getFirstName()[0]);
-            var_dump($user->getLastName()[0]);
             $company = $faker->company;
             $code = strtoupper(
                 utf8_encode($user->getFirstName()[0])

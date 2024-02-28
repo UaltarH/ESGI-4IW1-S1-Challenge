@@ -14,9 +14,8 @@ class QuotationController extends AbstractController
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
         return $this->render('back/quotation/index.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['isAdmin' => $isAdmin]),
+            'menuItems' => (new MenuBuilder)->createMainMenu(),
         ]);
     }
     #[Route('/quotation/new', name: 'app_quotation_new')]

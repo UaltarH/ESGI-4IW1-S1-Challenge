@@ -1,0 +1,24 @@
+@use 'variables' as v;
+@use 'fonts' as f;
+:root {
+  --primary-color: #{v.$primary-color};
+  --secondary-color: #{v.$secondary-color};
+  --accent-color: #{v.$accent-color};
+  --white: #{v.$white};
+  --gray: #{v.$gray};
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+ul {
+  list-style: none;
+}
+body {
+  background-color: var(--white);
+  font-family: f.$font1;
+}
+p {
+  color: red;
+}
