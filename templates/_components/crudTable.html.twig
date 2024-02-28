@@ -1,19 +1,19 @@
 {# parameters: data: liste d'entité ; title: titre du header ; entityProperties: liste clé valeur ex == [['propertyName']-> 'Titre de la colonne']#}
 <article class="tableContent">
-	<table class="shadow-lg bg-white border-collapse">
+	<table class="shadow-lg bg-white border-collapse rounded overflow-hidden">
 		<thead>
-			<H1>{{ title }}</H1>
+			<h1>{{ title }}</h1>
 		</thead>
 		<tbody>
 			<tr>
 				{% for titleProperty in entityProperties %}
-					<th class="bg-blue-100 border text-left px-8 py-4">{{ titleProperty }}</th>
+					<th class="bg-blue-100 text-left px-8 py-4">{{ titleProperty }}</th>
 				{% endfor %}
 			</tr>
 			{% for data in datas %}
 				<tr class="hover:bg-gray-50">
 					{% for key, titleProperty in entityProperties %}
-						<td class="border px-8 py-4">
+						<td class="px-8 py-4">
 							{% if key == 'actions' %}
 								{% for action in attribute(data, key) %}
 									{% if action.type == 'button' %}

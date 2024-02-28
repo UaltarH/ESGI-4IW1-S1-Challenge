@@ -16,7 +16,7 @@
 	<button type="submit">Modifier</button>
 	{{ form_end(form) }}
 
-	<a href="{{ path('acceuil_admin_users') }}">Retour à la liste des utilisateurs</a>
+	<a href="{{ path('accueil_admin_users') }}">Retour à la liste des utilisateurs</a>
 	<br>
 	<form method="post" action="{{ path('admin_user_send_email', {'id': userId}) }}">
 		<input type="hidden" name="_token" value="{{ csrf_token('resetPwdRequest' ~ userId) }}">

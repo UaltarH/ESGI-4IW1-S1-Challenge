@@ -18,10 +18,7 @@
 		{% endblock %}
 	</head>
 	<body>
-
 		{% include '_components/main_menu.html.twig' with {'menuItems' : menuItems} %}
-		<div class="sm:w-full lg:max-w-screen-lg m-auto">
-			{% block body %}{% endblock %}
-		</div>
+		{% block body %}{% endblock %}
 	</body>
 </html>

@@ -41,9 +41,13 @@ security:
     - { path: /admin, roles: ROLE_ADMIN }
     - { path: /admin_users, roles: ROLE_ADMIN }
     - { path: /home, roles: ROLE_USER }
+    - { path: /login, allow_if: "!is_authenticated()"}
+    - { path: /register, allow_if: "!is_authenticated()"}
+
+  access_denied_url : /access-denied
 
   role_hierarchy:
-    ROLE_ADMIN: ROLE_USER
+    ROLE_ADMIN: [ROLE_USER, ROLE_ACCOUNTANT, ROLE_COMPANY, ROLE_OWNER_COMPANY]
     ROLE_ACCOUNTANT: ROLE_USER
     ROLE_COMPANY: ROLE_USER
     ROLE_OWNER_COMPANY: [ROLE_USER, ROLE_ACCOUNTANT, ROLE_COMPANY]

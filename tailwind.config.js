@@ -12,6 +12,7 @@ module.exports = {
         'accent': 'var(--accent-color)',
         'white': 'var(--white)',
         'gray': 'var(--gray)',
+        'light-gray': 'var(--light-gray)',
       },
       fontFamily: {
         'body': ['Poppins', 'sans-serif'],
@@ -24,7 +25,10 @@ module.exports = {
       lineHeight: {
         '12': '3rem',
         '16': '4rem',
-      }
+      },
+      minHeight: {
+        'cover': 'calc(100vh - 4rem)',
+      },
     },
   },
   plugins: [],

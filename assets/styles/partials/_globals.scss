@@ -6,6 +6,7 @@
   --accent-color: #{v.$accent-color};
   --white: #{v.$white};
   --gray: #{v.$gray};
+    --light-gray: #{v.$light-gray};
 }
 * {
   margin: 0;
@@ -15,9 +16,14 @@
 ul {
   list-style: none;
 }
+html {
+  height: 100%;
+}
 body {
-  background-color: var(--white);
+  background-color: var(--light-gray);
   font-family: f.$font1;
+  color: var(--primary-color);
+  height: 100%;
 }
 p {
   color: red;

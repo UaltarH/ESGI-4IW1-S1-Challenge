@@ -10,23 +10,33 @@
                 <path d="M53.3333 19.1667H10.6667M53.3333 32.5H10.6667M53.3333 45.8333H10.6667" stroke="white" stroke-width="1.5" stroke-linecap="round"></path>
             </svg>
         </span>
-        <ul class="sm:absolute lg:relative sm:-left-full lg:left-0 sm:top-0 sm:bg-secondary lg:bg-none sm:flex-col lg:flex-row sm:h-screen lg:h-max sm:w-screen lg:w-auto flex items-center flex-2 text-center [&>*]:transition-all">
+        <ul class="sm:absolute lg:relative sm:-left-full lg:left-0 sm:top-0 sm:bg-secondary lg:bg-none sm:flex-col lg:flex-row sm:h-screen lg:h-max sm:w-full lg:w-auto flex items-center flex-2 text-center [&>*]:transition-all">
             <li class="flex items-center justify-center text-2xl text-white h-16 lg:hidden sm:mb-8">
                 <a href="{{ path('default_index') }}" class="flex items-center h-full">
                     <h1>TECH CARE</h1>
                 </a>
             </li>
+            {% set continue = false %}
             {% for item in menuItems %}
+                {# affichage de tous les liens sauf ceux pour se connecter qu'on affiche à la fin#}
                 {% if not is_granted('ROLE_USER') %}
-                    {% if item.route != 'app_dashboard' and item.route != 'app_logout' and item.route != 'app_login' and item.route != 'app_register' %}
+                    {% if item.route != 'app_login' and item.route != 'app_register' %}
                         <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full"><a href="{{ path(item.route) }}" class="h-full w-full sm:leading-12 lg:leading-16">{{ item.label }}</a></li>
                     {% endif %}
                 {% else %}
-                    {% if item.route != 'app_login' and item.route != 'app_register' and item.route != 'app_logout' %}
-                        <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full"><a href="{{ path(item.route) }}" class="h-full w-full sm:leading-12 lg:leading-16">{{ item.label }}</a></li>
+                    {% if item.route != 'app_logout' %}
+                        {% if not is_granted('ROLE_COMPANY') and item.route == 'app_products_manager' %}
+                            {% set continue = true %}
+                        {% elseif not is_granted('ROLE_ADMIN') and item.route == 'accueil_admin_users' %}
+                            {% set continue = true %}
+                        {% else %}
+                            <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full"><a href="{{ path(item.route) }}" class="h-full w-full sm:leading-12 lg:leading-16">{{ item.label }}</a></li>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
             {% endfor %}
+
+            <!-- login/logout -->
             {% if is_granted('ROLE_USER') %}
                 <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
                     <a href="{{ path('app_logout') }}" class="h-full w-full sm:leading-12 lg:leading-16">Déconnexion</a>
