@@ -18,12 +18,15 @@ use App\Entity\TechcareComponent;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\TechcareQuotationContent;
 use App\Repository\TechcareComponentRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
+use App\Menu\MenuBuilder;
 
 class CreateQuotationController extends AbstractController
 {
     #[Route('/create/quotation', name: 'app_create_quotation')]
     public function index(TechcareServiceRepository $techcareServiceRepository): Response
     {
+        $userConnected = $this->getUser() instanceof UserInterface;
         $company = $this->getUser()->getCompany();
 
         $services = $techcareServiceRepository->findAll();
@@ -67,6 +70,7 @@ class CreateQuotationController extends AbstractController
             ];
         }
         return $this->render('create_quotation/index.html.twig', [
+            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
             'services' => $servicesMapped,
             'clients' => $clientsCompanyMapped,
             'productsAndComponents' => $productsWithComponents,

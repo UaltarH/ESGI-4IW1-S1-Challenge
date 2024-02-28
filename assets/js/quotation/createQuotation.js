@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
         success: function (response) {
           console.log(response);
           if (response.status == "success") {
-            window.location.href = "/home";
+            window.location.href = "/admin";
           } else {
             console.error(response);
           }
