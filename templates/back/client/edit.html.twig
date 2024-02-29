@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification d'un client{% endblock %}
+
+{% block body %}
+    <div class="page-wrapper">
+        <h1 class="page-title">Modification d'un client</h1>
+        {{ form_start(form) }}
+        {{ form_row(form.firstName) }}
+        {{ form_row(form.lastName) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.phoneNumber) }}
+        {{ form_row(form.billingAddress) }}
+
+        <button type="submit" class="btn btn-primary btn-lg self-center w-fit">Modifier</button>
+        {{ form_end(form) }}
+
+        <a href="{{ path('app_client_list') }}" class="underline">back to list</a>
+    </div>
+{% endblock %}

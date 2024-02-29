@@ -24,7 +24,7 @@
 									{% endif %}
 
 									{% if action.type == 'form' %}
-										<form method="post" action="{{ path(action.path, {'id': action.id}) }}">
+										<form method="post" action="{{ path(action.path, {'id': action.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet entrée ?')">
 											<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ action.id) }}">
 											<button class="btn btn-error">{{ action.label}}</button>
 										</form>

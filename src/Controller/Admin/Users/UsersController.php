@@ -23,7 +23,7 @@ class UsersController extends AbstractController
         $usersFiltered = $techcareUserRepository->findUsersByRoles(['ROLE_COMPANY', 'ROLE_ACCOUNTANT', 'ROLE_OWNER_COMPANY']);
         $usersFilteredMapped = array_map(function ($user) {
             return [
-                'id' => $user->getId(),
+//                'id' => $user->getId(),
                 'firstname' => $user->getFirstname(),
                 'lastname' => $user->getLastname(),
                 'email' => $user->getEmail(),
@@ -57,12 +57,12 @@ class UsersController extends AbstractController
             'datas' => $usersFilteredMapped,
             'title' => 'Utilisateurs',
             'entityProperties' => [
-                'id' => 'ID',
+//                'id' => 'ID',
                 'firstname' => 'Prénom',
                 'lastname' => 'Nom',
-                'email' => 'Email',
-                'roles' => 'Roles',
-                'company' => 'Entreprise id',
+                'email' => 'E-mail',
+                'roles' => 'Rôles',
+                'company' => 'Entreprise',
                 'createdAt' => 'Date de création',
                 'actions' => 'Actions',
             ],
