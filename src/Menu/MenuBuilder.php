@@ -14,6 +14,7 @@ class MenuBuilder {
                     ['label' => 'Utilisateurs','route' => 'accueil_admin_users',],
                     ['label' => 'Produits','route' => 'app_products_manager',],
                     ['label' => 'Devis','route' => 'app_quotation',],
+                    ['label' => 'Clients','route' => 'app_client_list',],
                 ],
             ];
             $menu[] = [

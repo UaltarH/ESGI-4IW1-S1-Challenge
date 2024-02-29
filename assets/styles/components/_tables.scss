@@ -2,26 +2,29 @@
   .tableContent {
     @apply mb-5;
     table {
-      @apply shadow-lg bg-white border-collapse rounded overflow-hidden;
+      @apply shadow-lg bg-white dark:bg-primary-dark border-collapse rounded overflow-hidden;
     }
     tbody {
-      @apply [&>tr:nth-child(2n+1)]:bg-light-gray;
+      @apply [&>tr:nth-child(2n+1)]:bg-light-gray dark:[&>tr:nth-child(2n+1)]:bg-primary;
     }
     tr.thead {
-      @apply [&>th:first-child]:hidden;
+      //@apply [&>th:first-child]:hidden;
       th {
-        @apply bg-accent text-white;
+        @apply bg-accent text-white font-normal hover:bg-secondary;
       }
     }
     tr.tableRow {
-      @apply hover:bg-light-gray [&>td:last-child]:flex [&>td:last-child]:flex-col [&>td:last-child]:gap-1 [&>td:first-child]:hidden;
+      @apply hover:bg-light-gray dark:hover:bg-primary [&>td:last-child]:flex [&>td:last-child]:flex-col [&>td:last-child]:gap-1;
+      td {
+        @apply hover:bg-white dark:hover:bg-primary-dark;
+      }
     }
     .pagination {
       @apply text-center mt-5;
     }
 
     .pagination button {
-      @apply py-1.5 px-2.5 mx-2.5 cursor-pointer rounded-sm border-0 outline outline-1 outline-secondary shadow-md bg-white hover:bg-light-gray;
+      @apply py-1.5 px-2.5 mx-2.5 cursor-pointer rounded-sm border-0 outline outline-1 outline-secondary shadow-md bg-white dark:bg-primary hover:bg-light-gray dark:hover:bg-primary-dark;
     }
 
     //.hidden {

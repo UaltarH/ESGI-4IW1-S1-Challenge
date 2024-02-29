@@ -16,7 +16,7 @@
   }
 
   input:checked + .slider {
-    @apply bg-accent
+    @apply bg-primary;
   }
 
   input:focus + .slider {
