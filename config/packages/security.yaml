@@ -46,6 +46,7 @@ security:
 
   access_denied_url : /access-denied
 
+  # TODO : remove compoany role for admin
   role_hierarchy:
     ROLE_ADMIN: [ROLE_USER, ROLE_ACCOUNTANT, ROLE_COMPANY, ROLE_OWNER_COMPANY]
     ROLE_ACCOUNTANT: ROLE_USER

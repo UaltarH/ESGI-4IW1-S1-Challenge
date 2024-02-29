@@ -2,34 +2,37 @@
 <article class="tableContent">
 	<table class="shadow-lg bg-white border-collapse rounded overflow-hidden">
 		<thead>
-			<h1>{{ title }}</h1>
+			<h1 class="page-title">{{ title }}</h1>
+			<button id="add-user-btn" class="btn btn-primary mb-4">
+				<a href="{{ path(createRoute) }}">{{ createLabel }}</a>
+			</button>
 		</thead>
-		<tbody>
-			<tr>
+		<tbody class="[&>tr:nth-child(2n+1)]:bg-light-gray">
+			<tr class="thead">
 				{% for titleProperty in entityProperties %}
-					<th class="bg-blue-100 text-left px-8 py-4">{{ titleProperty }}</th>
+					<th class="px-8 py-4">{{ titleProperty }}</th>
 				{% endfor %}
 			</tr>
 			{% for data in datas %}
-				<tr class="hover:bg-gray-50">
+				<tr class="tableRow">
 					{% for key, titleProperty in entityProperties %}
 						<td class="px-8 py-4">
 							{% if key == 'actions' %}
 								{% for action in attribute(data, key) %}
 									{% if action.type == 'button' %}
-										<a href="{{ path(action.path, {'id': action.id}) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{ action.label }}</a>
+										<a href="{{ path(action.path, {'id': action.id}) }}" class="btn btn-primary">{{ action.label }}</a>
 									{% endif %}
 
 									{% if action.type == 'form' %}
 										<form method="post" action="{{ path(action.path, {'id': action.id}) }}">
 											<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ action.id) }}">
-											<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{ action.label}}</button>
+											<button class="btn btn-error">{{ action.label}}</button>
 										</form>
 									{% endif %}
 								{% endfor %}
 							{% elseif attribute(data, key) is iterable %}
 								{% for item in attribute(data, key) %}
-									<span class="bg-blue-500 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mr-2">
+									<span class="bg-accent text-white text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mr-2">
 										{{item}}
 									</span>
 								{% endfor %}

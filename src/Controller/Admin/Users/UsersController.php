@@ -28,7 +28,7 @@ class UsersController extends AbstractController
                 'lastname' => $user->getLastname(),
                 'email' => $user->getEmail(),
                 'roles' => $user->getRolesAsArrayName(),
-                'company' => $user->getCompany() ? $user->getCompany()->getId() : 'Aucune',
+                'company' => $user->getCompany() ? $user->getCompany()->getName() : 'Aucune',
                 'createdAt' => $user->getCreatedAt()->format('d/m/Y H:i:s'),
                 'actions' => [
                     'update' => [
@@ -53,11 +53,12 @@ class UsersController extends AbstractController
 
         return $this->render('admin/users/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
             'datas' => $usersFilteredMapped,
             'title' => 'Utilisateurs',
             'entityProperties' => [
                 'id' => 'ID',
-                'firstname' => 'Prenom',
+                'firstname' => 'Prénom',
                 'lastname' => 'Nom',
                 'email' => 'Email',
                 'roles' => 'Roles',
@@ -114,6 +115,7 @@ class UsersController extends AbstractController
 
         return $this->render('admin/users/addUserFromAdmin.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
             'form' => $form->createView(),
         ]);
     }
@@ -140,6 +142,7 @@ class UsersController extends AbstractController
         }
         return $this->render('admin/users/updateFromAdmin.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
             'form' => $form->createView(),
             'userId' => $techcareUser->getId(),
         ]);

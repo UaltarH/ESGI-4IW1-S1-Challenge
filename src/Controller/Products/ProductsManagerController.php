@@ -38,7 +38,7 @@ class ProductsManagerController extends AbstractController
                     'update' => [
                         'type' => 'button',
                         'path' => 'app_products_manager_edit',
-                        'label' => 'Modifier le produit',
+                        'label' => 'Modifier',
                         'id' => $product->getId(),
                     ],
                     'delete' => [
@@ -55,6 +55,7 @@ class ProductsManagerController extends AbstractController
 
         return $this->render('products_manager/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
             'controller_name' => 'ProductsManagerController',
             'datas' => $productsMapped,
             'title' => 'Gestion des produits',
@@ -91,6 +92,7 @@ class ProductsManagerController extends AbstractController
 
         return $this->render('products_manager/new.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
             'form' => $form->createView(),
         ]);
     }
@@ -115,6 +117,7 @@ class ProductsManagerController extends AbstractController
 
         return $this->render('products_manager/edit.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
             'form' => $form->createView(),
         ]);
     }

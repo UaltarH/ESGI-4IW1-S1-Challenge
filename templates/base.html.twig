@@ -17,8 +17,9 @@
 			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
 	</head>
-	<body>
+	<body class="bg-light-gray dark:bg-primary-dark text-primary dark:text-white h-full font-body">
 		{% include '_components/main_menu.html.twig' with {'menuItems' : menuItems} %}
 		{% block body %}{% endblock %}
+		{% include '_components/main_footer.html.twig' %}
 	</body>
 </html>

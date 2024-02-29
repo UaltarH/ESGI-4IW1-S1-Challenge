@@ -18,48 +18,38 @@
             </li>
             {% set continue = false %}
             {% for item in menuItems %}
-                {# affichage de tous les liens sauf ceux pour se connecter qu'on affiche à la fin#}
-                {% if not is_granted('ROLE_USER') %}
-                    {% if item.route != 'app_login' and item.route != 'app_register' %}
-                        <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full"><a href="{{ path(item.route) }}" class="h-full w-full sm:leading-12 lg:leading-16">{{ item.label }}</a></li>
-                    {% endif %}
+                {% if not is_granted('ROLE_COMPANY') and item.route == 'app_products_manager' %}
+                    {% set continue = true %}
+                {% elseif not is_granted('ROLE_ADMIN') and item.route == 'accueil_admin_users' %}
+                    {% set continue = true %}
                 {% else %}
-                    {% if item.route != 'app_logout' %}
-                        {% if not is_granted('ROLE_COMPANY') and item.route == 'app_products_manager' %}
-                            {% set continue = true %}
-                        {% elseif not is_granted('ROLE_ADMIN') and item.route == 'accueil_admin_users' %}
-                            {% set continue = true %}
-                        {% else %}
-                            <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full"><a href="{{ path(item.route) }}" class="h-full w-full sm:leading-12 lg:leading-16">{{ item.label }}</a></li>
-                        {% endif %}
+                    {# items avec sous menus #}
+                    {% if item.route == '' %}
+                        {#  sur grand écran on affiche un menu déroulant #}
+                        <li class="group sm:hidden lg:flex flex-col lg:flex-1 lg:h-16 justify-center items-center relative hover:bg-accent w-full">
+                            <span class="w-full h-full lg:leading-16">{{ item.label }}</span>
+                            <ul class="flex-col absolute -top-16 group-hover:top-16 w-full h-auto bg-secondary hidden group-hover:flex [&>*]:transition-all">
+                                {% for subItem in item.children %}
+                                    <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
+                                        <a href="{{ path(subItem.route) }}" class="h-full w-full sm:leading-12 lg:leading-16">{{ subItem.label }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {# sur petit écran on affiche les items directement #}
+                        {% for subItem in item.children %}
+                            <li class="lg:hidden sm:flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
+                                <a href="{{ path(subItem.route) }}" class="h-full w-full sm:leading-12 lg:leading-16">{{ subItem.label }}</a>
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
+                            <a href="{{ path(item.route) }}" class="h-full w-full sm:leading-12 lg:leading-16">{{ item.label }}</a>
+                        </li>
                     {% endif %}
                 {% endif %}
             {% endfor %}
-
-            <!-- login/logout -->
-            {% if is_granted('ROLE_USER') %}
-                <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
-                    <a href="{{ path('app_logout') }}" class="h-full w-full sm:leading-12 lg:leading-16">Déconnexion</a>
-                </li>
-            {% else %}
-                <li class="group sm:hidden lg:flex flex-col lg:flex-1 lg:h-16 justify-center items-center relative hover:bg-accent w-full">
-                    <span class="">Mon Compte</span>
-                    <ul class="flex-col absolute -top-16 group-hover:top-16 w-full h-32 bg-secondary hidden group-hover:flex [&>*]:transition-all">
-                        <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
-                            <a href="{{ path('app_login') }}" class="h-full w-full leading-16">Connexion</a>
-                        </li>
-                        <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
-                            <a href="{{ path('app_register') }}" class="h-full w-full leading-16">Inscription</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="sm:flex lg:hidden justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
-                    <a href="{{ path('app_login') }}" class="h-full w-full leading-12">Connexion</a>
-                </li>
-                <li class="sm:flex lg:hidden justify-center items-center lg:flex-1 sm:h-12 lg:h-16 hover:bg-accent w-full">
-                    <a href="{{ path('app_register') }}" class="h-full w-full leading-12">Inscription</a>
-                </li>
-            {% endif %}
+            <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16 w-full">{{ include('_components/darkMode.html.twig') }}</li>
         </ul>
     </nav>
 </header>
