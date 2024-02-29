@@ -71,6 +71,7 @@ class CreateQuotationController extends AbstractController
         }
         return $this->render('create_quotation/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
             'services' => $servicesMapped,
             'clients' => $clientsCompanyMapped,
             'productsAndComponents' => $productsWithComponents,

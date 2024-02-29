@@ -1,0 +1,38 @@
+@layer components {
+  .switch {
+    @apply relative inline-block w-14 h-8;
+  }
+
+  .switch input {
+    @apply opacity-0 w-0 h-0;
+  }
+
+  .slider {
+    @apply absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray transition duration-500;
+  }
+
+  .slider:before {
+    @apply absolute content-[""] h-6 w-6 left-1 bottom-1 bg-white transition duration-500;
+  }
+
+  input:checked + .slider {
+    @apply bg-accent
+  }
+
+  input:focus + .slider {
+    @apply shadow;
+  }
+
+  input:checked + .slider:before {
+    @apply translate-x-6;
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    @apply rounded-full;
+  }
+
+  .slider.round:before {
+    @apply rounded-full;
+  }
+}

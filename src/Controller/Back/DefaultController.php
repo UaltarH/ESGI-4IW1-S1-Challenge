@@ -16,6 +16,7 @@ class DefaultController extends AbstractController
         $connected = $this->getUser() instanceof UserInterface;
         return $this->render('back/default/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $connected]),
+            'footerItems' => (new MenuBuilder)->createMainFooter()
         ]);
     }
 }

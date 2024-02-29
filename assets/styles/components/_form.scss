@@ -6,13 +6,12 @@
     }
   }
   .form-control {
-    @apply w-full px-4 py-2 border-b border-secondary;
+    @apply w-full px-4 py-2 border-b border-secondary dark:bg-primary dark:border-white;
     &-small {
       @apply w-1/2;
     }
     &:focus, &:focus-visible {
-      @apply border-secondary bg-light-gray border-b outline-0;
+      @apply border-secondary bg-light-gray border-b outline-0 dark:bg-primary-dark dark:border-white;
     }
-
   }
 }

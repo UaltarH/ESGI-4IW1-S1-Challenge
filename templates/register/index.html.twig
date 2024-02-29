@@ -8,14 +8,14 @@
 {% block body %}
 	<div class="page-wrapper">
 		<h1 class="page-title">Création du compte</h1>
-		{% form_theme form '/_form/twoColForm.html.twig' %}
+{#		{% form_theme form '/_form/twoColForm.html.twig' %}#}
 		{{ form_start(form) }}
 		<h2 class="text-xl my-3">Informations personnelles : </h2>
 		{{ form_row(form.firstName) }}
 		{{ form_row(form.lastName) }}
 		{{ form_row(form.email) }}
 		{{ form_row(form.password) }}
-		<hr class="text-gray m-12"/>
+		<hr class="text-gray m-12 dark:text-primary-dark"/>
 		<h2 class="text-xl my-3">
 			Company:
 		</h2>
@@ -25,7 +25,7 @@
 		{{ form_row(form.companyEmail) }}
 		{{ form_row(form.companyAddress) }}
 
-		<hr class="text-gray m-12"/>
+		<hr class="text-gray m-12 dark:text-primary-dark"/>
 		<button type="submit" class="btn btn-primary btn-lg self-center w-fit">Enregistrer</button>
 		{{ form_end(form) }}
 	</div>

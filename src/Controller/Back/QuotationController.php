@@ -16,6 +16,7 @@ class QuotationController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         return $this->render('back/quotation/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['conntected' => $this->getUser() instanceof UserInterface]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
         ]);
     }
     #[Route('/quotation/new', name: 'app_quotation_new')]
@@ -24,6 +25,7 @@ class QuotationController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         return $this->render('back/quotation/create.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['conntected' => $this->getUser() instanceof UserInterface]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
         ]);
     }
     #[Route('/quotation/delete{id}', name: 'app_quotation_delete')]

@@ -5,6 +5,7 @@ namespace App\Form\User;
 use App\Entity\TechcareUser;
 use App\Entity\TechcareCompany;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -21,14 +22,20 @@ class AdminCreateOrUpdateUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
+            ->add('email', TextType::class, [
+                'attr' => ['placeholder' => 'ex : john.doe@exemple.com'],
+            ])
             ->add('roles', ChoiceType::class, [
                 'choices' => $options['role_choices'],
                 'multiple' => false,
                 'expanded' => false,
             ])
-            ->add('firstname')
-            ->add('lastname');
+            ->add('firstname', TextType::class, [
+                'attr' => ['placeholder' => 'ex : John'],
+            ])
+            ->add('lastname', TextType::class, [
+                'attr' => ['placeholder' => 'ex : Doe'],
+            ]);
 
         $builder->get('roles')
             ->addModelTransformer(new CallbackTransformer(

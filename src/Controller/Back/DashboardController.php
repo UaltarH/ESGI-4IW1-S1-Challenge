@@ -16,6 +16,7 @@ class DashboardController extends AbstractController
         return $this->render('back/dashboard/index.html.twig', [
             'controller_name' => 'DashboardController',
             'menuItems' => (new MenuBuilder)->createMainMenu(['conntected' => $this->getUser() instanceof UserInterface]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
         ]);
     }
 }

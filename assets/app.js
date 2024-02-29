@@ -22,9 +22,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const burger = document.querySelector(".menu-burger");
 
   burger.addEventListener("click", () => {
-    console.log("clicked");
-    console.log(mainNav);
-    console.log(burger);
     mainNav.classList.toggle("sm:-left-full");
+  });
+
+  const darkModeToggle = document.querySelector("#dark-mode-toggle");
+  darkModeToggle.addEventListener("change", () => {
+    if(darkModeToggle.checked) {
+      document.getElementsByTagName("html")[0].classList.add("dark");
+    }
+    else {
+      document.getElementsByTagName("html")[0].classList.remove("dark");
+    }
   });
 });
