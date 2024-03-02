@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="page-wrapper page-wrapper-admin">
+		<h1 class="page-title">Gestion des factures</h1>
+
+
+		<button id="add-user-btn" class="btn btn-success">
+			<a href="{{ path('invoice_new') }}">Créer une facture</a>
+		</button>
+
+		{% include '_components/crudTable.html.twig' with {'title' : 'Factures de votre entreprise', 'entityProperties': entityProperties, 'datas': datas} %}
+	</div>
+{% endblock %}

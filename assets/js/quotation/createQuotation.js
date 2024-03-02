@@ -1,27 +1,30 @@
 import $ from "jquery";
 document.addEventListener("DOMContentLoaded", function () {
-  var onPageCreateQuotation = document.getElementById(
-    "articleCreationQuotation"
-  );
+  var onPageCreateQuotation = document.getElementById("articleQuotation");
   if (onPageCreateQuotation) {
     //add event click for the buttons
     var buttonAddService = document.getElementById("buttonAddService");
     buttonAddService.addEventListener("click", addServiceItem);
 
     // add event click for the button create quotation
-    var buttonCreateQuotation = document.getElementById(
-      "buttonCreateQuotation"
+    var buttonActionQuotation = document.getElementById(
+      "buttonActionQuotation"
     );
-    buttonCreateQuotation.addEventListener("click", createQuotation);
+    buttonActionQuotation.addEventListener("click", actionQuotation);
 
     // functions
-    function createQuotation() {
+    function actionQuotation() {
       // basic infos
       var clientSelect = document.getElementById("clientSelect");
       var productSelect = document.getElementById("selectProduct");
       var descriptionQuotation = document.getElementById(
         "descriptionQuotation"
       );
+      var discountValue = document.getElementById("discountInput").value;
+      if (descriptionQuotation.value === "") {
+        alert("La description du devis ne peut pas être vide.");
+        return;
+      }
 
       // price
       var finalPrice = 0;
@@ -81,26 +84,101 @@ document.addEventListener("DOMContentLoaded", function () {
           price: priceService,
         });
       });
-      // create the json object to send
-      var quotation = {
-        clientId: clientSelect.value,
-        productId: productSelect.value,
-        description: descriptionQuotation.value,
-        price: finalPrice,
-        services: services,
-      };
-      console.log(JSON.stringify(quotation, null, 2));
+
+      if (editQuotationBoolean === false) {
+        // create the json object to send
+        var createQuotation = {
+          clientId: clientSelect.value,
+          productId: productSelect.value,
+          description: descriptionQuotation.value,
+          discount: discountValue,
+          price: finalPrice,
+          services: services,
+        };
+        sendNewQuotation(createQuotation);
+      } else {
+        var editQuotation = {
+          id: quotationId,
+          price: finalPrice,
+          description: descriptionQuotation.value,
+          discount: discountValue,
+          services: services,
+        };
+        sendEditQuotation(editQuotation);
+      }
+    }
+
+    function sendEditQuotation(editQuotation) {
+      console.log(JSON.stringify(editQuotation, null, 2));
 
       // send the json object to the server
       $.ajax({
-        url: "/create/quotation/post",
+        url: "/quotation/editpost",
         type: "POST",
         contentType: "application/json",
-        data: JSON.stringify(quotation),
+        data: JSON.stringify(editQuotation),
         success: function (response) {
           console.log(response);
           if (response.status == "success") {
-            window.location.href = "/admin";
+            $.ajax({
+              url: "/quotation/pdfpost",
+              type: "POST",
+              contentType: "application/json",
+              data: JSON.stringify({ quotationId: response.quotationId }),
+              success: function (response) {
+                console.log(response);
+                if (response.status == "success") {
+                  window.location.href = "/quotation/manager";
+                } else {
+                  console.error(response);
+                }
+              },
+              error: function (error) {
+                console.error("Erreur lors de la requête Ajax :", error);
+              },
+            });
+          } else {
+            console.error(response);
+          }
+        },
+        error: function (error) {
+          console.error("Erreur lors de la requête Ajax :", error);
+        },
+      });
+    }
+
+    function sendNewQuotation(createQuotation) {
+      console.log(JSON.stringify(createQuotation, null, 2));
+
+      // send the json object to the server
+      $.ajax({
+        url: "/quotation/create/post",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(createQuotation),
+        success: function (response) {
+          console.log(response);
+          if (response.status == "success") {
+            // redirect to the home page
+            // window.location.href = "/quotation/manager";
+            // call ajax to create the pdf with the id of the quotation
+            $.ajax({
+              url: "/quotation/pdfpost",
+              type: "POST",
+              contentType: "application/json",
+              data: JSON.stringify({ quotationId: response.quotationId }),
+              success: function (response) {
+                console.log(response);
+                if (response.status == "success") {
+                  window.location.href = "/quotation/manager";
+                } else {
+                  console.error(response);
+                }
+              },
+              error: function (error) {
+                console.error("Erreur lors de la requête Ajax :", error);
+              },
+            });
           } else {
             console.error(response);
           }

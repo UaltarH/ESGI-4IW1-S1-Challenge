@@ -3,7 +3,6 @@
 
 namespace App\Service;
 
-use SebastianBergmann\Environment\Console;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
@@ -26,6 +25,23 @@ class EmailService
         $this->idTemplateQuote = 2;
         $this->idTemplateInvoice = 3;
         $this->idTemplateResetPassword = 4;
+    }
+
+    public function sendEmailWithPdf(string $subject, string $content, string $senderEmail, string $recipientEmail, $pdf, $nameFilePdf): void
+    {
+        $email = (new Email())
+            ->from($senderEmail)
+            ->to($recipientEmail)
+            ->subject($subject)
+            ->text('Sending emails is fun again!')
+            ->html($content)
+            ->attach($pdf, $nameFilePdf . '.pdf', 'application/pdf');
+
+        try {
+            $this->mailer->send($email);
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     public function sendEmailUsingMailer(string $subject, string $content, string $senderEmail, string $recipientEmail): void

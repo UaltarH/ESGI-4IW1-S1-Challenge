@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="page-wrapper">
+	<h1 class="page-title">Création d'une facture à partir des devis acceptés</h1>
+    {# filtrer le select create_invoice_quotation avec une recherche #}
+    <div>
+        <input type="text" id="search" placeholder="Rechercher un devis avec son numero">
+    </div>
+
+	{{ form_start(form) }}
+	{{ form_row(form.quotation) }}
+	{{ form_row(form.amount) }}
+
+	<button type="submit">Créer</button>
+	{{ form_end(form) }}
+
+	<a href="{{ path('invoice_manager') }}">back to list</a>
+</div>
+
+
+<script>
+    var quotationsAmount = JSON.parse('{{ quotationsAmount|json_encode|raw }}');
+    var quotationSelect = document.getElementById('create_invoice_quotation');
+    var amountInput = document.getElementById('create_invoice_amount');
+    
+    quotationSelect.addEventListener('change', function() {
+        var selectedQuotation = quotationSelect.value;
+        amountInput.value = quotationsAmount[selectedQuotation];
+    });
+
+    // filtrer les options select create_invoice_quotation en fonction de la recherche search
+    var search = document.getElementById('search');
+    search.addEventListener('input', function() {
+        var searchValue = search.value;
+        for (var i = 0; i < quotationSelect.options.length; i++) {
+            var option = quotationSelect.options[i];
+            if (option.text.includes(searchValue)) {
+                option.style.display = 'block';
+            } else {
+                option.style.display = 'none';
+            }
+        }
+    });
+
+
+</script>
+{% endblock %}

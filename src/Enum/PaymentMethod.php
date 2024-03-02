@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Enum;
 
 enum PaymentMethod: string
 {
@@ -9,5 +9,4 @@ enum PaymentMethod: string
     case bank_transfer = 'BANK_TRANSFER';
     case credit_card = 'CREDIT_CARD';
     case other = 'OTHER';
-
 }

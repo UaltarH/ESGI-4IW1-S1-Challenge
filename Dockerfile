@@ -29,6 +29,18 @@ WORKDIR /srv/app
 
 # persistent / runtime deps
 RUN apk add --no-cache \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    && docker-php-ext-configure gd \
+        --with-freetype \
+        --with-jpeg \
+        --with-webp \
+    && docker-php-ext-install -j$(nproc) gd
+
+
+RUN apk add --no-cache \
 		acl \
 		fcgi \
 		file \

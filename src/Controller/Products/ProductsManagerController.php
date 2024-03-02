@@ -38,7 +38,7 @@ class ProductsManagerController extends AbstractController
                     'update' => [
                         'type' => 'button',
                         'path' => 'app_products_manager_edit',
-                        'label' => 'Modifier le produit',
+                        'label' => 'Modifier',
                         'id' => $product->getId(),
                     ],
                     'delete' => [

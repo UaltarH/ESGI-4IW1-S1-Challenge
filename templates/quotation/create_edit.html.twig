@@ -1,0 +1,277 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CreateQuotationController!
+{% endblock %}
+
+{% block body %}
+
+	<article id="articleQuotation" class="m-20 border-solid rounded border-4 p-4">
+		<div id="headerArticle" class="flex flex-col w m-12">
+			{% if quotationToEdit is defined %}
+				<h1 class="self-center">Modification du devis {{ quotationToEdit.number }}:</h1>
+			{% else %}
+				<h1 class="self-center">Création d'un devis :</h1>
+			{% endif %}			
+			<div class="flex flex-row justify-around w mt-10">
+				<div class="relative h-10 w-72 min-w-[200px]">
+					{% if quotationToEdit is defined %}
+						<select id="clientSelect" class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+							<option value="{{ quotationToEdit.client_id }}">{{ quotationToEdit.client_name }}</option>						
+						</select>
+						<label class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+							Client
+						</label>
+						{% else %}
+						<select id="clientSelect" class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+							{% for client in clients %}
+								<option value="{{ client.id }}">{{ client.name }}</option>
+							{% endfor %}
+						</select>
+						<label class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+							Selectionnez votre client
+						</label>
+					{% endif %}															
+				</div>
+
+				<div class="relative h-10 w-72 min-w-[200px]">
+					{% if quotationToEdit is defined %}
+						<select id="selectProduct" class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">							
+							<option value="{{ quotationToEdit.product_id }}">{{ quotationToEdit.product_name }}</option>							
+						</select>
+						<label class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+							Produit
+						</label>
+					{% else %}
+						<select id="selectProduct" class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+							{% for object in productsAndComponents %}
+								<option value="{{ object.product.id }}">{{ object.product.name }}</option>
+							{% endfor %}
+						</select>
+						<label class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+							Selectionnez votre produit
+						</label>
+					{% endif %}
+				</div>
+			</div>
+			<div class="self-center mt-10 relative w-full min-w-[200px]">
+				{% if quotationToEdit is defined %}
+					<textarea id="descriptionQuotation" class="peer h-full min-h-[100px] w-full resize-none rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:resize-none disabled:border-0 disabled:bg-blue-gray-50" placeholder=" ">{{ quotationToEdit.quotation_description }}</textarea>
+				{% else %}
+					<textarea id="descriptionQuotation" class="peer h-full min-h-[100px] w-full resize-none rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:resize-none disabled:border-0 disabled:bg-blue-gray-50" placeholder=" "></textarea>				
+				{% endif %}				
+				<label class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+					Description
+				</label>
+			</div>
+		</div>
+
+		<div id="bodyArticle" class="m-12">
+			<div id="actionsBody" class="flex justify-between mt-10">
+				<button id="buttonAddService" class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mr-2">
+					Ajoutez un service
+				</button>
+				<div class="w-20">
+					<label for="price" class="block text-sm font-medium leading-6 text-gray-900">Reduction</label>
+					<div class="relative mt-2">
+						<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+							<span class="text-gray-500 sm:text-sm">%</span>
+						</div>
+						{% if quotationToEdit is defined %}
+							<input type="number" name="price" id="discountInput" class="block w-full rounded-md border-0 py-1.5 pl-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="0.00" value="{{ quotationToEdit.quotation_discount }}">
+						{% else %}
+							<input type="number" name="price" id="discountInput" class="block w-full rounded-md border-0 py-1.5 pl-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="0.00">
+						{% endif %}						
+					</div>
+				</div>
+			</div>
+			<div id="containerService" class="mt-10 flex flex-col items-center">
+				<div id="serviceItem-origin" class="hidden serviceItem border-solid rounded border-2 w-10/12 p-4 m-4">
+					<div id="contendService" class="flex justify-between">
+						<div id="contentLeft" class="self-center flex">
+							<button id="removeService-origin" type="button" class="close-btn h-1/2 self-center bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+								<span class="sr-only">Close</span>
+								<svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+								</svg>
+							</button>
+
+							<div class="relative h-10 w-72 min-w-[200px] m-5">
+								<select id="selectService-origin" class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+									{% for service in services %}
+										<option value="{{ service.id }}">{{ service.name }}</option>
+									{% endfor %}
+								</select>
+								<label class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+									Selectionnez le service
+								</label>
+							</div>
+
+							<div id="selectComponentDiv-origin" class="relative h-10 w-72 min-w-[200px] m-5 hidden">
+								<select id="selectComponent-origin" class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+									{% for component in productsAndComponents[0]['product']['components'] %}
+										<option value="{{ component.id }}">{{ component.name }}</option>
+									{% endfor %}
+								</select>
+								<label class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+									Selectionnez le composant
+								</label>
+							</div>
+						</div>
+						<div class="w-1/12">
+							<label for="price" class="block text-sm font-medium leading-6 text-gray-900">Prix</label>
+							<div class="relative mt-2">
+								<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+									<span class="text-gray-500 sm:text-sm">€</span>
+								</div>
+								<input type="number" name="price" id="servicePrice-origin" class="block w-full rounded-md border-0 py-1.5 pl-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="0.00">
+							</div>
+						</div>
+
+					</div>
+				</div>
+				{% if quotationToEdit is defined %}
+					{% for content in quotationToEdit.quotation_contents %}
+						<div id="serviceItem-{{ loop.index }}" class="serviceItem border-solid rounded border-2 w-10/12 p-4 m-4">
+							<div id="contendService" class="flex justify-between">
+								<div id="contentLeft" class="self-center flex">
+									<div class="relative h-10 w-72 min-w-[200px] m-5">
+										<select id="selectService-{{ loop.index }}" class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">												
+											{% for service in services %}
+												{% if service.id == content.service_id %}
+													<option value="{{ service.id }}" selected>{{ service.name }}</option>
+												{% else %}
+													<option value="{{ service.id }}">{{ service.name }}</option>
+												{% endif %}
+											{% endfor %}
+										</select>
+										<label class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+											Selectionnez le service
+										</label>
+									</div>
+		
+									<div id="selectComponentDiv-{{ loop.index }}" class="relative h-10 w-72 min-w-[200px] m-5 {% if content.component_id != null %}block{% else %}hidden{% endif %}">
+										<select id="selectComponent-{{ loop.index }}" class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+											{% for component in productsAndComponents[0]['product']['components'] %}
+												{% if component.id == content.component_id %}
+													<option value="{{ component.id }}" selected>{{ component.name }}</option>
+												{% else %}
+													<option value="{{ component.id }}">{{ component.name }}</option>
+												{% endif %}
+											{% endfor %}
+										</select>
+										<label class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+											Sélectionnez le composant
+										</label>
+									</div>
+								</div>
+								<div class="w-1/12">
+									<label for="price" class="block text-sm font-medium leading-6 text-gray-900">Prix</label>
+									<div class="relative mt-2">
+										<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+											<span class="text-gray-500 sm:text-sm">€</span>
+										</div>
+										<input type="number" name="price" id="servicePrice-{{ loop.index }}" class="block w-full rounded-md border-0 py-1.5 pl-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="0.00" value="{{content.amount}}">
+									</div>
+								</div>
+		
+							</div>
+						</div>
+					{% endfor %}
+				{% else %}
+					<div id="serviceItem-1" class="serviceItem border-solid rounded border-2 w-10/12 p-4 m-4">
+						<div id="contendService" class="flex justify-between">
+							<div id="contentLeft" class="self-center flex">
+								<div class="relative h-10 w-72 min-w-[200px] m-5">
+									<select id="selectService-1" class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+										{% for service in services %}
+											<option value="{{ service.id }}">{{ service.name }}</option>
+										{% endfor %}
+									</select>
+									<label class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+										Selectionnez le service
+									</label>
+								</div>
+
+								<div id="selectComponentDiv-1" class="relative h-10 w-72 min-w-[200px] m-5 hidden">
+									<select id="selectComponent-1" class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+										{% for component in productsAndComponents[0]['product']['components'] %}
+											<option value="{{ component.id }}">{{ component.name }}</option>
+										{% endfor %}
+									</select>
+									<label class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+										Selectionnez le composant
+									</label>
+								</div>
+							</div>
+							<div class="w-1/12">
+								<label for="price" class="block text-sm font-medium leading-6 text-gray-900">Prix</label>
+								<div class="relative mt-2">
+									<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+										<span class="text-gray-500 sm:text-sm">€</span>
+									</div>
+									<input type="number" name="price" id="servicePrice-1" class="block w-full rounded-md border-0 py-1.5 pl-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="0.00">
+								</div>
+							</div>
+
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+		<div id="footerArticle" class="m-12 flex justify-around">
+			<div id="containerPrices">
+				<h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Prix finaux :</h2>
+				<ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+					<li class="flex justify-between">
+						<p>Montant total HT:</p>
+						{% if quotationToEdit is defined %}
+							<p id="finalPriceHT">{{ quotationToEdit.quotation_contentsTotalPriceHt }} €</p>
+						{% else %}
+							<p id="finalPriceHT">0.00 €</p>
+						{% endif %}						
+					</li>
+					<li class="flex justify-between">
+						<p class="mr-2">Montant total TTC (20%):</p>
+						{% if quotationToEdit is defined %}							
+							<p id="finalPriceTTC">{{ quotationToEdit.quotation_contentsTotalPriceTTC }} €</p>
+						{% else %}
+							<p id="finalPriceTTC">0.00 €</p>
+						{% endif %}						
+					</li>
+					{% if quotationToEdit is defined %}
+						{% if quotationToEdit.quotation_discount == 0 %}
+							<li id="liPriceAfterDiscount" class="flex justify-between hidden">
+								<p class="mr-2">Montant total apres reduction:</p>
+								<p id="finalPriceAfterDiscount">0.00 €</p>
+							</li>
+						{% else %}
+							<li id="liPriceAfterDiscount" class="flex justify-between">
+								<p class="mr-2">Montant total apres reduction:</p>
+								<p id="finalPriceAfterDiscount">{{quotationToEdit.quotation_amount}} €</p>
+							</li>
+						{% endif %}
+					{% else %}
+						<li id="liPriceAfterDiscount" class="flex justify-between hidden">
+							<p class="mr-2">Montant total apres reduction:</p>
+							<p id="finalPriceAfterDiscount">0.00 €</p>
+						</li>
+					{% endif %}					
+				</ul>
+			</div>
+			<button id="buttonActionQuotation" class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mr-2">
+				{% if quotationToEdit is defined %}
+					Modifier le devis
+				{% else %}
+					Créer le devis
+				{% endif %}				
+			</button>
+		</div>
+	</article>
+
+
+	<script>
+		var productsAndComponentsAssociated = JSON.parse('{{ productsAndComponents | json_encode | raw }}');
+		var editQuotationBoolean = JSON.parse('{{ edit | json_encode | raw }}');
+		var quotationId = JSON.parse('{{ idQuotation | json_encode | raw }}');
+	</script>
+{% endblock %}

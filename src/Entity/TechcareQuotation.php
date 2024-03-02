@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Enum\QuotationStatus;
 
 
 #[ORM\Entity(repositoryClass: TechcareQuotationRepository::class)]
@@ -58,6 +59,12 @@ class TechcareQuotation
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $UpdatedAt = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    private ?string $discount = '0.00';
+
+    #[ORM\Column(type: UuidType::NAME, unique: true, nullable: true)]
+    private ?Uuid $token;
 
     public function __construct()
     {
@@ -251,5 +258,47 @@ class TechcareQuotation
         $this->UpdatedAt = $UpdatedAt;
 
         return $this;
+    }
+
+    public function getDiscount(): ?string
+    {
+        return $this->discount;
+    }
+
+    public function setDiscount(?string $discount): static
+    {
+        $this->discount = $discount;
+
+        return $this;
+    }
+
+    public function getToken(): ?Uuid
+    {
+        return $this->token;
+    }
+
+    public function setToken(?Uuid $token): static
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function generateToken()
+    {
+        $this->token = Uuid::v4();
+    }
+
+
+    //custome getters:
+    public function getStatusName(): string
+    {
+        return match ($this->status) {
+            QuotationStatus::pending->value => 'en attente de validation',
+            QuotationStatus::accepted->value => 'validé',
+            QuotationStatus::refused->value => 'refusé',
+            QuotationStatus::paid->value => 'payé',
+            default => 'Unknown'
+        };
     }
 }

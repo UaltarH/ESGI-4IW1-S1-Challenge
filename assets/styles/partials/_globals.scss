@@ -1,12 +1,12 @@
-@use 'variables' as v;
-@use 'fonts' as f;
+@use "variables" as v;
+@use "fonts" as f;
 :root {
   --primary-color: #{v.$primary-color};
   --secondary-color: #{v.$secondary-color};
   --accent-color: #{v.$accent-color};
   --white: #{v.$white};
   --gray: #{v.$gray};
-    --light-gray: #{v.$light-gray};
+  --light-gray: #{v.$light-gray};
 }
 * {
   margin: 0;
@@ -24,7 +24,4 @@ body {
   font-family: f.$font1;
   color: var(--primary-color);
   height: 100%;
-}
-p {
-  color: red;
 }
