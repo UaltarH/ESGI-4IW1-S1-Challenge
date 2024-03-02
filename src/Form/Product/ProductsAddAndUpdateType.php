@@ -8,6 +8,7 @@ use App\Entity\TechcareProduct;
 use App\Entity\TechcareProductCategory;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,7 +17,9 @@ class ProductsAddAndUpdateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
+            ->add('name', TextType::class, [
+                'attr' => ['placeholder' => 'Nom du produit'],
+            ])
             ->add('brand', EntityType::class, [
                 'class' => TechcareBrand::class,
                 'choice_label' => 'name',

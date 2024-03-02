@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des clients
+{% endblock %}
+
+{% block body %}
+    <div class="page-wrapper page-wrapper-admin">
+        {% include '_components/crudTable.html.twig' with {
+            'title' : 'Gestion des clients',
+            'createRoute' : 'app_client_add',
+            'createLabel' : 'Ajouter un client',
+            'entityProperties': entityProperties,
+            'datas': datas
+        }
+        %}
+    </div>
+{% endblock %}

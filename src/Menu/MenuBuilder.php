@@ -11,14 +11,35 @@ class MenuBuilder
         $menu[] = ['label' => 'Accueil', 'route' => 'default_index',];
         if (isset($options['connected']) && $options['connected']) {
             $menu[] = ['label' => 'Dashboard', 'route' => 'app_dashboard',];
-            $menu[] = ['label' => 'Produits', 'route' => 'app_products_manager',];
-            $menu[] = ['label' => 'Utilisateurs', 'route' => 'accueil_admin_users',];
-            $menu[] = ['label' => 'Devis', 'route' => 'app_quotation_manager',];
-            $menu[] = ['label' => 'Déconnexion', 'route' => 'app_logout',];
+            $menu[] = [
+                'label' => 'Admin', 'route' => '', 'children' => [
+                    ['label' => 'Utilisateurs', 'route' => 'accueil_admin_users',],
+                    ['label' => 'Produits', 'route' => 'app_products_manager',],
+                    ['label' => 'Devis', 'route' => 'app_quotation',],
+                    ['label' => 'Clients', 'route' => 'app_client_list',],
+                ],
+            ];
+            $menu[] = [
+                'label' => 'Mon compte', 'route' => '', 'children' => [
+                    ['label' => 'Déconnexion', 'route' => 'app_logout',],
+                ],
+            ];
         } else {
-            $menu[] = ['label' => 'Inscription', 'route' => 'app_register',];
-            $menu[] = ['label' => 'Connexion', 'route' => 'app_login',];
+            $menu[] = [
+                'label' => 'Mon compte', 'route' => '', 'children' => [
+                    ['label' => 'Connexion', 'route' => 'app_login',],
+                    ['label' => 'Inscription', 'route' => 'app_register',],
+                ],
+            ];
         }
         return $menu;
+    }
+    public function createMainFooter(): array
+    {
+        return [
+            ['label' => 'Mentions légales', 'route' => 'default_index',],
+            ['label' => 'Contact', 'route' => 'default_index',],
+            ['label' => 'CGV', 'route' => 'default_index',],
+        ];
     }
 }

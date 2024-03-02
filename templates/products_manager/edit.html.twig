@@ -12,9 +12,9 @@
 	{{ form_row(form.productCategory) }}
 	{{ form_row(form.components) }}
 
-	<button type="submit">Modifier</button>
+	<button type="submit" class="btn btn-primary btn-lg self-center w-fit">Modifier</button>
 	{{ form_end(form) }}
 
-	<a href="{{ path('app_products_manager') }}">back to list</a>
+	<a href="{{ path('app_products_manager') }}" class="underline">back to list</a>
 </div>
 {% endblock %}

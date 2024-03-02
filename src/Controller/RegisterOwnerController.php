@@ -62,6 +62,7 @@ class RegisterOwnerController extends AbstractController
         return $this->render('register/index.html.twig', [
             'form' => $form->createView(),
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
         ]);
     }
 }
