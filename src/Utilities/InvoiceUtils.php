@@ -86,6 +86,7 @@ class InvoiceUtils
                 ];
                 $object['actions']['delete'] = [
                     'type' => 'button',
+                    'deleteStyle' => '****',
                     'path' => 'invoice_delete',
                     'label' => 'Supprimer',
                     'id' => $invoice->getId(),

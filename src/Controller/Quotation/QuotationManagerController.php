@@ -34,6 +34,7 @@ class QuotationManagerController extends AbstractController
 
         return $this->render('quotation/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
             'datas' => $data,
             'entityProperties' => [
                 'quotation_number' => 'Numéro de devis',
@@ -54,6 +55,8 @@ class QuotationManagerController extends AbstractController
 
         $data = $this->quotationService->showQuotation($quotation);
         $data['menuItems'] = (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]);
+        $data['footerItems'] = (new MenuBuilder)->createMainFooter();
+
 
         return $this->render('quotation/show.html.twig', $data);
     }
@@ -70,6 +73,7 @@ class QuotationManagerController extends AbstractController
 
         return $this->render('quotation/create_edit.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
             'services' => $datas['datas']['services'],
             'productsAndComponents' => $datas['datas']['products'],
             'quotationToEdit' => $datas['quotation'],
@@ -110,6 +114,7 @@ class QuotationManagerController extends AbstractController
 
         return $this->render('quotation/create_edit.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
             'services' => $datas['services'],
             'clients' => $datas['clients'],
             'productsAndComponents' => $datas['products'],
@@ -159,12 +164,14 @@ class QuotationManagerController extends AbstractController
         if (array_key_exists('quotationNumber', $response)) {
             return $this->render('quotation/acceptedAndRefused.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
+                'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'quotationNumber' => $response['quotationNumber'],
                 'status' => 'accepted',
             ]);
         } else {
             return $this->render('quotation/acceptedAndRefused.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
+                'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'status' => 'error',
             ]);
         }
@@ -178,12 +185,14 @@ class QuotationManagerController extends AbstractController
         if (array_key_exists('quotationNumber', $response)) {
             return $this->render('quotation/acceptedAndRefused.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
+                'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'quotationNumber' => $response['quotationNumber'],
                 'status' => 'refused',
             ]);
         } else {
             return $this->render('quotation/acceptedAndRefused.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
+                'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'status' => 'error',
             ]);
         }

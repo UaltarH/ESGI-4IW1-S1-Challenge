@@ -34,6 +34,7 @@ class InvoiceManagerController extends AbstractController
 
         return $this->render('invoice/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
             'datas' => $invoicesMapped,
             'entityProperties' => [
                 'invoice_number' => 'Numéro de facture',
@@ -55,6 +56,7 @@ class InvoiceManagerController extends AbstractController
         $data = $this->invoiceService->showInvoice($invoice);
 
         $data['menuItems'] = (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]);
+        $data['footerItems'] = (new MenuBuilder)->createMainFooter();
         return $this->render('invoice/show.html.twig', $data);
     }
 
@@ -72,6 +74,7 @@ class InvoiceManagerController extends AbstractController
         } else {
             return $this->render('invoice/edit.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]),
+                'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'form' => $form->createView(),
             ]);
         }
@@ -122,6 +125,7 @@ class InvoiceManagerController extends AbstractController
         } else {
             return $this->render('invoice/new.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+                'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'form' => $form->createView(),
                 'quotationsAmount' => $quotationsAmount,
             ]);

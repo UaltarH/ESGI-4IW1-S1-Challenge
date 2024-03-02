@@ -1,9 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<div class="page-wrapper page-wrapper-admin">
-		<h1 class="page-title">Suivi des payements</h1>
+	<div class="page-wrapper page-wrapper-admin">		
 
-		{% include '_components/crudTable.html.twig' with {'title' : '', 'entityProperties': entityProperties, 'datas': datas} %}
+		{% include '_components/crudTable.html.twig' with {'title' : 'Suivi des payements', 'entityProperties': entityProperties, 'datas': datas} %}
 	</div>
 {% endblock %}

@@ -15,8 +15,11 @@ class MenuBuilder
                 'label' => 'Admin', 'route' => '', 'children' => [
                     ['label' => 'Utilisateurs', 'route' => 'accueil_admin_users',],
                     ['label' => 'Produits', 'route' => 'app_products_manager',],
-                    ['label' => 'Devis', 'route' => 'app_quotation',],
+                    ['label' => 'Devis', 'route' => 'app_quotation_manager',],
                     ['label' => 'Clients', 'route' => 'app_client_list',],
+                    ['label' => 'Factures', 'route' => 'invoice_manager',],
+                    ['label' => 'Payement', 'route' => 'payement_list',],
+
                 ],
             ];
             $menu[] = [

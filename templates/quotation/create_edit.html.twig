@@ -8,9 +8,9 @@
 	<article id="articleQuotation" class="m-20 border-solid rounded border-4 p-4">
 		<div id="headerArticle" class="flex flex-col w m-12">
 			{% if quotationToEdit is defined %}
-				<h1 class="self-center">Modification du devis {{ quotationToEdit.number }}:</h1>
+				<h1 class="self-center page-title">Modification du devis {{ quotationToEdit.number }}:</h1>
 			{% else %}
-				<h1 class="self-center">Création d'un devis :</h1>
+				<h1 class="self-center page-title">Création d'un devis :</h1>
 			{% endif %}			
 			<div class="flex flex-row justify-around w mt-10">
 				<div class="relative h-10 w-72 min-w-[200px]">
@@ -67,7 +67,7 @@
 
 		<div id="bodyArticle" class="m-12">
 			<div id="actionsBody" class="flex justify-between mt-10">
-				<button id="buttonAddService" class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mr-2">
+				<button id="buttonAddService" class="btn btn-primary">
 					Ajoutez un service
 				</button>
 				<div class="w-20">
@@ -258,7 +258,7 @@
 					{% endif %}					
 				</ul>
 			</div>
-			<button id="buttonActionQuotation" class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mr-2">
+			<button id="buttonActionQuotation" class="btn btn-primary">
 				{% if quotationToEdit is defined %}
 					Modifier le devis
 				{% else %}

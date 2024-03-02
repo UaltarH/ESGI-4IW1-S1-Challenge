@@ -2,13 +2,12 @@
 
 {% block body %}
 	<div class="page-wrapper page-wrapper-admin">
-		<h1 class="page-title">Gestion des devis</h1>
-
-
-		<button id="add-user-btn" class="btn btn-success">
-			<a href="{{ path('app_quotation_create') }}">Créer un devis</a>
-		</button>
-
-		{% include '_components/crudTable.html.twig' with {'title' : 'Devis de votre entreprise', 'entityProperties': entityProperties, 'datas': datas} %}
+		{% include '_components/crudTable.html.twig' with {
+			'title' : 'Gestion des devis', 
+			'entityProperties': entityProperties, 
+			'datas': datas,
+			'createRoute': 'app_quotation_create',
+			'createLabel': 'Créer un devis'
+		} %}
 	</div>
 {% endblock %}

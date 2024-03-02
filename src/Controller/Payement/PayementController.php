@@ -49,6 +49,7 @@ class PayementController extends AbstractController
         return $this->render('payement/index.html.twig', [
             'datas' => $payementsMapped,
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
             'entityProperties' => [
                 'payment_number' => 'Numéro de paiement',
                 'status' => 'Statut',
@@ -68,6 +69,7 @@ class PayementController extends AbstractController
         if ($payement === null) {
             return $this->render('payement/action.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
+                'footerItems' => (new MenuBuilder)->createMainFooter(),
             ]);
         } else {
             $payement->setDate(new DateTimeImmutable());
@@ -83,6 +85,7 @@ class PayementController extends AbstractController
 
             return $this->render('payement/action.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
+                'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'invoiceName' => $invoice->getInvoiceNumber(),
             ]);
         }
