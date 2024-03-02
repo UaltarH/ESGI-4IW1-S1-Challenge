@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\QuotationCounter;
-use App\Entity\QuotationStatus;
+use App\Enum\QuotationStatus;
 use App\Entity\TechcareQuotation as Quotation;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -34,7 +34,8 @@ class QuotationFixtures extends Fixture implements DependentFixtureInterface
                     ->setStatus($faker->randomElement(QuotationStatus::cases())->value)
                     ->setCreatedBy("system")
                     ->setCreatedAt(new DateTimeImmutable())
-                    ->setClient($client);
+                    ->setClient($client)
+                    ->setDiscount(0);
                 $manager->persist($quotation);
                 $this->addReference('quotation-smartphone-' . ++$smartphoneCpt, $quotation);
             }
@@ -48,7 +49,8 @@ class QuotationFixtures extends Fixture implements DependentFixtureInterface
                     ->setStatus($faker->randomElement(QuotationStatus::cases())->value)
                     ->setCreatedBy("system")
                     ->setCreatedAt(new DateTimeImmutable())
-                    ->setClient($client);
+                    ->setClient($client)
+                    ->setDiscount(0);
                 $manager->persist($quotation);
                 $this->addReference('quotation-computer-' . ++$ordinateurCpt, $quotation);
             }
@@ -62,7 +64,8 @@ class QuotationFixtures extends Fixture implements DependentFixtureInterface
                     ->setStatus($faker->randomElement(QuotationStatus::cases())->value)
                     ->setCreatedBy("system")
                     ->setCreatedAt(new DateTimeImmutable())
-                    ->setClient($client);
+                    ->setClient($client)
+                    ->setDiscount(0);
                 $manager->persist($quotation);
                 $this->addReference('quotation-tablet-' . ++$tabletteCpt, $quotation);
             }
