@@ -7,7 +7,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
-use Symfony\Component\Validator\Constraints as Assert;
+use App\Enum\InvoiceStatus;
+
 
 #[ORM\Entity(repositoryClass: TechcareInvoiceRepository::class)]
 class TechcareInvoice
@@ -24,7 +25,7 @@ class TechcareInvoice
     #[ORM\Column(length: 255)]
     private ?string $createdBy = null;
 
-    #[ORM\Column(nullable:true)]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -33,7 +34,7 @@ class TechcareInvoice
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $amount = null;
 
-    #[ORM\ManyToOne(inversedBy: 'invoices')]
+    #[ORM\ManyToOne(inversedBy: 'invoices', cascade: ["persist"])]
     #[ORM\JoinColumn(nullable: false)]
     private ?TechcareQuotation $quotation = null;
 
@@ -42,12 +43,15 @@ class TechcareInvoice
     private ?TechcareClient $client = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\Unique]
     private ?string $invoice_number = null;
 
     #[ORM\OneToOne(inversedBy: 'invoice', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?TechcarePayment $payment = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $status = null;
+
 
     public function getId(): ?Uuid
     {
@@ -160,5 +164,27 @@ class TechcareInvoice
         $this->payment = $payment;
 
         return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    //custome getters:
+    public function getStatusName(): string
+    {
+        return match ($this->status) {
+            InvoiceStatus::paid->value => 'Payé',
+            InvoiceStatus::not_paid->value => 'Non payé',
+            default => 'Unknown'
+        };
     }
 }

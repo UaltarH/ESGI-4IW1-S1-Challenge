@@ -1,5 +1,5 @@
-@use 'variables' as v;
-@use 'fonts' as f;
+@use "variables" as v;
+@use "fonts" as f;
 :root {
   --primary-color: #{v.$primary-color};
   --primary-dark: #{v.$primary-dark};

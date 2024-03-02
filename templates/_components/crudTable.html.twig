@@ -3,9 +3,11 @@
 	<table class="shadow-lg bg-white border-collapse rounded overflow-hidden">
 		<thead>
 			<h1 class="page-title">{{ title }}</h1>
-			<button id="add-user-btn" class="btn btn-primary mb-4">
-				<a href="{{ path(createRoute) }}">{{ createLabel }}</a>
-			</button>
+			{% if createLabel is defined and createRoute is defined %}
+				<button id="add-user-btn" class="btn btn-primary mb-4">
+					<a href="{{ path(createRoute) }}">{{ createLabel }}</a>
+				</button>
+			{% endif %}
 		</thead>
 		<tbody class="[&>tr:nth-child(2n+1)]:bg-light-gray">
 			<tr class="thead">
@@ -20,7 +22,11 @@
 							{% if key == 'actions' %}
 								{% for action in attribute(data, key) %}
 									{% if action.type == 'button' %}
+									{% if action.deleteStyle is defined %}
+										<a href="{{ path(action.path, {'id': action.id}) }}" class="btn btn-error">{{ action.label }}</a>
+									{% else %}
 										<a href="{{ path(action.path, {'id': action.id}) }}" class="btn btn-primary">{{ action.label }}</a>
+									{% endif %}
 									{% endif %}
 
 									{% if action.type == 'form' %}

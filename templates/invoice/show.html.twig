@@ -1,0 +1,209 @@
+{% extends 'base.html.twig' %}
+
+
+
+{% block body %}
+<style>
+    .invoice-box {
+        max-width: 1200px;
+        margin: auto;
+        padding: 30px;
+        border: 1px solid #eee;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+        font-size: 16px;
+        line-height: 24px;
+        font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        color: #555;
+    }
+    
+    .invoice-box table {
+        width: 100%;
+        line-height: inherit;
+        text-align: left;
+    }
+    
+    .invoice-box table td {
+        padding: 5px;
+        vertical-align: top;
+    }
+    
+    .invoice-box table tr td:nth-child(2) {
+        text-align: right;
+    }
+    
+    .invoice-box table tr.top table td {
+        padding-bottom: 20px;
+    }
+    
+    .invoice-box table tr.top table td.title {
+        font-size: 45px;
+        line-height: 45px;
+        color: #333;
+    }
+    
+    .invoice-box table tr.information table td {
+        padding-bottom: 40px;
+    }
+    
+    .invoice-box table tr.heading td {
+        background: #eee;
+        border-bottom: 1px solid #ddd;
+        font-weight: bold;
+    }
+    
+    .invoice-box table tr.details td {
+        padding-bottom: 20px;
+    }
+    
+    .invoice-box table tr.item td{
+        border-bottom: 1px solid #eee;
+    }
+    
+    .invoice-box table tr.item.last td {
+        border-bottom: none;
+    }
+    
+    .invoice-box table tr.total td:nth-child(2) {
+        border-top: 2px solid #eee;
+        font-weight: bold;
+    }
+    
+    @media only screen and (max-width: 600px) {
+        .invoice-box table tr.top table td {
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+        
+        .invoice-box table tr.information table td {
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+    }
+    
+    /** RTL **/
+    .rtl {
+        direction: rtl;
+        font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    }
+    
+    .rtl table {
+        text-align: right;
+    }
+    
+    .rtl table tr td:nth-child(2) {
+        text-align: left;
+    }
+</style>
+
+	<div class="page-wrapper page-wrapper-admin">
+        <h1 class="page-title">Preview de votre facture</h1>
+
+        <div class="invoice-box">
+            <table cellpadding="0" cellspacing="0">
+                <tr class="top">
+                    <td colspan="2">
+                        <table>
+                            <tr>
+                                <td class="title">                                    
+                                    <img src="{{asset('assets/images/techcareLogo.png')}}"  style="width:60%; max-width:300px;">
+                                </td>
+                                
+                                <td>
+                                    Facture #: {{invoice_number}}<br>
+                                    Date Emission: {{invoice_date}}<br>
+                                   
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr class="information">
+                    <td colspan="2">
+                        <table>
+                            <tr>
+                                <td>
+                                    Entreprise: <br>
+                                    {{ quotation.name_company }} <br>
+                                    {{ quotation.address_company }} <br>
+                                    {{ quotation.phone_number_company }} <br>
+                                    {{ quotation.email_company }} 
+                                </td>
+                                
+                                <td>
+                                    Client: <br>
+                                    {{ quotation.firstname_client }} {{ quotation.lastname_client }} <br>
+                                    {{ quotation.email_client }} 
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>                
+            </table>     
+            <div class="quotation_description">
+                <h3>Description de la facture:</h3> <br>
+                <p style="color: #555; margin-bottom: 25px;">{{ quotation.quotation_description }}</p>       
+                <table>            
+                    <tr class="heading">
+                        <td>
+                            Article : {{quotation.quotation_productName}}
+                        </td>
+                        
+                        <td>
+                            Prix
+                        </td>
+                    </tr>
+                    {% for content in quotation.contents %}
+                        <tr class="item">
+                            <td>
+                                {{content.name}} {% if content.componentName != null %} - {{content.componentName}} {% endif %}
+                            </td>
+                            
+                            <td>
+                                {{content.price}} €
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr class="item">
+                        <td>Prix HT :</td>
+                        
+                        <td>
+                            {{quotation.priceAllContent}} €
+                        </td>
+                    </tr>
+                    <tr class="item">
+                        <td>Prix TTC :</td>
+                        
+                        <td>
+                            {{quotation.priceWithTax}} €
+                        </td>
+                    </tr>            
+                        <tr class="item">
+                            <td>Remise :</td>
+                            
+                            <td>
+                                {{quotation.quotation_discount}} %
+                            </td>
+                        </tr>            
+                    <tr class="item">
+                        <td>Prix final devis:</td>
+                        
+                        <td>
+                            {{quotation.quotation_amount}} €
+                        </td>
+                    </tr>
+                    <tr class="item">
+                        <td>Prix final facture:</td>
+                        
+                        <td>
+                            {{invoice_amount}} €
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <a href="{{ path('invoice_manager') }}" class="underline">Retour en arrière</a>
+    </div>
+{% endblock %}

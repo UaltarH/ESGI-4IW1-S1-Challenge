@@ -17,8 +17,8 @@ class TechcarePayment
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $amount = null;
@@ -33,24 +33,27 @@ class TechcarePayment
     #[ORM\JoinColumn(nullable: false)]
     private ?TechcareClient $client = null;
 
-    #[ORM\OneToOne(inversedBy: 'payment', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'payment', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?TechcareQuotation $quotation = null;
 
     #[ORM\OneToOne(mappedBy: 'payment', cascade: ['persist', 'remove'])]
     private ?TechcareInvoice $invoice = null;
 
+    #[ORM\Column(type: UuidType::NAME, unique: true, nullable: true)]
+    private ?Uuid $token;
+
     public function getId(): ?Uuid
     {
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?\DateTimeImmutable
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): static
+    public function setDate(\DateTimeImmutable $date): static
     {
         $this->date = $date;
 
@@ -132,5 +135,22 @@ class TechcarePayment
         $this->invoice = $invoice;
 
         return $this;
+    }
+
+    public function getToken(): ?Uuid
+    {
+        return $this->token;
+    }
+
+    public function setToken(?Uuid $token): static
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function generateToken()
+    {
+        $this->token = Uuid::v4();
     }
 }
