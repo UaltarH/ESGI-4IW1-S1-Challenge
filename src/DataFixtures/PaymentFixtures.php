@@ -2,14 +2,15 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\PaymentMethod;
+use App\Enum\PaymentMethod;
 use App\Entity\QuotationCounter;
-use App\Entity\QuotationStatus;
+use App\Enum\QuotationStatus;
 use App\Entity\TechcarePayment as Payment;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use DateTimeImmutable;
 
 class PaymentFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -29,7 +30,7 @@ class PaymentFixtures extends Fixture implements DependentFixtureInterface
             if ($quotation->getStatus() !== QuotationStatus::paid->value)
                 continue;
             $payment = (new Payment())
-                ->setDate($faker->dateTime)
+                ->setDate(new DateTimeImmutable())
                 ->setAmount($quotation->getAmount())
                 ->setMethod($faker->randomElement(PaymentMethod::cases())->value)
                 ->setPaymentNumber($faker->uuid)
@@ -44,7 +45,7 @@ class PaymentFixtures extends Fixture implements DependentFixtureInterface
             if ($quotation->getStatus() !== QuotationStatus::paid->value)
                 continue;
             $payment = (new Payment())
-                ->setDate($faker->dateTime)
+                ->setDate(new DateTimeImmutable())
                 ->setAmount($quotation->getAmount())
                 ->setMethod($faker->randomElement(PaymentMethod::cases())->value)
                 ->setPaymentNumber($faker->uuid)
@@ -59,7 +60,7 @@ class PaymentFixtures extends Fixture implements DependentFixtureInterface
             if ($quotation->getStatus() !== QuotationStatus::paid->value)
                 continue;
             $payment = (new Payment())
-                ->setDate($faker->dateTime)
+                ->setDate(new DateTimeImmutable())
                 ->setAmount($quotation->getAmount())
                 ->setMethod($faker->randomElement(PaymentMethod::cases())->value)
                 ->setPaymentNumber($faker->uuid)

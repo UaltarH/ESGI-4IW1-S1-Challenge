@@ -2,7 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\QuotationStatus;
+use App\Enum\InvoiceStatus;
+use App\Enum\QuotationStatus;
 use App\Entity\TechcareInvoice as Invoice;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -18,11 +19,14 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
         $paymentTotal = $this->getReference('payment-total')->getTotal();
 
         $invoiceCpt = 0;
-        for($i=1; $i<=$paymentTotal; $i++) {
+        for ($i = 1; $i <= $paymentTotal; $i++) {
             $payment = $this->getReference('payment-' . $i);
             $quotation = $payment->getQuotation();
-            if($quotation->getStatus() !== QuotationStatus::paid->value)
-                continue;
+            if ($quotation->getStatus() !== QuotationStatus::paid->value) {
+                $status = InvoiceStatus::not_paid->value;
+            } else {
+                $status = InvoiceStatus::paid->value;
+            }
             $invoice = (new Invoice())
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setCreatedBy("system")
@@ -30,7 +34,8 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
                 ->setInvoiceNumber($payment->getQuotation()->getQuotationNumber())
                 ->setPayment($payment)
                 ->setQuotation($quotation)
-                ->setClient($quotation->getClient());
+                ->setClient($quotation->getClient())
+                ->setStatus($status);
             $manager->persist($invoice);
             $this->addReference('invoice-' . ++$invoiceCpt, $invoice);
         }
