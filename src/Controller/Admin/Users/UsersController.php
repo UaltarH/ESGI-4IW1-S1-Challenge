@@ -22,28 +22,30 @@ class UsersController extends AbstractController
     {
         $usersFiltered = $techcareUserRepository->findUsersByRoles(['ROLE_COMPANY', 'ROLE_ACCOUNTANT', 'ROLE_OWNER_COMPANY']);
         $usersFilteredMapped = array_map(function ($user) {
-            return [
-                'firstname' => $user->getFirstname(),
-                'lastname' => $user->getLastname(),
+            $object = [
+                'nom' => $user->getFirstname() . ' ' . $user->getLastname(),
                 'email' => $user->getEmail(),
                 'roles' => $user->getRolesAsArrayName(),
                 'company' => $user->getCompany() ? $user->getCompany()->getName() : 'Aucune',
-                'createdAt' => $user->getCreatedAt()->format('d/m/Y H:i:s'),
+                'createdAt' => $user->getCreatedAt()->format('d/m/Y'),
                 'actions' => [
                     'update' => [
                         'type' => 'button',
                         'path' => 'admin_user_update',
                         'label' => 'Modifier',
                         'id' => $user->getId(),
-                    ],
-                    'delete' => [
-                        'type' => 'form',
-                        'path' => 'admin_user_delete',
-                        'label' => 'Supprimer',
-                        'id' => $user->getId(),
                     ]
                 ]
             ];
+            if (!in_array('ROLE_OWNER_COMPANY', $user->getRoles())) {
+                $object['actions']['delete'] = [
+                    'type' => 'form',
+                    'path' => 'admin_user_delete',
+                    'label' => 'Supprimer',
+                    'id' => $user->getId(),
+                ];
+            }
+            return $object;
         }, $usersFiltered);
 
         $userConnected = $this->getUser() instanceof UserInterface;
@@ -56,8 +58,7 @@ class UsersController extends AbstractController
             'datas' => $usersFilteredMapped,
             'title' => 'Utilisateurs',
             'entityProperties' => [
-                'firstname' => 'Prénom',
-                'lastname' => 'Nom',
+                'nom' => 'Prénom et nom',
                 'email' => 'E-mail',
                 'roles' => 'Rôles',
                 'company' => 'Entreprise',

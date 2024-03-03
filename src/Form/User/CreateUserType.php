@@ -3,39 +3,43 @@
 namespace App\Form\User;
 
 use App\Entity\TechcareUser;
-use App\Entity\TechcareCompany;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
-
-
-class AdminCreateOrUpdateUserType extends AbstractType
+class CreateUserType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', EmailType::class, [
-                'attr' => ['placeholder' => 'ex : john.doe@exemple.com'],
-            ])
-            ->add('roles', ChoiceType::class, [
-                'choices' => $options['role_choices'],
-                'multiple' => false,
-                'expanded' => false,
-            ])
             ->add('firstname', TextType::class, [
+                'label' => 'Prénom',
                 'attr' => ['placeholder' => 'ex : John'],
             ])
             ->add('lastname', TextType::class, [
+                'label' => 'Nom',
                 'attr' => ['placeholder' => 'ex : Doe'],
+            ])
+            ->add('email', EmailType::class, [
+                'label' => 'Email',
+                'attr' => ['placeholder' => 'ex : john.doe@exemple.com'],
+            ])
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'first_options' => ['label' => 'Mot de passe'],
+                'second_options' => ['label' => 'Confirmer le mot de passe'],
+            ])
+            ->add('roles', ChoiceType::class, [
+                'label' => 'Rôle',
+                'choices' => $options['role_choices'],
+                'multiple' => false,
+                'expanded' => false,
             ]);
 
         $builder->get('roles')
@@ -47,20 +51,6 @@ class AdminCreateOrUpdateUserType extends AbstractType
                     return [$rolesString];
                 }
             ));
-
-        if ($options['new'] == true) {
-            $builder
-                ->add('company', EntityType::class, [
-                    'class' => TechcareCompany::class,
-                    'choice_label' => 'name',
-                    'placeholder' => 'Sélectionnez une entreprise',
-                ])
-                ->add('password', RepeatedType::class, [
-                    'type' => PasswordType::class,
-                    'first_options' => ['label' => 'Password'],
-                    'second_options' => ['label' => 'Repeat Password'],
-                ]);
-        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -68,7 +58,6 @@ class AdminCreateOrUpdateUserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => TechcareUser::class,
             'role_choices' => [],
-            'new' => true
         ]);
     }
 }
