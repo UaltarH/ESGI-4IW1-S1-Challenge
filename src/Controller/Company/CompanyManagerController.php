@@ -48,6 +48,7 @@ class CompanyManagerController extends AbstractController
 
         $bool = $this->companyService->editCompany($company, $form);
         if ($bool) {
+            $this->addFlash('success', 'Entreprise modifiée avec succès !');
             return $this->redirectToRoute('company_manager');
         } else {
             return $this->render('admin/company/edit.html.twig', [
@@ -64,6 +65,7 @@ class CompanyManagerController extends AbstractController
     //     if ($this->isCsrfTokenValid('delete' . $company->getId(), $request->request->get('_token'))) {
     //         $this->entityManager->remove($company);
     //         $this->entityManager->flush();
+    //          $this->addFlash('success', 'Entreprise supprimée avec succès !');
     //     }
 
     //     return $this->redirectToRoute('company_manager', [], Response::HTTP_SEE_OTHER);
