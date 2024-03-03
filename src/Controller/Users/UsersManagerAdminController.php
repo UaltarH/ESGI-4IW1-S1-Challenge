@@ -51,6 +51,7 @@ class UsersManagerAdminController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $techcareUser->getId(), $request->request->get('_token'))) {
             $entityManager->remove($techcareUser);
             $entityManager->flush();
+            $this->addFlash('success', 'Utilisateur supprimé avec succès !');
         }
 
         return $this->redirectToRoute('accueil_admin_users', [], Response::HTTP_SEE_OTHER);
@@ -74,6 +75,7 @@ class UsersManagerAdminController extends AbstractController
         $bool = $this->userManagerAdminService->createUser($form, $userConnected, $newUser);
 
         if ($bool) {
+            $this->addFlash('success', 'Nouvel utilisateur ajouté avec succès !');
             return $this->redirectToRoute('accueil_admin_users');
         } else {
             return $this->render('admin/users/addUserFromAdmin.html.twig', [
@@ -104,6 +106,7 @@ class UsersManagerAdminController extends AbstractController
         $bool = $this->userManagerAdminService->updateUser($form, $techcareUser, $userConnected);
 
         if ($bool) {
+            $this->addFlash('success', 'Utilisateur modifié avec succès !');
             return $this->redirectToRoute('accueil_admin_users');
         } else {
             return $this->render('admin/users/updateFromAdmin.html.twig', [

@@ -3,11 +3,17 @@
 	<table class="shadow-lg bg-white border-collapse rounded overflow-hidden">
 		<thead>
 			<h1 class="page-title">{{ title }}</h1>
-			{% if createLabel is defined and createRoute is defined %}
-				<button id="add-user-btn" class="btn btn-primary mb-4 self-start">
-					<a href="{{ path(createRoute) }}">{{ createLabel }}</a>
-				</button>
-			{% endif %}
+			<div class="flex flex-row justify-between self-start w-full mb-4">
+				{% if createLabel is defined and createRoute is defined %}
+					<button id="add-user-btn" class="btn btn-primary">
+						<a href="{{ path(createRoute) }}">{{ createLabel }}</a>
+					</button>
+				{% endif %}
+				<div class="bg-primary dark:bg-secondary rounded-md">
+					{% include '_components/flushMessage.html.twig'%}
+				</div>
+			</div>
+			
 		</thead>
 		<tbody class="[&>tr:nth-child(2n+1)]:bg-light-gray">
 			<tr class="thead">

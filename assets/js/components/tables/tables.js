@@ -50,6 +50,14 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
+    const closeAlert = document.querySelector("#closeNotifFlush");
+    if (closeAlert) {
+      closeAlert.addEventListener("click", function () {
+        const alert = document.querySelector("#alertFlushMessage");
+        alert.classList.add("hidden");
+      });
+    }
+
     createPageButtons();
     showPage(currentPage);
   }

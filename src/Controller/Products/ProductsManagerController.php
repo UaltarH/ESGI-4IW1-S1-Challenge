@@ -57,6 +57,7 @@ class ProductsManagerController extends AbstractController
         $bool = $this->productsManagerService->addProduct($form, $techcareProduct, $userConnected);
 
         if ($bool) {
+            $this->addFlash('success', 'Nouveau produit ajouté avec succès !');
             return $this->redirectToRoute('app_products_manager');
         } else {
             return $this->render('employee/products_manager/new.html.twig', [
@@ -87,6 +88,7 @@ class ProductsManagerController extends AbstractController
         $bool = $this->productsManagerService->editProduct($form, $techcareProduct, $userConnected);
 
         if ($bool) {
+            $this->addFlash('success', 'Produit modifié avec succès !');
             return $this->redirectToRoute('app_products_manager');
         } else {
             return $this->render('employee/products_manager/edit.html.twig', [
@@ -112,7 +114,7 @@ class ProductsManagerController extends AbstractController
             $entityManager->remove($techcareProduct);
             $entityManager->flush();
         }
-
+        $this->addFlash('success', 'Produit supprimé avec succès !');
         return $this->redirectToRoute('app_products_manager', [], Response::HTTP_SEE_OTHER);
     }
 }

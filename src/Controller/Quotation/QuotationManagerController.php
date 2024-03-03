@@ -105,7 +105,7 @@ class QuotationManagerController extends AbstractController
             $entityManager->remove($quotation);
             $entityManager->flush();
         }
-
+        $this->addFlash('success', 'Devis supprimé avec succès !');
         return $this->redirectToRoute('app_quotation_manager', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -148,7 +148,7 @@ class QuotationManagerController extends AbstractController
     public function sendPdfFromManager(TechcareQuotation $quotation)
     {
         $this->quotationService->sendPdf($quotation);
-
+        $this->addFlash('success', 'Le devis a bien été envoyé !');
         return $this->redirectToRoute('app_quotation_manager');
     }
 

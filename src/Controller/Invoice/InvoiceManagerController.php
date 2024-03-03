@@ -84,6 +84,8 @@ class InvoiceManagerController extends AbstractController
 
         $bool = $this->invoiceService->editInvoice($invoice, $form);
         if ($bool) {
+            $this->addFlash('success', 'Facture modifiée avec succès !');
+
             return $this->redirectToRoute('invoice_manager');
         } else {
             return $this->render('employee/invoice/edit.html.twig', [
@@ -107,7 +109,7 @@ class InvoiceManagerController extends AbstractController
         }
         $entityManager->remove($invoice);
         $entityManager->flush();
-
+        $this->addFlash('success', 'Facture supprimée avec succès !');
         return $this->redirectToRoute('invoice_manager');
     }
 
@@ -116,6 +118,7 @@ class InvoiceManagerController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         $this->invoiceService->sendInvoice($invoice);
+        $this->addFlash('success', 'Facture envoyée avec succès !');
         return $this->redirectToRoute('invoice_manager');
     }
 
@@ -141,6 +144,7 @@ class InvoiceManagerController extends AbstractController
         $bool = $this->invoiceService->createInvoice($newInvoice, $form, $userConnected);
 
         if ($bool) {
+            $this->addFlash('success', 'Nouvelle facture ajoutée avec succès !');
             return $this->redirectToRoute('invoice_manager');
         } else {
             return $this->render('employee/invoice/new.html.twig', [
