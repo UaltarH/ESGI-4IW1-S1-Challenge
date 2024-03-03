@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="page-wrapper">
+	<h1 class="page-title">Modification de l'entreprise</h1>
+	{{ form_start(form) }}
+	{{ form_row(form.name) }}
+	{{ form_row(form.siret) }}
+	{{ form_row(form.phone_number) }}
+	{{ form_row(form.email) }}
+	{{ form_row(form.address) }}
+	{{ form_row(form.active) }}
+
+	<button type="submit" class="btn btn-primary btn-lg self-center w-fit">Modifier</button>
+	{{ form_end(form) }}
+
+	<a href="{{ path('company_manager') }}" class="underline">Retour en arrière</a>
+</div>
+{% endblock %}

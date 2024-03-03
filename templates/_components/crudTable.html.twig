@@ -4,7 +4,7 @@
 		<thead>
 			<h1 class="page-title">{{ title }}</h1>
 			{% if createLabel is defined and createRoute is defined %}
-				<button id="add-user-btn" class="btn btn-primary mb-4">
+				<button id="add-user-btn" class="btn btn-primary mb-4 self-start">
 					<a href="{{ path(createRoute) }}">{{ createLabel }}</a>
 				</button>
 			{% endif %}
@@ -18,7 +18,7 @@
 			{% for data in datas %}
 				<tr class="tableRow">
 					{% for key, titleProperty in entityProperties %}
-						<td class="px-8 py-4">
+						<td class="px-8 py-4 text-center">
 							{% if key == 'actions' %}
 								{% for action in attribute(data, key) %}
 									{% if action.type == 'button' %}

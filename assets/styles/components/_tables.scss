@@ -1,6 +1,6 @@
 @layer components {
   .tableContent {
-    @apply mb-5;
+    @apply mb-5 flex items-center flex-col;
     table {
       @apply shadow-lg bg-white dark:bg-primary-dark border-collapse rounded overflow-hidden;
     }
@@ -38,7 +38,7 @@
     //}
 
     .pagination button.active {
-        @apply bg-secondary text-white hover:bg-accent;
+      @apply bg-secondary text-white hover:bg-accent;
     }
   }
 }

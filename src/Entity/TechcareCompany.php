@@ -65,16 +65,16 @@ class TechcareCompany
     #[ORM\Column(nullable: true)]
     private ?int $imageSize = null;
 
-    #[ORM\OneToMany(mappedBy: 'company', targetEntity: TechcareClient::class)]
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: TechcareClient::class, cascade: ['remove'])]
     private Collection $client;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: TechcareUser::class)]
     private Collection $users;
 
-    #[ORM\OneToMany(mappedBy: 'company', targetEntity: TechcareProduct::class)]
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: TechcareProduct::class, cascade: ['remove'])]
     private Collection $products;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['remove'])]
     private ?TechcareUser $owner = null;
 
     #[ORM\Column]
