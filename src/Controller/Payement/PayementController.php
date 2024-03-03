@@ -2,6 +2,7 @@
 
 namespace App\Controller\Payement;
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,10 +21,11 @@ class PayementController extends AbstractController
     }
 
     #[Route('/payementList', name: 'payement_list')]
-    public function index(): Response
+    public function index(): Response | Exception
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
-
+        if(!$this->isGranted('ROLE_COMPANY') || !$this->isGranted('ROLE_ACCOUNTANT') || !$this->isGranted('ROLE_OWNER_COMPANY')) {
+            return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
+        }
         $userConnected = $this->getUser();
 
         $datas = $this->payementService->getPayements($userConnected);

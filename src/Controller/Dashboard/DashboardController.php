@@ -4,6 +4,7 @@ namespace App\Controller\Dashboard;
 
 use App\Menu\MenuBuilder;
 use App\Service\Chart\ChartService;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,12 +14,14 @@ use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 class DashboardController extends AbstractController
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route('/dashboard', name: 'app_dashboard')]
-    public function index(ChartBuilderInterface $chartBuilder,ChartService $chartService): Response
+    public function index(ChartBuilderInterface $chartBuilder,ChartService $chartService): Response | Exception
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCOUNTANT');
+        if(!$this->isGranted('ROLE_ACCOUNTANT') || !$this->isGranted('ROLE_OWNER_COMPANY')) {
+            return $this->createAccessDeniedException('Vous n\'avez pas les droits pour accéder à cette page');
+        }
         $company = $this->getUser()->getCompany()->getName();
         $salesChart = $chartService->createInvoiceChart($chartBuilder, $company);
         $productChart = $chartService->createProductCategorySalesChart($chartBuilder, $company);

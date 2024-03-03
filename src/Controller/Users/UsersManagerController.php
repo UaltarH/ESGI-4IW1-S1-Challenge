@@ -2,6 +2,7 @@
 
 namespace App\Controller\Users;
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,6 +32,7 @@ class UsersManagerController extends AbstractController
     #[Route('/users/company/manager', name: 'users_company_manager')]
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_OWNER_COMPANY');
         $userConnected = $this->getUser();
         $datas = $this->usersCompanyService->manager($userConnected);
 
@@ -48,6 +50,7 @@ class UsersManagerController extends AbstractController
     #[Route('/users/company/manager/create', name: 'users_company_manager_create')]
     public function create(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_OWNER_COMPANY');
         $userConnected = $this->getUser();
 
         $newUser = new TechcareUser();
@@ -76,8 +79,12 @@ class UsersManagerController extends AbstractController
     }
 
     #[Route('/users/company/manager/update/{id}', name: 'users_company_manager_update')]
-    public function update(Request $request, TechcareUser $techcareUser): Response
+    public function update(Request $request, TechcareUser $techcareUser): Response | Exception
     {
+        $this->denyAccessUnlessGranted('ROLE_OWNER_COMPANY');
+        if($techcareUser->getCompany() !== $this->getUser()->getCompany()) {
+            return $this->createAccessDeniedException('Vous n\'avez pas les droits pour modifier cet employé !');
+        }
         $userConnected = $this->getUser();
         $form = $this->createForm(EditUserType::class, $techcareUser, [
             'role_choices' => [
@@ -104,8 +111,12 @@ class UsersManagerController extends AbstractController
     }
 
     #[Route('/users/company/manager/delete/{id}', name: 'users_company_manager_delete')]
-    public function delete(TechcareUser $techcareUser, Request $request): Response
+    public function delete(TechcareUser $techcareUser, Request $request): Response | Exception
     {
+        $this->denyAccessUnlessGranted('ROLE_OWNER_COMPANY');
+        if($techcareUser->getCompany() !== $this->getUser()->getCompany()) {
+            return $this->createAccessDeniedException('Vous n\'avez pas les droits pour supprimer cet employé !');
+        }
         if ($this->isCsrfTokenValid('delete' . $techcareUser->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($techcareUser);
             $this->entityManager->flush();

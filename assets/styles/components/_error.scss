@@ -1,0 +1,20 @@
+@layer components {
+  .error-page {
+    @apply flex flex-col items-center justify-center text-center;
+  }
+  .error-title {
+    @apply text-4xl font-bold mb-6 w-full;
+  }
+  .error-code {
+    @apply text-6xl font-bold text-error-light;
+  }
+  .error-message {
+    @apply text-2xl font-bold mb-6 w-full;
+  }
+  .error-page p {
+    @apply mb-6;
+  }
+  .error-link {
+    @apply text-lg font-bold text-secondary underline;
+  }
+}
