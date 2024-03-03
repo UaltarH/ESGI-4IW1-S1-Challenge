@@ -12,7 +12,7 @@ use App\Utilities\EmailUtils;
 
 class HomeController extends AbstractController
 {
-    #[Route('/home', name: 'default_index')]
+    #[Route('/home', name: 'app_home_index')]
     public function index(EmailUtils $emailUtils): Response
     {
         // test email
@@ -51,8 +51,12 @@ class HomeController extends AbstractController
 
         $connected = $this->getUser() instanceof UserInterface;
         return $this->render('employee/index.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $connected]),
-            'footerItems' => (new MenuBuilder)->createMainFooter()
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => $connected,
+                'role' => $connected ? $this->getUser()->getRoles()[0] : null,
+            ]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
+            'company' => $connected ? $this->getUser()->getCompany()->getName() : null,
         ]);
     }
 }

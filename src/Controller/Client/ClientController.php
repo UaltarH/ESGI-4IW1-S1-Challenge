@@ -30,7 +30,11 @@ class ClientController extends AbstractController
         $datas = $this->clientService->getClientList($userConnected);
 
         return $this->render('employee/client/index.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => true]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => true,
+                'role' => $this->getUser()->getRoles()[0]
+            ]),
+            'company' => $this->getUser()->getCompany()->getName(),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'controller_name' => 'ClientController',
             'datas' => $datas['datas'],
@@ -58,6 +62,17 @@ class ClientController extends AbstractController
                 'form' => $form->createView(),
             ]);
         }
+        return $this->render('employee/client/new.html.twig', [
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => true,
+                'role' => $this->getUser()->getRoles()[0]
+            ]),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
+            'company' => $this->getUser()->getCompany()->getName(),
+            'controller_name' => 'ClientController',
+            'title' => 'Ajouter un client',
+            'form' => $form->createView(),
+        ]);
     }
 
     #[Route('/client/edit/{id}', name: 'app_client_edit', methods: ['GET', 'POST'])]
@@ -82,6 +97,17 @@ class ClientController extends AbstractController
                 'form' => $form->createView(),
             ]);
         }
+        return $this->render('employee/client/edit.html.twig', [
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => true,
+                'role' => $this->getUser()->getRoles()[0]
+            ]),
+            'company' => $this->getUser()->getCompany()->getName(),
+            'footerItems' => (new MenuBuilder)->createMainFooter(),
+            'controller_name' => 'ClientController',
+            'title' => 'Modification d\'un client',
+            'form' => $form->createView(),
+        ]);
     }
 
     #[Route('/client/delete/{id}', name: 'app_client_delete', methods: ['POST'])]

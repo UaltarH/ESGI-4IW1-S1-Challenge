@@ -15,6 +15,7 @@ module.exports = {
         'white': 'var(--white)',
         'gray': 'var(--gray)',
         'light-gray': 'var(--light-gray)',
+        'dark-gray': 'var(--dark-gray)',
         'error': 'var(--error)',
         'error-light': 'var(--error-light)',
         'warning': 'var(--warning)',

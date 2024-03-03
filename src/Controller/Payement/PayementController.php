@@ -30,8 +30,12 @@ class PayementController extends AbstractController
 
         return $this->render('employee/payement/index.html.twig', [
             'datas' => $datas['datas'],
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => $this->getUser() instanceof UserInterface,
+                'role' => $this->getUser()->getRoles()[0],
+            ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
+            'company' => $this->getUser()->getCompany()->getName(),
             'entityProperties' => $datas['entityProperties'],
         ]);
     }

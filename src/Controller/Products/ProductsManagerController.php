@@ -32,8 +32,12 @@ class ProductsManagerController extends AbstractController
         $datas = $this->productsManagerService->getProducts($userConnected);
 
         return $this->render('employee/products_manager/index.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => $userConnected instanceof UserInterface,
+                'role' => $userConnected->getRoles()[0],
+            ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
+            'company' => $userConnected->getCompany()->getName(),
             'controller_name' => 'ProductsManagerController',
             'datas' => $datas['datas'],
             'title' => 'Gestion des produits',
@@ -44,6 +48,7 @@ class ProductsManagerController extends AbstractController
     #[Route('/products/manager/add', name: 'app_products_manager_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_COMPANY');
         $userConnected = $this->getUser();
         $techcareProduct = new TechcareProduct();
         $form = $this->createForm(ProductsAddAndUpdateType::class, $techcareProduct);
@@ -56,8 +61,12 @@ class ProductsManagerController extends AbstractController
             return $this->redirectToRoute('app_products_manager');
         } else {
             return $this->render('employee/products_manager/new.html.twig', [
-                'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+                'menuItems' => (new MenuBuilder)->createMainMenu([
+                    'connected' => $userConnected instanceof UserInterface,
+                    'role' => $userConnected->getRoles()[0],
+                ]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
+                'company' => $userConnected->getCompany()->getName(),
                 'form' => $form->createView(),
             ]);
         }
@@ -66,7 +75,11 @@ class ProductsManagerController extends AbstractController
     #[Route('/products/manager/edit/{id}', name: 'app_products_manager_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, TechcareProduct $techcareProduct): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_COMPANY');
         $userConnected = $this->getUser();
+        if($techcareProduct->getCompany() !== $userConnected->getCompany()){
+            return $this->redirectToRoute('app_products_manager');
+        }
         $componentsOftheProduct = $techcareProduct->getComponents()->toArray();
         //meme si on specifie componentsList en mapped false, il vas quand meme lié les composants au produit car les composants qu'on lui fourni sont deja lié au produit qu'on modifie
         $form = $this->createForm(ProductsAddAndUpdateType::class, $techcareProduct, ['componentsList' => $componentsOftheProduct]);
@@ -79,8 +92,12 @@ class ProductsManagerController extends AbstractController
             return $this->redirectToRoute('app_products_manager');
         } else {
             return $this->render('employee/products_manager/edit.html.twig', [
-                'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+                'menuItems' => (new MenuBuilder)->createMainMenu([
+                    'connected' => $userConnected instanceof UserInterface,
+                    'role' => $userConnected->getRoles()[0],
+                ]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
+                'company' => $userConnected->getCompany()->getName(),
                 'form' => $form->createView(),
             ]);
         }
@@ -89,6 +106,10 @@ class ProductsManagerController extends AbstractController
     #[Route('/products/manager/delete/{id}', name: 'app_products_manager_delete', methods: ['POST'])]
     public function delete(Request $request, TechcareProduct $techcareProduct, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_COMPANY');
+        if($techcareProduct->getCompany() !== $this->getUser()->getCompany()){
+            return $this->redirectToRoute('app_products_manager');
+        }
         if ($this->isCsrfTokenValid('delete' . $techcareProduct->getId(), $request->request->get('_token'))) {
             $entityManager->remove($techcareProduct);
             $entityManager->flush();
