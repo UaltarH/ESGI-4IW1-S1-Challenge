@@ -1,0 +1,156 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\TechcarePaymentRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
+
+#[ORM\Entity(repositoryClass: TechcarePaymentRepository::class)]
+class TechcarePayment
+{
+    #[ORM\Id]
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?Uuid $id = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $date = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $amount = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $method = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $payment_number = null;
+
+    #[ORM\ManyToOne(inversedBy: 'payments')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TechcareClient $client = null;
+
+    #[ORM\OneToOne(inversedBy: 'payment', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TechcareQuotation $quotation = null;
+
+    #[ORM\OneToOne(mappedBy: 'payment', cascade: ['persist', 'remove'])]
+    private ?TechcareInvoice $invoice = null;
+
+    #[ORM\Column(type: UuidType::NAME, unique: true, nullable: true)]
+    private ?Uuid $token;
+
+    public function getId(): ?Uuid
+    {
+        return $this->id;
+    }
+
+    public function getDate(): ?\DateTimeImmutable
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeImmutable $date): static
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getAmount(): ?string
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(string $amount): static
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getClient(): ?TechcareClient
+    {
+        return $this->client;
+    }
+
+    public function setClient(?TechcareClient $client): static
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    public function getMethod(): ?string
+    {
+        return $this->method;
+    }
+
+    public function setMethod(string $method): static
+    {
+        $this->method = $method;
+
+        return $this;
+    }
+
+    public function getPaymentNumber(): ?string
+    {
+        return $this->payment_number;
+    }
+
+    public function setPaymentNumber(string $payment_number): static
+    {
+        $this->payment_number = $payment_number;
+
+        return $this;
+    }
+
+    public function getQuotation(): ?TechcareQuotation
+    {
+        return $this->quotation;
+    }
+
+    public function setQuotation(TechcareQuotation $quotation): static
+    {
+        $this->quotation = $quotation;
+
+        return $this;
+    }
+
+    public function getInvoice(): ?TechcareInvoice
+    {
+        return $this->invoice;
+    }
+
+    public function setInvoice(TechcareInvoice $invoice): static
+    {
+        // set the owning side of the relation if necessary
+        if ($invoice->getPayment() !== $this) {
+            $invoice->setPayment($this);
+        }
+
+        $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    public function getToken(): ?Uuid
+    {
+        return $this->token;
+    }
+
+    public function setToken(?Uuid $token): static
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function generateToken()
+    {
+        $this->token = Uuid::v4();
+    }
+}

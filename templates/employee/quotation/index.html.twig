@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="page-wrapper page-wrapper-admin">
+		{% include '_components/crudTable.html.twig' with {
+			'title' : 'Gestion des devis', 
+			'entityProperties': entityProperties, 
+			'datas': datas,
+			'createRoute': 'app_quotation_create',
+			'createLabel': 'Créer un devis'
+		} %}
+	</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+<footer class="bg-secondary pb-3">
+    <nav class="sm:w-full lg:max-w-screen-lg m-auto main-nav relative flex flex-col items-center text-white [&>*]:transition-all">
+        <ul class="flex items-center sm:flex-col lg:flex-row w-full text-center [&>*]:transition-all">
+            {% for item in footerItems %}
+                <li class="flex justify-center items-center lg:flex-1 sm:h-12 lg:h-16">
+                    <a href="{{ path(item.route) }}" class="sm:leading-12 lg:leading-16">{{ item.label }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <p class="mb-3">© 2024 Tech Care.<br/>Tous droits réservés.</p>
+    </nav>
+</footer>

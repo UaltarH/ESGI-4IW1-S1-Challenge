@@ -1,0 +1,61 @@
+{# parameters: data: liste d'entité ; title: titre du header ; entityProperties: liste clé valeur ex == [['propertyName']-> 'Titre de la colonne']#}
+<article class="tableContent">
+	<table class="shadow-lg bg-white border-collapse rounded overflow-hidden">
+		<thead>
+			<h1 class="page-title">{{ title }}</h1>
+			<div class="flex flex-row justify-between self-start w-9/12 mb-4">
+				{% if createLabel is defined and createRoute is defined %}
+					<button id="add-user-btn" class="btn btn-primary">
+						<a href="{{ path(createRoute) }}">{{ createLabel }}</a>
+					</button>
+				{% endif %}
+				<div class="bg-primary dark:bg-secondary rounded-md">
+					{% include '_components/flushMessage.html.twig'%}
+				</div>
+			</div>
+			
+		</thead>
+		<tbody class="[&>tr:nth-child(2n+1)]:bg-light-gray">
+			<tr class="thead">
+				{% for titleProperty in entityProperties %}
+					<th class="px-8 py-4">{{ titleProperty }}</th>
+				{% endfor %}
+			</tr>
+			{% for data in datas %}
+				<tr class="tableRow">
+					{% for key, titleProperty in entityProperties %}
+						<td class="px-8 py-4 text-center">
+							{% if key == 'actions' %}
+								{% for action in attribute(data, key) %}
+									{% if action.type == 'button' %}
+									{% if action.deleteStyle is defined %}
+										<a href="{{ path(action.path, {'id': action.id}) }}" class="btn btn-error">{{ action.label }}</a>
+									{% else %}
+										<a href="{{ path(action.path, {'id': action.id}) }}" class="btn btn-primary">{{ action.label }}</a>
+									{% endif %}
+									{% endif %}
+
+									{% if action.type == 'form' %}
+										<form method="post" action="{{ path(action.path, {'id': action.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet entrée ?')">
+											<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ action.id) }}">
+											<button class="btn btn-error">{{ action.label}}</button>
+										</form>
+									{% endif %}
+								{% endfor %}
+							{% elseif attribute(data, key) is iterable %}
+								{% for item in attribute(data, key) %}
+									<span class="bg-accent text-white text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mr-2">
+										{{item}}
+									</span>
+								{% endfor %}
+							{% else %}
+								{{ attribute(data, key) }}
+							{% endif %}
+						</td>
+					{% endfor %}
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+</article>

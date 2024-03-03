@@ -63,6 +63,10 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data:rw
 
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8080:8080"
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
 volumes:

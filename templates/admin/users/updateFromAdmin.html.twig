@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un utilisateur
+{% endblock %}
+
+
+{% block body %}
+	<div class="page-wrapper">
+		<h1 class="page-title">Modifier un utilisateur</h1>
+
+		{{ form_start(form) }}
+		{{ form_row(form.email) }}
+		{{ form_row(form.roles) }}
+		{{ form_row(form.firstname) }}
+		{{ form_row(form.lastname) }}
+
+		<button type="submit" class="btn btn-primary btn-lg self-center w-fit">Modifier</button>
+		{{ form_end(form) }}
+
+		<a href="{{ path('accueil_admin_users') }}" class="inline-block underline mb-4">Retour à la liste des utilisateurs</a>
+		<br>
+		<form method="post" action="{{ path('admin_user_send_email', {'id': userId}) }}" class="mb-4">
+			<input type="hidden" name="_token" value="{{ csrf_token('resetPwdRequest' ~ userId) }}">
+			<button class="btn">Envoyer un mail pour réinitialiser le mot de passe</button>
+		</form>
+	</div>
+
+{% endblock %}

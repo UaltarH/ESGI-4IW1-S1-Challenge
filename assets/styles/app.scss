@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Base
+@import "common/variables";
+@import "partials/variables";
+@import "partials/globals";
+@import "partials/fonts";
+
+// Components
+@import "components/tables";
+@import "components/form";
+@import "components/button";
+@import "components/title";
+@import "components/container";
+@import "components/switch";
+@import "components/chartjs";
+@import "components/error";
+
+// Layouts
+@import "layouts/header";
+@import "layouts/footer";
+
+// Pages
+
+// Utilities

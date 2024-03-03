@@ -10,6 +10,11 @@ ARG CADDY_VERSION=2
 # Prod image
 FROM php:${PHP_VERSION}-fpm-alpine AS app_php
 
+RUN apk update && \
+    apk add --no-cache \
+    nodejs \
+    npm
+	
 # Allow to use development versions of Symfony
 ARG STABILITY="stable"
 ENV STABILITY ${STABILITY}
@@ -24,12 +29,25 @@ WORKDIR /srv/app
 
 # persistent / runtime deps
 RUN apk add --no-cache \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    && docker-php-ext-configure gd \
+        --with-freetype \
+        --with-jpeg \
+        --with-webp \
+    && docker-php-ext-install -j$(nproc) gd
+
+
+RUN apk add --no-cache \
 		acl \
 		fcgi \
 		file \
 		gettext \
 		git \
         linux-headers \
+        npm \
 	;
 
 RUN set -eux; \
@@ -156,3 +174,4 @@ WORKDIR /srv/app
 COPY --from=app_caddy_builder /usr/bin/caddy /usr/bin/caddy
 COPY --from=app_php /srv/app/public public/
 COPY docker/caddy/Caddyfile /etc/caddy/Caddyfile
+# RUN php bin/console messenger:consume async

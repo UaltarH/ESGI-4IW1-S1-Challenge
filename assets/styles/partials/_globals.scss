@@ -1,0 +1,32 @@
+@use "variables" as v;
+@use "fonts" as f;
+:root {
+  --primary-color: #{v.$primary-color};
+  --primary-dark: #{v.$primary-dark};
+  --secondary-color: #{v.$secondary-color};
+  --accent-color: #{v.$accent-color};
+  --white: #{v.$white};
+  --gray: #{v.$gray};
+  --light-gray: #{v.$light-gray};
+    --dark-gray: #{v.$dark-gray};
+  --error: #{v.$error};
+  --error-light: #{v.$error-light};
+  --warning: #{v.$warning};
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+ul {
+  list-style: none;
+}
+html {
+  height: 100%;
+}
+body {
+  //background-color: var(--light-gray);
+  //font-family: f.$font1;
+  //color: var(--primary-color);
+  //height: 100%;
+}

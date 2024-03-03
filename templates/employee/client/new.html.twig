@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <div class="page-wrapper">
+        <h1 class="page-title">Création d'un client</h1>
+        {{ form_start(form) }}
+        {{ form_row(form.firstName) }}
+        {{ form_row(form.lastName) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.phoneNumber) }}
+        {{ form_row(form.billingAddress) }}
+
+        <button type="submit" class="btn btn-primary btn-lg self-center w-fit">Créer</button>
+        {{ form_end(form) }}
+
+        <a href="{{ path('app_client_list') }}" class="underline">Retour en arrière</a>
+    </div>
+{% endblock %}

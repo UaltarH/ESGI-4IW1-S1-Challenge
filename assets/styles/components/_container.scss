@@ -1,0 +1,8 @@
+@layer components {
+  .page-wrapper {
+    @apply min-h-cover bg-white sm:w-10/12 lg:max-w-screen-lg m-auto overflow-x-auto px-4 dark:bg-primary;
+    &-admin {
+      @apply sm:w-10/12 lg:max-w-full lg:w-11/12;
+    }
+  }
+}
