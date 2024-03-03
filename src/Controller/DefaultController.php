@@ -90,10 +90,11 @@ class DefaultController extends AbstractController
                 'role' => $connected ? $this->getUser()->getRoles()[0] : null,
             ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
-            'company' => $connected ? $this->getUser()->getCompany()->getName() : null,
+            'company' => $connected ? $this->getUser()->getRoles()[0] == 'ROLE_ADMIN' ? null : $this->getUser()->getCompany()->getName() : null,
             'totalCompanies' => $companyRepository->countCompanies(),
             'chartLine' => $chartLine,
             'chartBar' => $chartBar,
         ]);
     }
+
 }
