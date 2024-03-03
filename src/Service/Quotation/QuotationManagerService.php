@@ -285,8 +285,28 @@ class QuotationManagerService
         $htmlContent = '<p>Veuillez cliquer sur le lien ci-dessous pour accepter le devis :</p><br><a href="' . $acceptUrl . '">Accepter le devis</a> <br>';
         $htmlContent .= '<p>Veuillez cliquer sur le lien ci-dessous pour refuser le devis :</p><br><a href="' . $refuseUrl . '">Refuser le devis</a> ';
 
+        //for brevo
+        $clientFullName = $quotation->getClient()->getFirstname() . ' ' . $quotation->getClient()->getLastname();
+        $dateQuotation = $quotation->getCreatedAt()->format('d/m/Y');
+        $companyName = $quotation->getClient()->getCompany()->getName();
+        $quoteName = $quotation->getQuotationNumber();
+
+
 
         $this->emailUtils->sendEmailWithPdf('subject', $htmlContent, 'mail@gmail.com', $clientEmail, $contentPdf, $data['quotation_number']);
+
+        $this->emailUtils->sendEmailForQuoteUsingBrevo(
+            "admin",
+            "admin@techcare.com",
+            "mathieupannetrat5@gmail.com", // $clientEmail,
+            $clientFullName,
+            $dateQuotation,
+            $companyName,
+            base64_encode($contentPdf),
+            $quoteName . '.pdf',
+            $acceptUrl,
+            $refuseUrl
+        );
     }
 
     public function acceptQuotation($token)
