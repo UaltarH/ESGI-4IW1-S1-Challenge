@@ -298,7 +298,7 @@ class QuotationManagerService
         $this->emailUtils->sendEmailForQuoteUsingBrevo(
             "admin",
             "admin@techcare.com",
-            "mathieupannetrat5@gmail.com", // $clientEmail,
+            $clientEmail,
             $clientFullName,
             $dateQuotation,
             $companyName,

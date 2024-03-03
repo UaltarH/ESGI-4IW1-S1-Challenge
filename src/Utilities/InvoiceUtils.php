@@ -140,7 +140,7 @@ class InvoiceUtils
         $this->emailUtils->sendEmailForInvoiceUsingBrevo(
             "admin",
             "admin@techcare.com",
-            "mathieupannetrat5@gmail.com", //$clientEmail,
+            $clientEmail,
             $clientFullName,
             $dateInvoice,
             $companyName,
