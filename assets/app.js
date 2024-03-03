@@ -14,25 +14,8 @@ import "./styles/app.scss";
 // js
 import $ from "jquery";
 
+import "./js/darkmode/darkmode.js";
+import "./js/components/burgerMenu/burgermenu.js";
 import "./js/components/tables/tables.js";
 import "./js/product/productComponentsManage.js";
 import "./js/quotation/createQuotation.js";
-document.addEventListener("DOMContentLoaded", function () {
-  // main menu toggle
-  const mainNav = document.querySelector(".main-nav ul");
-  const burger = document.querySelector(".menu-burger");
-
-  burger.addEventListener("click", () => {
-    mainNav.classList.toggle("sm:-left-full");
-  });
-
-  const darkModeToggle = document.querySelector("#dark-mode-toggle");
-  darkModeToggle.addEventListener("change", () => {
-    if(darkModeToggle.checked) {
-      document.getElementsByTagName("html")[0].classList.add("dark");
-    }
-    else {
-      document.getElementsByTagName("html")[0].classList.remove("dark");
-    }
-  });
-});

@@ -86,7 +86,7 @@ class TechcareInvoiceRepository extends ServiceEntityRepository
             ->setParameter('end', $param);
         return $qb->getQuery()->getResult();
     }
-    public function findBrandSales(DateTime $start, DateTime $end ): array
+    public function findBrandSales(DateTime $start, DateTime $end): array
     {
         $qb = $this->createQueryBuilder('i');
         $qb->select('br.name, SUM(i.amount) as total')
@@ -130,33 +130,32 @@ class TechcareInvoiceRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('i');
         $qb->select('count(i.id)');
         return $qb->getQuery()->getSingleScalarResult();
-
     }
 
-//    /**
-//     * @return TechcareInvoice[] Returns an array of TechcareInvoice objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return TechcareInvoice[] Returns an array of TechcareInvoice objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('t')
+    //            ->andWhere('t.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('t.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?TechcareInvoice
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?TechcareInvoice
+    //    {
+    //        return $this->createQueryBuilder('t')
+    //            ->andWhere('t.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 
 
 }

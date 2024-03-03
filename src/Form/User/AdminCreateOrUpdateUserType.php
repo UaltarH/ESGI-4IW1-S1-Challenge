@@ -14,6 +14,10 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
 
 
 
@@ -24,17 +28,51 @@ class AdminCreateOrUpdateUserType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
+                'label' => 'Email',
                 'attr' => ['placeholder' => 'ex : john.doe@exemple.com'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'L\'email ne peut pas être vide.',
+                    ]),
+                    new Email([
+                        'message' => 'L\'adresse email n\'est pas valide.',
+                    ]),
+                ],
             ])
             ->add('roles', ChoiceType::class, [
+                'label' => 'Rôle',
                 'choices' => $options['role_choices'],
                 'multiple' => false,
                 'expanded' => false,
             ])
             ->add('firstname', TextType::class, [
+                'label' => 'Prénom',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le prénom ne peut pas être vide.',
+                    ]),
+                    new Length([
+                        'min' => 2,
+                        'max' => 50,
+                        'minMessage' => 'Le prénom doit comporter au moins {{ limit }} caractères.',
+                        'maxMessage' => 'Le prénom ne peut pas dépasser {{ limit }} caractères.',
+                    ]),
+                ],
                 'attr' => ['placeholder' => 'ex : John'],
             ])
             ->add('lastname', TextType::class, [
+                'label' => 'Nom',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le nom ne peut pas être vide.',
+                    ]),
+                    new Length([
+                        'min' => 2,
+                        'max' => 50,
+                        'minMessage' => 'Le nom doit comporter au moins {{ limit }} caractères.',
+                        'maxMessage' => 'Le nom ne peut pas dépasser {{ limit }} caractères.',
+                    ]),
+                ],
                 'attr' => ['placeholder' => 'ex : Doe'],
             ]);
 
@@ -51,14 +89,31 @@ class AdminCreateOrUpdateUserType extends AbstractType
         if ($options['new'] == true) {
             $builder
                 ->add('company', EntityType::class, [
+                    'label' => 'Entreprise',
                     'class' => TechcareCompany::class,
                     'choice_label' => 'name',
                     'placeholder' => 'Sélectionnez une entreprise',
                 ])
                 ->add('password', RepeatedType::class, [
                     'type' => PasswordType::class,
-                    'first_options' => ['label' => 'Password'],
-                    'second_options' => ['label' => 'Repeat Password'],
+                    'invalid_message' => 'Les champs du mot de passe doivent correspondre.',
+                    'first_options' => ['label' => 'Mot de passe'],
+                    'second_options' => ['label' => 'Confirmer le mot de passe'],
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => 'Veuillez entrer un mot de passe',
+                        ]),
+                        new Length([
+                            'min' => 8,
+                            'max' => 4096,
+                            'minMessage' => 'Votre mot de passe doit comporter au moins {{ limit }} caractères',
+                            'maxMessage' => 'Votre mot de passe ne peut pas dépasser {{ limit }} caractères',
+                        ]),
+                        new Regex([
+                            'pattern' => '/(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}/',
+                            'message' => 'Votre mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.',
+                        ]),
+                    ],
                 ]);
         }
     }
