@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Menu\MenuBuilder;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 
@@ -26,9 +27,11 @@ class AdminController extends AbstractController
     #[Route('/admin/dashboard', name: 'app_admin_dashboard_index')]
     public function index(ChartBuilderInterface $chartBuilder, ChartService $chartService,
                           TechcareCompanyRepository $companyRepository, TechcareInvoiceRepository $invoiceRepository,
-                          TechcareQuotationRepository $quotationRepository): Response
+                          TechcareQuotationRepository $quotationRepository): Response | AccessDeniedException
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        if(!$this->isGranted('ROLE_ADMIN')) {
+            return $this->createAccessDeniedException("Accès interdit.");
+        }
         $salesChart = $chartService->createInvoiceChart($chartBuilder);
         $newCompaniesChart = $chartService->createCompanyChart($chartBuilder);
 

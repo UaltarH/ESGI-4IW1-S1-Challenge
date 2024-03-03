@@ -27,6 +27,7 @@ class CompanyManagerController extends AbstractController
     #[Route('/company/manager', name: 'company_manager')]
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $userConnected = $this->getUser();
 
         $datas = $this->companyService->manager();
@@ -46,6 +47,7 @@ class CompanyManagerController extends AbstractController
     #[Route('/company/edit/{id}', name: 'company_edit')]
     public function edit(TechcareCompany $company, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $userConnected = $this->getUser();
         $form = $this->createForm(EditCompanyType::class, $company);
         $form->handleRequest($request);

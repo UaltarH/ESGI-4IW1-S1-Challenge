@@ -2,17 +2,37 @@
 {% block title %}Tech Care{% endblock %}
 
 {% block body %}
-<div class="page-wrapper dark:bg-primary-dark">
-    <h1 class="page-title">Bienvenue sur Tech Care</h1>
+<div class="page-wrapper bg-light-gray dark:bg-primary-dark">
 
-    <article>
-        <p class="text-justify">
-            Tech Care est une plateforme pour les professionnels de la maintenance d'appareils électroniques.<br/>
-            Elle permet de gérer vos devis, factures, clients, produits et bien plus encore.
-        </p>
-        <p>
-            Aujourd'hui, <span class="chart-kpi">{{ totalCompanies }}</span> entreprises utilisent Tech Care pour gérer leur activité.
-        </p>
+    <article class="bg-white px-4 py-2 mb-4">
+        <h1 class="page-title">Bienvenue sur Tech Care</h1>
+        <div class="leading-10">
+            <p class="text-justify">
+                <span class="text-xl font-bold text-secondary">Tech Care</span> est une plateforme pour les professionnels de la maintenance d'appareils électroniques.<br/>
+                Elle permet de gérer vos devis, factures, clients, produits et bien plus encore.
+            </p>
+            <p>
+                Aujourd'hui, <span class="chart-kpi">{{ totalCompanies }}</span> entreprises utilisent Tech Care pour gérer leur activité.
+            </p>
+            <p>
+                Rejoignez-les dès maintenant en vous <a href="{{ path('app_register') }}" class="underline text-secondary">inscrivant ici</a>.
+            </p>
+        </div>
     </article>
+    <div class="flex sm:flex-col lg:flex-row justify-between items-stretch mb-4 gap-4 sm:h-auto lg:h-64">
+        <div class="chart chart-small flex flex-col justify-evenly items-center h-full flex-1">
+            <div class="chart-kpis">
+                <h2>Des graphes pour suivre vos KPIs</h2>
+            </div>
+        </div>
+        <div class="chart chart-small flex-2">
+            {{ render_chart(chartLine, {'class': 'my-chart'}) }}
+            <h2>Ventes</h2>
+        </div>
+        <div class="chart chart-small flex-2">
+            {{ render_chart(chartBar, {'class': 'my-chart'}) }}
+            <h2>Ventes</h2>
+        </div>
+    </div>
 </div>
 {% endblock %}

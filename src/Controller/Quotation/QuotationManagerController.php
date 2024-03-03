@@ -3,6 +3,7 @@
 namespace App\Controller\Quotation;
 
 use App\Repository\TechcareQuotationRepository;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,9 +25,11 @@ class QuotationManagerController extends AbstractController
     }
 
     #[Route('/quotation/manager', name: 'app_quotation_manager')]
-    public function index(): Response
+    public function index(): Response | Exception
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
+            return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
+        }
 
         $data = $this->quotationService->manager($this->getUser());
 
@@ -43,9 +46,14 @@ class QuotationManagerController extends AbstractController
     }
 
     #[Route('/quotation/show/{id}', name: 'app_quotation_show')]
-    public function show(TechcareQuotation $quotation): Response
+    public function show(TechcareQuotation $quotation): Response | Exception
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
+            return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à ce devis");
+        }
+        if($quotation->getClient()->getCompany() !== $this->getUser()->getCompany()) {
+            return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à ce devis");
+        }
 
         $connected = $this->getUser() instanceof UserInterface;
 
@@ -64,9 +72,14 @@ class QuotationManagerController extends AbstractController
     }
 
     #[Route('/quotation/edit/{id}', name: 'app_quotation_edit')]
-    public function edit(TechcareQuotation $quotation): Response
+    public function edit(TechcareQuotation $quotation): Response | Exception
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
+            return $this->createAccessDeniedException("Vous n'avez pas les droits pour modifier ce devis.");
+        }
+        if($quotation->getClient()->getCompany() !== $this->getUser()->getCompany()) {
+            return $this->createAccessDeniedException("Vous n'avez pas les droits pour modifier ce devis.");
+        }
 
         $userConnected = $this->getUser();
 
@@ -99,8 +112,14 @@ class QuotationManagerController extends AbstractController
     }
 
     #[Route('/quotation/delete/{id}', name: 'app_quotation_delete', methods: ['POST'])]
-    public function delete(Request $request, TechcareQuotation $quotation, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, TechcareQuotation $quotation, EntityManagerInterface $entityManager): Response | Exception
     {
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
+            return $this->createAccessDeniedException("Vous n'avez pas les droits pour supprimer ce devis.");
+        }
+        if($quotation->getClient()->getCompany() !== $this->getUser()->getCompany()) {
+            return $this->createAccessDeniedException("Vous n'avez pas les droits pour supprimer ce devis.");
+        }
         if ($this->isCsrfTokenValid('delete' . $quotation->getId(), $request->request->get('_token'))) {
             $entityManager->remove($quotation);
             $entityManager->flush();
@@ -110,9 +129,11 @@ class QuotationManagerController extends AbstractController
     }
 
     #[Route('/quotation/create', name: 'app_quotation_create')]
-    public function create(): Response
+    public function create(): Response | Exception
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
+            return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
+        }
 
         $userConnected = $this->getUser();
         $datas = $this->quotationService->createQuotation($userConnected);

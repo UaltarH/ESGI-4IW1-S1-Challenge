@@ -1,0 +1,16 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="page-wrapper error-page">
+        <h1 class="page-title error-title">Error <span class="error-code">{{ code }}</span></h1>
+        <h2 class="error-message">{{ message }}</h2>
+        <p>
+            Unfortunately, you are not allowed to view the page you tried to reach.
+            <br/><a href="{{ path('default_index') }}" class="error-link">return to the homepage</a>.
+        </p>
+        <p>
+            If you think this is a server error, please contact US and we will Tech Care of it.
+        </p>
+    </div>
+{% endblock %}

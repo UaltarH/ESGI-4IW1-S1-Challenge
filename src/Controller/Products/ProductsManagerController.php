@@ -2,6 +2,7 @@
 
 namespace App\Controller\Products;
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -73,12 +74,12 @@ class ProductsManagerController extends AbstractController
     }
 
     #[Route('/products/manager/edit/{id}', name: 'app_products_manager_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, TechcareProduct $techcareProduct): Response
+    public function edit(Request $request, TechcareProduct $techcareProduct): Response | Exception
     {
         $this->denyAccessUnlessGranted('ROLE_COMPANY');
         $userConnected = $this->getUser();
         if($techcareProduct->getCompany() !== $userConnected->getCompany()){
-            return $this->redirectToRoute('app_products_manager');
+            return $this->createAccessDeniedException("Vous n'avez pas le droit de modifier ce produit");
         }
         $componentsOftheProduct = $techcareProduct->getComponents()->toArray();
         //meme si on specifie componentsList en mapped false, il vas quand meme lié les composants au produit car les composants qu'on lui fourni sont deja lié au produit qu'on modifie
@@ -104,11 +105,11 @@ class ProductsManagerController extends AbstractController
     }
 
     #[Route('/products/manager/delete/{id}', name: 'app_products_manager_delete', methods: ['POST'])]
-    public function delete(Request $request, TechcareProduct $techcareProduct, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, TechcareProduct $techcareProduct, EntityManagerInterface $entityManager): Response | Exception
     {
         $this->denyAccessUnlessGranted('ROLE_COMPANY');
         if($techcareProduct->getCompany() !== $this->getUser()->getCompany()){
-            return $this->redirectToRoute('app_products_manager');
+            return $this->createAccessDeniedException("Vous n'avez pas le droit de supprimer ce produit");
         }
         if ($this->isCsrfTokenValid('delete' . $techcareProduct->getId(), $request->request->get('_token'))) {
             $entityManager->remove($techcareProduct);

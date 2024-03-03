@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Menu\MenuBuilder;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,9 +17,12 @@ use App\Entity\TechcareCompany;
 class RegisterController extends AbstractController
 {
     #[Route('/register', name: 'app_register', methods: ['POST', 'GET'])]
-    public function index(Request $request, EntityManagerInterface $entityManager): Response
+    public function index(Request $request, EntityManagerInterface $entityManager): Response | Exception
     {
-        //        $this->denyAccessUnlessGranted('IS_ANONYMOUS');
+        if($this->getUser()) {
+            return $this->createAccessDeniedException('You are already connected');
+        }
+
         $form = $this->createForm(registerCompany::class);
         $form->handleRequest($request);
 
