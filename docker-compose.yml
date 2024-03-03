@@ -13,6 +13,7 @@ services:
     restart: unless-stopped
     volumes:
       - php_socket:/var/run/php
+      - public:/srv/app/public
     healthcheck:
       interval: 10s
       timeout: 3s
@@ -40,6 +41,7 @@ services:
       - php_socket:/var/run/php
       - caddy_data:/data
       - caddy_config:/config
+      - public:/srv/app/public
     ports:
       # HTTP
       - target: 80
@@ -73,6 +75,7 @@ volumes:
   php_socket:
   caddy_data:
   caddy_config:
+  public:
   ###> doctrine/doctrine-bundle ###
   db_data:
   ###< doctrine/doctrine-bundle ###
