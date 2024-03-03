@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello Dashboard!
+{% endblock %}
+
+{% block body %}
+	<div class="page-wrapper page-wrapper-admin bg-light-gray dark:bg-primary-dark">
+		<h1 class="page-title">Dashboard</h1>
+		<div class="flex sm:flex-col lg:flex-row justify-between items-stretch mb-4 gap-4 sm:h-auto lg:h-64">
+			<div class="chart chart-small flex flex-col justify-evenly items-center h-full">
+				<div>
+					<h2>Total Sales this year</h2>
+					<p class="chart-kpis">
+						<span class="chart-kpi">{{ totalSales }}</span> EUR
+						<span {% if growth >= 0 %}
+								class="chart-kpi-growth chart-kpi-positive"> + {{ growth }}
+							{% else %}
+								class="chart-kpi-growth chart-kpi-negative"> - {{ growth[1:] }}
+							{% endif %}%
+						</span>
+					</p>
+				</div>
+				<div>
+					<h2>Total Devices Repaired this year</h2>
+					<p class="chart-kpis"><span class="chart-kpi">{{ totalDevicesRepaired }}</span>
+						<span {% if repairGrowth >= 0 %}
+								class="chart-kpi-growth chart-kpi-positive"> + {{ repairGrowth }}
+							{% else %}
+								class="chart-kpi-growth chart-kpi-negative"> - {{ repairGrowth[1:] }}
+							{% endif %}%
+						</span>
+				</div>
+			</div>
+			<div class="chart chart-small">
+				{{ render_chart(smallChart1, {'class': 'my-chart'}) }}
+				<h2>Ventes par catégorie</h2>
+			</div>
+			<div class="chart chart-small">
+				{{ render_chart(smallChart2, {'class': 'my-chart'}) }}
+				<h2>Ventes par marque</h2>
+			</div>
+		</div>
+		<div class="chart chart-main mb-4">
+			{{ render_chart(mainChart, {'class': 'my-chart'}) }}
+			<h2>Ventes durant les 12 derniers mois</h2>
+		</div>
+	</div>
+{% endblock %}

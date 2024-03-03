@@ -42,7 +42,7 @@
     {%- if help is not empty -%}
         {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
     {%- endif -%}
-    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %} class="flex flex-row justify-start items-center w-full gap-4">
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %} class="flex sm:flex-col lg:flex-row justify-start items-center w-full gap-4">
         <div class="flex flex-col flex-1">
             {{- form_label(form) -}}
             {{- form_errors(form) -}}

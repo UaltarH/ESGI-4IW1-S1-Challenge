@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block title %}Tech Care{% endblock %}
+
+{% block body %}
+<div class="page-wrapper dark:bg-primary-dark">
+    <h1 class="page-title">Bienvenue sur Tech Care</h1>
+
+    <article>
+        <p class="text-justify">
+            Tech Care est une plateforme pour les professionnels de la maintenance d'appareils électroniques.<br/>
+            Elle permet de gérer vos devis, factures, clients, produits et bien plus encore.
+        </p>
+        <p>
+            Aujourd'hui, <span class="chart-kpi">{{ totalCompanies }}</span> entreprises utilisent Tech Care pour gérer leur activité.
+        </p>
+    </article>
+</div>
+{% endblock %}

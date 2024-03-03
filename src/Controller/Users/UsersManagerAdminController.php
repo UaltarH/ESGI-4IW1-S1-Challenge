@@ -28,12 +28,16 @@ class UsersManagerAdminController extends AbstractController
     #[Route('/admin/users', name: 'accueil_admin_users')]
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $datas = $this->userManagerAdminService->getUsers();
 
         $userConnected = $this->getUser() instanceof UserInterface;
 
         return $this->render('admin/users/index.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => $userConnected,
+                'role' => 'ROLE_ADMIN'
+            ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'datas' => $datas['datas'],
             'entityProperties' => $datas['entityProperties'],
@@ -43,6 +47,7 @@ class UsersManagerAdminController extends AbstractController
     #[Route('/admin/users/delete/{id}', name: 'admin_user_delete', methods: ['POST'])]
     public function delete(Request $request, TechcareUser $techcareUser, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if ($this->isCsrfTokenValid('delete' . $techcareUser->getId(), $request->request->get('_token'))) {
             $entityManager->remove($techcareUser);
             $entityManager->flush();
@@ -55,6 +60,7 @@ class UsersManagerAdminController extends AbstractController
     #[Route('/admin/users/add', name: 'admin_user_create', methods: ['POST', 'GET'])]
     public function createUser(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $newUser = new TechcareUser();
         $form = $this->createForm(AdminCreateOrUpdateUserType::class, $newUser, [
             'role_choices' => [
@@ -73,7 +79,10 @@ class UsersManagerAdminController extends AbstractController
             return $this->redirectToRoute('accueil_admin_users');
         } else {
             return $this->render('admin/users/addUserFromAdmin.html.twig', [
-                'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+                'menuItems' => (new MenuBuilder)->createMainMenu([
+                    'connected' => $userConnected instanceof UserInterface,
+                    'role' => 'ROLE_ADMIN'
+                ]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'form' => $form->createView(),
             ]);
@@ -83,6 +92,7 @@ class UsersManagerAdminController extends AbstractController
     #[Route('/admin/users/{id}', name: 'admin_user_update', methods: ['POST', 'GET'])]
     public function updateUser(TechcareUser $techcareUser, Request $request, TechcareUserRepository $techcareUserRepository, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $userConnected = $this->getUser();
         $form = $this->createForm(AdminCreateOrUpdateUserType::class, $techcareUser, [
             'role_choices' => [
@@ -100,7 +110,10 @@ class UsersManagerAdminController extends AbstractController
             return $this->redirectToRoute('accueil_admin_users');
         } else {
             return $this->render('admin/users/updateFromAdmin.html.twig', [
-                'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected]),
+                'menuItems' => (new MenuBuilder)->createMainMenu([
+                    'connected' => $userConnected,
+                    'role' => 'ROLE_ADMIN'
+                ]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'form' => $form->createView(),
                 'userId' => $techcareUser->getId(),

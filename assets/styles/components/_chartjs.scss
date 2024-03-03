@@ -1,0 +1,29 @@
+@layer components {
+  .chart {
+    @apply relative bg-white px-4 py-2 dark:bg-primary shadow-sm;
+    h2 {
+      @apply text-xl font-bold text-center;
+    }
+  }
+  .chart-main {
+    @apply w-full;
+  }
+  .chart-small {
+    @apply flex-1;
+  }
+  .chart-kpis {
+    @apply text-center;
+  }
+  .chart-kpi {
+    @apply text-3xl font-bold text-center text-accent;
+  }
+  .chart-kpi-growth {
+    @apply text-dark-gray;
+  }
+  .chart-kpi-positive {
+    @apply relative before:content-[''] before:w-2.5 before:h-2.5 before:absolute before:-rotate-45 before:-right-5 before:top-2.5 before:border-accent before:border-t-2 before:border-r-2 before:border-b-0 before:border-l-0;
+  }
+  .chart-kpi-negative {
+    @apply relative before:content-[''] before:w-2.5 before:h-2.5 before:absolute before:rotate-45 before:-right-5 before:bottom-2.5 before:border-error-light before:border-t-0 before:border-r-2 before:border-b-2 before:border-l-0;
+  }
+}

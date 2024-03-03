@@ -27,7 +27,7 @@ class SecurityController extends AbstractController
             [
                 'last_username' => $lastUsername,
                 'error' => $error,
-                'menuItems' => (new MenuBuilder)->createMainMenu(['conntected' => $this->getUser() instanceof UserInterface]),
+                'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
             ],
         );
