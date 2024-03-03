@@ -33,8 +33,12 @@ class InvoiceManagerController extends AbstractController
         $invoicesMapped = $this->invoiceService->manager($userConnected);
 
         return $this->render('employee/invoice/index.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => $userConnected instanceof UserInterface,
+                'role' => $userConnected->getRoles()[0],
+            ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
+            'company' => $userConnected->getCompany()->getName(),
             'datas' => $invoicesMapped,
             'entityProperties' => [
                 'invoice_number' => 'Numéro de facture',
@@ -52,10 +56,16 @@ class InvoiceManagerController extends AbstractController
     public function show(TechcareInvoice $invoice): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
-
+        $connected = $this->getUser() instanceof UserInterface;
         $data = $this->invoiceService->showInvoice($invoice);
 
-        $data['menuItems'] = (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]);
+        $data['menuItems'] = (new MenuBuilder)->createMainMenu([
+            'connected' => $connected,
+            'role' => $this->getUser()->getRoles()[0],
+        ]);
+        if($connected) {
+            $data['company'] = $this->getUser()->getCompany()->getName();
+        }
         $data['footerItems'] = (new MenuBuilder)->createMainFooter();
         return $this->render('employee/invoice/show.html.twig', $data);
     }
@@ -63,7 +73,11 @@ class InvoiceManagerController extends AbstractController
     #[Route('/invoice/edit/{id}', name: 'invoice_update')]
     public function update(Request $request, TechcareInvoice $invoice): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $this->denyAccessUnlessGranted('ROLE_COMPANY');
+
+        if($invoice->getClient()->getCompany() !== $this->getUser()->getCompany()) {
+            return $this->redirectToRoute('invoice_manager');
+        }
 
         $form = $this->createForm(EditInvoiceType::class, $invoice);
         $form->handleRequest($request);
@@ -73,8 +87,12 @@ class InvoiceManagerController extends AbstractController
             return $this->redirectToRoute('invoice_manager');
         } else {
             return $this->render('employee/invoice/edit.html.twig', [
-                'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]),
+                'menuItems' => (new MenuBuilder)->createMainMenu([
+                    'connected' => $this->getUser() instanceof UserInterface,
+                    'role' => $this->getUser()->getRoles()[0],
+                ]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
+                'company' => $this->getUser()->getCompany()->getName(),
                 'form' => $form->createView(),
             ]);
         }
@@ -84,7 +102,9 @@ class InvoiceManagerController extends AbstractController
     public function delete(TechcareInvoice $invoice, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
-
+        if($invoice->getClient()->getCompany() !== $this->getUser()->getCompany()) {
+            return $this->redirectToRoute('invoice_manager');
+        }
         $entityManager->remove($invoice);
         $entityManager->flush();
 
@@ -124,8 +144,12 @@ class InvoiceManagerController extends AbstractController
             return $this->redirectToRoute('invoice_manager');
         } else {
             return $this->render('employee/invoice/new.html.twig', [
-                'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+                'menuItems' => (new MenuBuilder)->createMainMenu([
+                    'connected' => $userConnected instanceof UserInterface,
+                    'role' => $userConnected->getRoles()[0],
+                ]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
+                'company' => $userConnected->getCompany()->getName(),
                 'form' => $form->createView(),
                 'quotationsAmount' => $quotationsAmount,
             ]);

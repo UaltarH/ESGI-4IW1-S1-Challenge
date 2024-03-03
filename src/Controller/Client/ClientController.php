@@ -51,7 +51,11 @@ class ClientController extends AbstractController
         }, $clients);
 
         return $this->render('employee/client/index.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => true]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => true,
+                'role' => $this->getUser()->getRoles()[0]
+            ]),
+            'company' => $this->getUser()->getCompany()->getName(),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'controller_name' => 'ClientController',
             'datas' => $clientsMap,
@@ -90,8 +94,12 @@ class ClientController extends AbstractController
         }
 
         return $this->render('employee/client/new.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => true]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => true,
+                'role' => $this->getUser()->getRoles()[0]
+            ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
+            'company' => $this->getUser()->getCompany()->getName(),
             'controller_name' => 'ClientController',
             'title' => 'Ajouter un client',
             'form' => $form->createView(),
@@ -116,7 +124,11 @@ class ClientController extends AbstractController
             return $this->redirectToRoute('app_client_list');
         }
         return $this->render('employee/client/edit.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => true]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => true,
+                'role' => $this->getUser()->getRoles()[0]
+            ]),
+            'company' => $this->getUser()->getCompany()->getName(),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'controller_name' => 'ClientController',
             'title' => 'Modification d\'un client',

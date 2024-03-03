@@ -7,6 +7,7 @@ use App\Entity\TechcareQuotation;
 use App\Enum\QuotationStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -75,5 +76,16 @@ class TechcareQuotationRepository extends ServiceEntityRepository
             ->setParameter('status', QuotationStatus::accepted)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function countQuotations(): int
+    {
+        $qb = $this->createQueryBuilder('q');
+        $qb->select('count(q.id)');
+        return $qb->getQuery()->getSingleScalarResult();
     }
 }

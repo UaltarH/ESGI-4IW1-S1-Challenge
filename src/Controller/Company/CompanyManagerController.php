@@ -32,8 +32,12 @@ class CompanyManagerController extends AbstractController
         $datas = $this->companyService->manager();
 
         return $this->render('admin/company/index.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => $userConnected instanceof UserInterface,
+                'role' => $userConnected->getRoles()[0],
+            ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
+            'company' => $userConnected->getCompany()->getName(),
             'datas' => $datas['datasTable'],
             'entityProperties' => $datas['entityProperties'],
         ]);
@@ -51,8 +55,12 @@ class CompanyManagerController extends AbstractController
             return $this->redirectToRoute('company_manager');
         } else {
             return $this->render('admin/company/edit.html.twig', [
-                'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+                'menuItems' => (new MenuBuilder)->createMainMenu([
+                    'connected' => $userConnected instanceof UserInterface,
+                    'role' => $userConnected->getRoles()[0],
+                ]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
+                'company' => $userConnected->getCompany()->getName(),
                 'form' => $form->createView(),
             ]);
         }

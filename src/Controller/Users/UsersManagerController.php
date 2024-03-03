@@ -35,7 +35,10 @@ class UsersManagerController extends AbstractController
         $datas = $this->usersCompanyService->manager($userConnected);
 
         return $this->render('employee/user/index.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => $userConnected instanceof UserInterface,
+                'role' => $userConnected->getRoles()[0],
+            ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'entityProperties' => $datas['entityProperties'],
             'datas' => $datas['datas'],
@@ -61,7 +64,10 @@ class UsersManagerController extends AbstractController
             return $this->redirectToRoute('users_company_manager');
         } else {
             return $this->render('employee/user/create.html.twig', [
-                'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+                'menuItems' => (new MenuBuilder)->createMainMenu([
+                    'connected' => $userConnected instanceof UserInterface,
+                    'role' => $userConnected->getRoles()[0],
+                ]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'form' => $form->createView(),
             ]);
@@ -85,7 +91,10 @@ class UsersManagerController extends AbstractController
             return $this->redirectToRoute('users_company_manager');
         } else {
             return $this->render('employee/user/update.html.twig', [
-                'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+                'menuItems' => (new MenuBuilder)->createMainMenu([
+                    'connected' => $userConnected instanceof UserInterface,
+                    'role' => $userConnected->getRoles()[0],
+                ]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'form' => $form->createView(),
             ]);

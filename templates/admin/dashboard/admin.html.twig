@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <div class="page-wrapper bg-light-gray dark:bg-primary-dark">
+        <main>
+            <h1 class="page-title">Dashboard Admin</h1>
+        </main>
+        <div class="flex sm:flex-col lg:flex-row justify-between items-stretch mb-4 gap-4 sm:h-auto lg:h-64">
+            <div class="chart chart-small flex flex-col justify-evenly items-center h-full">
+                <div class="chart-kpis">
+                   <h2>Au total</h2>
+                </div>
+                <div class="chart-kpis">
+                    <h2><span class="chart-kpi">{{ totalCompanies }}</span> sociétés nous ont rejoints.</h2>
+                </div>
+                <div class="chart-kpis">
+                    <h2>Dont <span class="chart-kpi">{{ totalNewCompanies }}</span> nous ont rejoints cette année</h2>
+                </div>
+            </div>
+            <div class="chart chart-small flex flex-col justify-evenly items-center h-full">
+                <div class="chart-kpis">
+                    <h2>Au total</h2>
+                </div>
+                <div class="chart-kpis">
+                    <h2><span class="chart-kpi">{{ totalQuotations }}</span> DEVIS créés</h2>
+                </div>
+                <div class="chart-kpis">
+                    <h2><span class="chart-kpi">{{ totalInvoices }}</span> FACTURES créées</h2>
+                </div>
+            </div>
+            <div class="chart chart-small">
+                {{ render_chart(companiesChart, {'class': 'my-chart'}) }}
+                <h2>Nouveaux clients</h2>
+            </div>
+        </div>
+        <div class="chart chart-main mb-4">
+            {{ render_chart(salesChart, {'class': 'my-chart'}) }}
+            <h2>Chiffres d'affaires</h2>
+        </div>
+    </div>
+{% endblock %}

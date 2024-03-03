@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\TechcareCompany;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -45,4 +47,24 @@ class TechcareCompanyRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function countCompaniesBetweenPeriod($start, $end): array
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->where('c.CreatedAt between :start and :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function countCompanies(): int
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('count(c.id)');
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

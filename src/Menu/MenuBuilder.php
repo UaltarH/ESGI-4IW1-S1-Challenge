@@ -9,21 +9,65 @@ class MenuBuilder
         // maintenant on peut utiliser options pour afficher ou non certains items, eg : if ($options['show_admin']) $menu[] = ['label' => 'Admin','route' => 'admin_index',]; ..
         $menu = [];
         $menu[] = ['label' => 'Accueil', 'route' => 'default_index',];
-        if (isset($options['connected']) && $options['connected']) {
-            $menu[] = ['label' => 'Dashboard', 'route' => 'app_dashboard',];
-            $menu[] = [
-                'label' => 'Admin', 'route' => '', 'children' => [
-                    ['label' => 'Utilisateurs', 'route' => 'accueil_admin_users',],
-                    ['label' => 'Produits', 'route' => 'app_products_manager',],
-                    ['label' => 'Devis', 'route' => 'app_quotation_manager',],
-                    ['label' => 'Clients', 'route' => 'app_client_list',],
-                    ['label' => 'Factures', 'route' => 'invoice_manager',],
-                    ['label' => 'Payement', 'route' => 'payement_list',],
-                    ['label' => 'Entreprises', 'route' => 'company_manager',],
-                    ['label' => 'Employés', 'route' => 'users_company_manager',],
 
-                ],
-            ];
+        if (isset($options['connected']) && $options['connected']) {
+            if(isset($options['role']) && $options['role'] === 'ROLE_ADMIN') {
+                $menu[] = ['label' => 'Dashboard', 'route' => 'app_admin_dashboard_index',];
+            } elseif(isset($options['role']) && ($options['role'] === 'ROLE_ACCOUNTANT') || ($options['role'] === 'ROLE_OWNER_COMPANY')){
+                $menu[] = ['label' => 'Dashboard', 'route' => 'app_dashboard',];
+            }
+            switch ($options['role']) {
+                case 'ROLE_ADMIN':
+                    $menu[] = [
+                        'label' => 'Admin', 'route' => '', 'children' => [
+                            ['label' => 'Utilisateurs', 'route' => 'accueil_admin_users',],
+                            ['label' => 'Entreprises', 'route' => 'company_manager',],
+                        ],
+                    ];
+                    break;
+                case 'ROLE_OWNER_COMPANY':
+                    $menu[] = [
+                        'label' => 'Admin', 'route' => '', 'children' => [
+                            ['label' => 'Produits', 'route' => 'app_products_manager',],
+                            ['label' => 'Clients', 'route' => 'app_client_list',],
+                            ['label' => 'Employés', 'route' => 'users_company_manager',],
+                        ],
+                    ];
+                    $menu[] = [
+                        'label' => 'Procédures', 'route' => '', 'children' => [
+                            ['label' => 'Devis', 'route' => 'app_quotation_manager',],
+                            ['label' => 'Factures', 'route' => 'invoice_manager',],
+                            ['label' => 'Paiement', 'route' => 'payement_list',],
+                        ],
+                    ];
+                    break;
+                case 'ROLE_ACCOUNTANT':
+                    $menu[] = [
+                        'label' => 'Procédures', 'route' => '', 'children' => [
+                            ['label' => 'Devis', 'route' => 'app_quotation_manager',],
+                            ['label' => 'Factures', 'route' => 'invoice_manager',],
+                            ['label' => 'Paiement', 'route' => 'payement_list',],
+                        ],
+                    ];
+                    break;
+                case 'ROLE_COMPANY':
+                    $menu[] = [
+                        'label' => 'Gestion', 'route' => '', 'children' => [
+                            ['label' => 'Produits', 'route' => 'app_products_manager',],
+                            ['label' => 'Clients', 'route' => 'app_client_list',],
+                        ],
+                    ];
+                    $menu[] = [
+                        'label' => 'Procédures', 'route' => '', 'children' => [
+                            ['label' => 'Devis', 'route' => 'app_quotation_manager',],
+                            ['label' => 'Factures', 'route' => 'invoice_manager',],
+                            ['label' => 'Paiement', 'route' => 'payement_list',],
+                        ],
+                    ];
+                    break;
+                default:
+                    break;
+            }
             $menu[] = [
                 'label' => 'Mon compte', 'route' => '', 'children' => [
                     ['label' => 'Déconnexion', 'route' => 'app_logout',],

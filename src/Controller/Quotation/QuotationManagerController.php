@@ -27,13 +27,16 @@ class QuotationManagerController extends AbstractController
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
-        $this->denyAccessUnlessGranted('ROLE_COMPANY');
 
         $data = $this->quotationService->manager($this->getUser());
 
         return $this->render('employee/quotation/index.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => $this->getUser() instanceof UserInterface,
+                'role' => $this->getUser()->getRoles()[0],
+            ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
+            'company' => $this->getUser()->getCompany()->getName(),
             'datas' => $data['datas'],
             'entityProperties' => $data['entityProperties'],
         ]);
@@ -44,9 +47,17 @@ class QuotationManagerController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
 
+        $connected = $this->getUser() instanceof UserInterface;
+
         $data = $this->quotationService->showQuotation($quotation);
-        $data['menuItems'] = (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]);
+        $data['menuItems'] = (new MenuBuilder)->createMainMenu([
+            'connected' => $connected,
+            'role' => $this->getUser()->getRoles()[0],
+        ]);
         $data['footerItems'] = (new MenuBuilder)->createMainFooter();
+        if($connected) {
+            $data['company'] = $this->getUser()->getCompany()->getName();
+        }
 
 
         return $this->render('employee/quotation/show.html.twig', $data);
@@ -57,14 +68,17 @@ class QuotationManagerController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
 
-
         $userConnected = $this->getUser();
 
         $datas = $this->quotationService->editQuotation($quotation, $userConnected);
 
         return $this->render('employee/quotation/create_edit.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => $userConnected instanceof UserInterface,
+                'role' => $userConnected->getRoles()[0],
+            ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
+            'company' => $userConnected->getCompany()->getName(),
             'services' => $datas['datas']['services'],
             'productsAndComponents' => $datas['datas']['products'],
             'quotationToEdit' => $datas['quotation'],
@@ -104,8 +118,12 @@ class QuotationManagerController extends AbstractController
         $datas = $this->quotationService->createQuotation($userConnected);
 
         return $this->render('employee/quotation/create_edit.html.twig', [
-            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
+            'menuItems' => (new MenuBuilder)->createMainMenu([
+                'connected' => $userConnected instanceof UserInterface,
+                'role' => $userConnected->getRoles()[0],
+            ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
+            'company' => $userConnected->getCompany()->getName(),
             'services' => $datas['services'],
             'clients' => $datas['clients'],
             'productsAndComponents' => $datas['products'],
