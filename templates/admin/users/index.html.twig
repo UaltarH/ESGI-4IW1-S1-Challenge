@@ -1,10 +1,7 @@
-{% extends '/admin/adminBase.html.twig' %}
+{% extends 'base.html.twig' %}
 
 
-{% block title %}Administration Tech Care
-{% endblock %}
-
-{% block content_admin %}
+{% block body %}
 	<div class="page-wrapper page-wrapper-admin">
 		{% include '_components/crudTable.html.twig' with {
 			'title' : 'Gestion des utilisateurs Tech Care',

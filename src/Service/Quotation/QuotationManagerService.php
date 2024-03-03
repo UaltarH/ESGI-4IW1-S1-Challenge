@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Quotation;
 
 use App\Entity\TechcareQuotation;
 use App\Entity\TechcareQuotationContent;
@@ -16,9 +16,11 @@ use App\Repository\TechcareProductRepository;
 use Faker\Factory;
 use Twig\Environment;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use App\Utilities\EmailUtils;
+use App\Utilities\PdfUtils;
 
 
-class QuotationService
+class QuotationManagerService
 {
     private TechcareQuotationRepository $quotationRepository;
     private QuotationUtils $quotationUtils;
@@ -28,15 +30,15 @@ class QuotationService
     private TechcareClientRepository $clientRepository;
     private TechcareProductRepository $productRepository;
     private Environment $twig;
-    private EmailService $emailService;
-    private PdfService $pdfService;
+    private EmailUtils $emailUtils;
+    private PdfUtils $pdfUtils;
     private UrlGeneratorInterface $router;
 
     public function __construct(
         Environment $twig,
         UrlGeneratorInterface $router,
-        PdfService $pdfService,
-        EmailService $emailService,
+        PdfUtils $pdfUtils,
+        EmailUtils $emailUtils,
         TechcareProductRepository $productRepository,
         TechcareClientRepository $clientRepository,
         TechcareComponentRepository $componentsRepository,
@@ -52,8 +54,8 @@ class QuotationService
         $this->componentsRepository = $componentsRepository;
         $this->clientRepository = $clientRepository;
         $this->productRepository = $productRepository;
-        $this->emailService = $emailService;
-        $this->pdfService = $pdfService;
+        $this->emailUtils = $emailUtils;
+        $this->pdfUtils = $pdfUtils;
         $this->router = $router;
         $this->twig = $twig;
     }
@@ -71,7 +73,20 @@ class QuotationService
 
         $quotationsSorted = $this->quotationUtils->sortQuotationsByDate($quotations);
 
-        return $this->quotationUtils->getArrayEntityMappedUsedForTable($quotationsSorted);
+        $datas = $this->quotationUtils->getArrayEntityMappedUsedForTable($quotationsSorted);
+
+        return [
+            'datas' => $datas,
+            'entityProperties' => [
+                'quotation_number' => 'Numéro de devis',
+                'client' => 'Client',
+                'created_by' => 'Créé par',
+                'last_modif' => 'Dernière modification',
+                'amount' => 'Montant',
+                'status' => 'Statut',
+                'actions' => 'Actions',
+            ],
+        ];
     }
 
     public function showQuotation($quotation)
@@ -261,9 +276,9 @@ class QuotationService
 
         $data = $this->quotationUtils->prepareDataForPdfOrPreview($quotation);
 
-        $html =  $this->twig->render('pdf_generator/quotation.html.twig', $data);
+        $html =  $this->twig->render('pdfTemplates/quotation.html.twig', $data);
 
-        $contentPdf = $this->pdfService->generatePdfFile($html);
+        $contentPdf = $this->pdfUtils->generatePdfFile($html);
 
         $acceptUrl = $this->router->generate('app_quotation_accept', ['token' => $quotation->getToken()], UrlGeneratorInterface::ABSOLUTE_URL);
         $refuseUrl = $this->router->generate('app_quotation_refuse', ['token' => $quotation->getToken()], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -271,7 +286,7 @@ class QuotationService
         $htmlContent .= '<p>Veuillez cliquer sur le lien ci-dessous pour refuser le devis :</p><br><a href="' . $refuseUrl . '">Refuser le devis</a> ';
 
 
-        $this->emailService->sendEmailWithPdf('subject', $htmlContent, 'mail@gmail.com', $clientEmail, $contentPdf, $data['quotation_number']);
+        $this->emailUtils->sendEmailWithPdf('subject', $htmlContent, 'mail@gmail.com', $clientEmail, $contentPdf, $data['quotation_number']);
     }
 
     public function acceptQuotation($token)

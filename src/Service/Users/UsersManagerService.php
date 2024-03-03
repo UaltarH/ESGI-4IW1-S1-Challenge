@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Users;
 
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 
-class UsersCompanyService
+class UsersManagerService
 {
     private EntityManagerInterface $entityManager;
 
@@ -22,7 +22,12 @@ class UsersCompanyService
         $usersWithoutOwner = array_filter($users, function ($user) {
             return !in_array('ROLE_OWNER_COMPANY', $user->getRoles());
         });
-        $usersWithoutOwner = $this->sortUsersByUpdatedAt($usersWithoutOwner);
+        //pareil mais pour role admin
+        $usersWithoutOwnerAndAdmin = array_filter($usersWithoutOwner, function ($user) {
+            return !in_array('ROLE_ADMIN', $user->getRoles());
+        });
+
+        $usersWithoutOwnerAndAdmin = $this->sortUsersByUpdatedAt($usersWithoutOwnerAndAdmin);
 
         $usersMapped = array_map(function ($user) {
             return [
@@ -45,7 +50,7 @@ class UsersCompanyService
                     ]
                 ]
             ];
-        }, $usersWithoutOwner);
+        }, $usersWithoutOwnerAndAdmin);
 
         $entityProperties = [
             'nom' => 'Prenom et nom',

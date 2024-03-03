@@ -1,12 +1,11 @@
 <?php
-// src/Service/EmailService.php
 
-namespace App\Service;
+namespace App\Utilities;
 
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-class EmailService
+class EmailUtils
 {
     private $mailer;
     private string $apiKey;

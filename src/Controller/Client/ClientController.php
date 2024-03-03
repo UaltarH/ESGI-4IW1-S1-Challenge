@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Controller\Back;
+namespace App\Controller\Client;
+
 use App\Entity\TechcareClient;
 use App\Form\Client\ClientForm;
 use App\Menu\MenuBuilder;
@@ -21,17 +22,17 @@ class ClientController extends AbstractController
         $clients = $clientRepository->findBy(['company' => $company]);
         $clientsMap = array_map(function ($client) {
             return [
-                'fullName' => $client->getFirstname().' ' .$client->getLastname(),
+                'fullName' => $client->getFirstname() . ' ' . $client->getLastname(),
                 'email' => $client->getEmail(),
                 'billingAddress' => $client->getBillingAddress(),
                 'phoneNumber' => $client->getPhoneNumber(),
                 'updatedAt' => $client->getUpdatedAt()->format('d/m/Y H:i:s'),
-//                'quotations' => $client->getQuotations()->map(function($quotation) {
-//                    return $quotation->getQuotationNumber();
-//                }),
-//                'invoices' => $client->getInvoices()->map(function($invoice) {
-//                    return $invoice->getInvoiceNumber();
-//                }),
+                //                'quotations' => $client->getQuotations()->map(function($quotation) {
+                //                    return $quotation->getQuotationNumber();
+                //                }),
+                //                'invoices' => $client->getInvoices()->map(function($invoice) {
+                //                    return $invoice->getInvoiceNumber();
+                //                }),
                 'actions' => [
                     'update' => [
                         'type' => 'button',
@@ -49,7 +50,7 @@ class ClientController extends AbstractController
             ];
         }, $clients);
 
-        return $this->render('back/client/index.html.twig', [
+        return $this->render('employee/client/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => true]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'controller_name' => 'ClientController',
@@ -60,8 +61,8 @@ class ClientController extends AbstractController
                 'email' => 'E-mail',
                 'billingAddress' => 'Adresse de facturation',
                 'phoneNumber' => 'N° de téléphone',
-//                'quotations' => 'Devis',
-//                'invoices' => 'Factures',
+                //                'quotations' => 'Devis',
+                //                'invoices' => 'Factures',
                 'updatedAt' => 'Dernière modification',
                 'actions' => 'Actions'
             ]
@@ -76,7 +77,7 @@ class ClientController extends AbstractController
         $form = $this->createForm(ClientForm::class, $client);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $client->setUpdatedBy($this->getUser()->getFirstname() . ' ' . $this->getUser()->getLastname());
             $client->setCreatedBy($this->getUser()->getFirstname() . ' ' . $this->getUser()->getLastname());
             $client->setUpdatedAt(new \DateTimeImmutable());
@@ -88,7 +89,7 @@ class ClientController extends AbstractController
             return $this->redirectToRoute('app_client_list');
         }
 
-        return $this->render('back/client/new.html.twig', [
+        return $this->render('employee/client/new.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => true]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'controller_name' => 'ClientController',
@@ -101,20 +102,20 @@ class ClientController extends AbstractController
     public function update(Request $request, TechcareClient $client, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_COMPANY');
-        if($client->getCompany() !== $this->getUser()->getCompany()) {
+        if ($client->getCompany() !== $this->getUser()->getCompany()) {
             return $this->redirectToRoute('app_client_list');
         }
         $form = $this->createForm(ClientForm::class, $client);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $client->setUpdatedBy($this->getUser()->getFirstname() . ' ' . $this->getUser()->getLastname());
             $client->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->persist($client);
             $entityManager->flush();
             return $this->redirectToRoute('app_client_list');
         }
-        return $this->render('back/client/edit.html.twig', [
+        return $this->render('employee/client/edit.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => true]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'controller_name' => 'ClientController',
@@ -127,10 +128,10 @@ class ClientController extends AbstractController
     public function delete(Request $request, TechcareClient $client, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_COMPANY');
-        if($client->getCompany() !== $this->getUser()->getCompany()) {
+        if ($client->getCompany() !== $this->getUser()->getCompany()) {
             return $this->redirectToRoute('app_client_list');
         }
-        if ($this->isCsrfTokenValid('delete'.$client->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $client->getId(), $request->request->get('_token'))) {
             $entityManager->remove($client);
             $entityManager->flush();
         }

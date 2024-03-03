@@ -8,19 +8,19 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Menu\MenuBuilder;
 use Symfony\Component\Security\Core\User\UserInterface;
-use App\Service\UsersCompanyService;
+use App\Service\Users\UsersManagerService;
 use App\Entity\TechcareUser;
 use App\Form\User\CreateUserType;
 use App\Form\User\EditUserType;
 use Doctrine\ORM\EntityManagerInterface;
 
-class UsersCompanyManagerController extends AbstractController
+class UsersManagerController extends AbstractController
 {
-    private UsersCompanyService $usersCompanyService;
+    private UsersManagerService $usersCompanyService;
     private EntityManagerInterface $entityManager;
 
     public function __construct(
-        UsersCompanyService $usersCompanyService,
+        UsersManagerService $usersCompanyService,
         EntityManagerInterface $entityManager
     ) {
         $this->usersCompanyService = $usersCompanyService;
@@ -34,7 +34,7 @@ class UsersCompanyManagerController extends AbstractController
         $userConnected = $this->getUser();
         $datas = $this->usersCompanyService->manager($userConnected);
 
-        return $this->render('User/index.html.twig', [
+        return $this->render('employee/user/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'entityProperties' => $datas['entityProperties'],
@@ -60,7 +60,7 @@ class UsersCompanyManagerController extends AbstractController
         if ($bool) {
             return $this->redirectToRoute('users_company_manager');
         } else {
-            return $this->render('User/create.html.twig', [
+            return $this->render('employee/user/create.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'form' => $form->createView(),
@@ -84,7 +84,7 @@ class UsersCompanyManagerController extends AbstractController
         if ($bool) {
             return $this->redirectToRoute('users_company_manager');
         } else {
-            return $this->render('User/update.html.twig', [
+            return $this->render('employee/user/update.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'form' => $form->createView(),

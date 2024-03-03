@@ -11,15 +11,14 @@ use App\Menu\MenuBuilder;
 use App\Entity\TechcareQuotation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Faker\Factory;
-use App\Service\QuotationService;
+use App\Service\Quotation\QuotationManagerService;
 
 
 class QuotationManagerController extends AbstractController
 {
-    private QuotationService $quotationService;
+    private QuotationManagerService $quotationService;
 
-    public function __construct(QuotationService $quotationService)
+    public function __construct(QuotationManagerService $quotationService)
     {
         $this->quotationService = $quotationService;
     }
@@ -32,19 +31,11 @@ class QuotationManagerController extends AbstractController
 
         $data = $this->quotationService->manager($this->getUser());
 
-        return $this->render('quotation/index.html.twig', [
+        return $this->render('employee/quotation/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
-            'datas' => $data,
-            'entityProperties' => [
-                'quotation_number' => 'Numéro de devis',
-                'client' => 'Client',
-                'created_by' => 'Créé par',
-                'last_modif' => 'Dernière modification',
-                'amount' => 'Montant',
-                'status' => 'Statut',
-                'actions' => 'Actions',
-            ],
+            'datas' => $data['datas'],
+            'entityProperties' => $data['entityProperties'],
         ]);
     }
 
@@ -58,7 +49,7 @@ class QuotationManagerController extends AbstractController
         $data['footerItems'] = (new MenuBuilder)->createMainFooter();
 
 
-        return $this->render('quotation/show.html.twig', $data);
+        return $this->render('employee/quotation/show.html.twig', $data);
     }
 
     #[Route('/quotation/edit/{id}', name: 'app_quotation_edit')]
@@ -71,7 +62,7 @@ class QuotationManagerController extends AbstractController
 
         $datas = $this->quotationService->editQuotation($quotation, $userConnected);
 
-        return $this->render('quotation/create_edit.html.twig', [
+        return $this->render('employee/quotation/create_edit.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'services' => $datas['datas']['services'],
@@ -112,7 +103,7 @@ class QuotationManagerController extends AbstractController
         $userConnected = $this->getUser();
         $datas = $this->quotationService->createQuotation($userConnected);
 
-        return $this->render('quotation/create_edit.html.twig', [
+        return $this->render('employee/quotation/create_edit.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'services' => $datas['services'],
@@ -128,7 +119,6 @@ class QuotationManagerController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
 
-        $faker = Factory::create('fr_FR');
         $jsonData = json_decode($request->getContent(), true);
         $response = $this->quotationService->createPostQuotation($jsonData, $this->getUser());
 
@@ -162,14 +152,14 @@ class QuotationManagerController extends AbstractController
         $response = $this->quotationService->acceptQuotation($token);
 
         if (array_key_exists('quotationNumber', $response)) {
-            return $this->render('quotation/acceptedAndRefused.html.twig', [
+            return $this->render('employee/quotation/acceptedAndRefused.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'quotationNumber' => $response['quotationNumber'],
                 'status' => 'accepted',
             ]);
         } else {
-            return $this->render('quotation/acceptedAndRefused.html.twig', [
+            return $this->render('employee/quotation/acceptedAndRefused.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'status' => 'error',
@@ -178,19 +168,19 @@ class QuotationManagerController extends AbstractController
     }
 
     #[Route('/quotation/refuse/{token}', name: 'app_quotation_refuse')]
-    public function refuseQuotation(string $token, EntityManagerInterface $entityManager, TechcareQuotationRepository $quotationRepository): Response
+    public function refuseQuotation(string $token): Response
     {
         $response = $this->quotationService->refuseQuotation($token);
 
         if (array_key_exists('quotationNumber', $response)) {
-            return $this->render('quotation/acceptedAndRefused.html.twig', [
+            return $this->render('employee/quotation/acceptedAndRefused.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'quotationNumber' => $response['quotationNumber'],
                 'status' => 'refused',
             ]);
         } else {
-            return $this->render('quotation/acceptedAndRefused.html.twig', [
+            return $this->render('employee/quotation/acceptedAndRefused.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'status' => 'error',

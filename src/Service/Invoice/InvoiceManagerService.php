@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Invoice;
 
 use App\Entity\TechcareInvoice;
 use App\Repository\TechcareQuotationRepository;
@@ -12,7 +12,7 @@ use Faker\Factory;
 use App\Entity\TechcarePayment;
 use App\Enum\InvoiceStatus;
 
-class InvoiceService
+class InvoiceManagerService
 {
     private EntityManagerInterface $entityManager;
     private Invoiceutils $invoiceUtils;

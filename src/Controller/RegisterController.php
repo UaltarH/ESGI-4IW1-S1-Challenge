@@ -13,12 +13,12 @@ use App\Form\Abstract\registerCompany;
 use App\Entity\TechcareCompany;
 
 
-class RegisterOwnerController extends AbstractController
+class RegisterController extends AbstractController
 {
     #[Route('/register', name: 'app_register', methods: ['POST', 'GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
-//        $this->denyAccessUnlessGranted('IS_ANONYMOUS');
+        //        $this->denyAccessUnlessGranted('IS_ANONYMOUS');
         $form = $this->createForm(registerCompany::class);
         $form->handleRequest($request);
 
@@ -59,7 +59,7 @@ class RegisterOwnerController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('register/index.html.twig', [
+        return $this->render('security/register.html.twig', [
             'form' => $form->createView(),
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => false]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
