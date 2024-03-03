@@ -27,7 +27,7 @@ class InvoiceManagerController extends AbstractController
     #[Route('/invoice/manager', name: 'invoice_manager')]
     public function index(): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') || !$this->isGranted('ROLE_ACCOUNTANT') || !$this->isGranted('ROLE_OWNER_COMPANY')) {
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT') && !$this->isGranted('ROLE_OWNER_COMPANY')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
         }
 
@@ -76,7 +76,7 @@ class InvoiceManagerController extends AbstractController
     #[Route('/invoice/edit/{id}', name: 'invoice_update')]
     public function update(Request $request, TechcareInvoice $invoice): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') || !$this->isGranted('ROLE_ACCOUNTANT') || !$this->isGranted('ROLE_OWNER_COMPANY')) {
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT') && !$this->isGranted('ROLE_OWNER_COMPANY')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
         }
 
@@ -108,7 +108,7 @@ class InvoiceManagerController extends AbstractController
     #[Route('/invoice/delete/{id}', name: 'invoice_delete')]
     public function delete(TechcareInvoice $invoice, EntityManagerInterface $entityManager): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') || !$this->isGranted('ROLE_ACCOUNTANT') || !$this->isGranted('ROLE_OWNER_COMPANY')) {
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT') && !$this->isGranted('ROLE_OWNER_COMPANY')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
         }
         if($invoice->getClient()->getCompany() !== $this->getUser()->getCompany()) {
@@ -123,7 +123,7 @@ class InvoiceManagerController extends AbstractController
     #[Route('/invoice/send/{id}', name: 'invoice_send')]
     public function send(TechcareInvoice $invoice): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') || !$this->isGranted('ROLE_ACCOUNTANT') || !$this->isGranted('ROLE_OWNER_COMPANY')) {
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT') && !$this->isGranted('ROLE_OWNER_COMPANY')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
         }
         if($invoice->getClient()->getCompany() !== $this->getUser()->getCompany()) {
@@ -137,7 +137,7 @@ class InvoiceManagerController extends AbstractController
     #[Route('/invoice/new', name: 'invoice_new')]
     public function new(Request $request): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') || !$this->isGranted('ROLE_ACCOUNTANT') || !$this->isGranted('ROLE_OWNER_COMPANY')) {
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT') && !$this->isGranted('ROLE_OWNER_COMPANY')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
         }
 

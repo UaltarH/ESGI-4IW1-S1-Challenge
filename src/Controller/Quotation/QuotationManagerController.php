@@ -27,7 +27,7 @@ class QuotationManagerController extends AbstractController
     #[Route('/quotation/manager', name: 'app_quotation_manager')]
     public function index(): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') || !$this->isGranted('ROLE_OWNER_COMPANY') || !$this->isGranted('ROLE_ACCOUNTANT')) {
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
         }
 
@@ -48,7 +48,7 @@ class QuotationManagerController extends AbstractController
     #[Route('/quotation/show/{id}', name: 'app_quotation_show')]
     public function show(TechcareQuotation $quotation): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') || !$this->isGranted('ROLE_OWNER_COMPANY') || !$this->isGranted('ROLE_ACCOUNTANT')) {
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à ce devis");
         }
         if($quotation->getClient()->getCompany() !== $this->getUser()->getCompany()) {
@@ -74,7 +74,7 @@ class QuotationManagerController extends AbstractController
     #[Route('/quotation/edit/{id}', name: 'app_quotation_edit')]
     public function edit(TechcareQuotation $quotation): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') || !$this->isGranted('ROLE_OWNER_COMPANY') || !$this->isGranted('ROLE_ACCOUNTANT')) {
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour modifier ce devis.");
         }
         if($quotation->getClient()->getCompany() !== $this->getUser()->getCompany()) {
@@ -114,7 +114,7 @@ class QuotationManagerController extends AbstractController
     #[Route('/quotation/delete/{id}', name: 'app_quotation_delete', methods: ['POST'])]
     public function delete(Request $request, TechcareQuotation $quotation, EntityManagerInterface $entityManager): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') || !$this->isGranted('ROLE_OWNER_COMPANY') || !$this->isGranted('ROLE_ACCOUNTANT')) {
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour supprimer ce devis.");
         }
         if($quotation->getClient()->getCompany() !== $this->getUser()->getCompany()) {
@@ -131,7 +131,7 @@ class QuotationManagerController extends AbstractController
     #[Route('/quotation/create', name: 'app_quotation_create')]
     public function create(): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') || !$this->isGranted('ROLE_OWNER_COMPANY') || !$this->isGranted('ROLE_ACCOUNTANT')) {
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
         }
 

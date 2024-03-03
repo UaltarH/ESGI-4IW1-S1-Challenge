@@ -23,7 +23,7 @@ class PayementController extends AbstractController
     #[Route('/payementList', name: 'payement_list')]
     public function index(): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') || !$this->isGranted('ROLE_ACCOUNTANT') || !$this->isGranted('ROLE_OWNER_COMPANY')) {
+        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT') && !$this->isGranted('ROLE_OWNER_COMPANY')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
         }
         $userConnected = $this->getUser();

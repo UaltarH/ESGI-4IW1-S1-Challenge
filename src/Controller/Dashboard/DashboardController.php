@@ -19,7 +19,7 @@ class DashboardController extends AbstractController
     #[Route('/dashboard', name: 'app_dashboard')]
     public function index(ChartBuilderInterface $chartBuilder,ChartService $chartService): Response | Exception
     {
-        if(!$this->isGranted('ROLE_ACCOUNTANT') || !$this->isGranted('ROLE_OWNER_COMPANY')) {
+        if(!$this->isGranted('ROLE_ACCOUNTANT') && !$this->isGranted('ROLE_OWNER_COMPANY')) {
             return $this->createAccessDeniedException('Vous n\'avez pas les droits pour accéder à cette page');
         }
         $company = $this->getUser()->getCompany()->getName();
