@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="page-wrapper page-wrapper-admin">		
+
+		{% include '_components/crudTable.html.twig' with {
+			'title' : 'Gestions des entreprises', 
+			'entityProperties': entityProperties, 
+			'datas': datas,			
+		} %}
+	</div>
+{% endblock %}

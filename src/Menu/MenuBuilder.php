@@ -19,6 +19,7 @@ class MenuBuilder
                     ['label' => 'Clients', 'route' => 'app_client_list',],
                     ['label' => 'Factures', 'route' => 'invoice_manager',],
                     ['label' => 'Payement', 'route' => 'payement_list',],
+                    ['label' => 'Entreprises', 'route' => 'company_manager',],
 
                 ],
             ];
