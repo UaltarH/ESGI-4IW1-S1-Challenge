@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Menu\MenuBuilder;
 use App\Entity\TechcareInvoice;
-use App\Service\InvoiceService;
+use App\Service\Invoice\InvoiceManagerService;
 use App\Form\Invoice\EditInvoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,9 +16,9 @@ use App\Form\Invoice\CreateInvoiceType;
 
 class InvoiceManagerController extends AbstractController
 {
-    private InvoiceService $invoiceService;
+    private InvoiceManagerService $invoiceService;
 
-    public function __construct(InvoiceService $invoiceService)
+    public function __construct(InvoiceManagerService $invoiceService)
     {
         $this->invoiceService = $invoiceService;
     }
@@ -32,7 +32,7 @@ class InvoiceManagerController extends AbstractController
 
         $invoicesMapped = $this->invoiceService->manager($userConnected);
 
-        return $this->render('invoice/index.html.twig', [
+        return $this->render('employee/invoice/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'datas' => $invoicesMapped,
@@ -57,7 +57,7 @@ class InvoiceManagerController extends AbstractController
 
         $data['menuItems'] = (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]);
         $data['footerItems'] = (new MenuBuilder)->createMainFooter();
-        return $this->render('invoice/show.html.twig', $data);
+        return $this->render('employee/invoice/show.html.twig', $data);
     }
 
     #[Route('/invoice/edit/{id}', name: 'invoice_update')]
@@ -72,7 +72,7 @@ class InvoiceManagerController extends AbstractController
         if ($bool) {
             return $this->redirectToRoute('invoice_manager');
         } else {
-            return $this->render('invoice/edit.html.twig', [
+            return $this->render('employee/invoice/edit.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $this->getUser() instanceof UserInterface]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'form' => $form->createView(),
@@ -92,10 +92,10 @@ class InvoiceManagerController extends AbstractController
     }
 
     #[Route('/invoice/send/{id}', name: 'invoice_send')]
-    public function send(TechcareInvoice $invoice, InvoiceService $invoiceService): Response
+    public function send(TechcareInvoice $invoice): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
-        $invoiceService->sendInvoice($invoice);
+        $this->invoiceService->sendInvoice($invoice);
         return $this->redirectToRoute('invoice_manager');
     }
 
@@ -123,7 +123,7 @@ class InvoiceManagerController extends AbstractController
         if ($bool) {
             return $this->redirectToRoute('invoice_manager');
         } else {
-            return $this->render('invoice/new.html.twig', [
+            return $this->render('employee/invoice/new.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'form' => $form->createView(),

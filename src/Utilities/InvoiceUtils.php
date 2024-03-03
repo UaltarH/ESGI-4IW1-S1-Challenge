@@ -5,8 +5,8 @@ namespace App\Utilities;
 use DateTimeImmutable;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Service\PdfService;
-use App\Service\EmailService;
+use App\Utilities\PdfUtils;
+use App\Utilities\EmailUtils;
 use App\Utilities\QuotationUtils;
 use Twig\Environment;
 use App\Enum\InvoiceStatus;
@@ -15,23 +15,23 @@ class InvoiceUtils
 {
     private UrlGeneratorInterface $router;
     private EntityManagerInterface $entityManager;
-    private PdfService $pdfService;
-    private EmailService $emailService;
+    private PdfUtils $PdfUtils;
+    private EmailUtils $emailUtils;
     private QuotationUtils $quotationUtils;
     private Environment $twig;
 
     public function __construct(
         UrlGeneratorInterface $router,
         EntityManagerInterface $entityManager,
-        PdfService $pdfService,
-        EmailService $emailService,
+        PdfUtils $PdfUtils,
+        EmailUtils $emailUtils,
         Environment $twig,
         QuotationUtils $quotationUtils
     ) {
         $this->router = $router;
         $this->entityManager = $entityManager;
-        $this->pdfService = $pdfService;
-        $this->emailService = $emailService;
+        $this->PdfUtils = $PdfUtils;
+        $this->emailUtils = $emailUtils;
         $this->twig = $twig;
         $this->quotationUtils = $quotationUtils;
     }
@@ -121,13 +121,13 @@ class InvoiceUtils
 
         $clientEmail = $invoice->getClient()->getEmail();
         $data = $this->prepareDataForPdfOrPreview($invoice);
-        $html =  $this->twig->render('pdf_generator/invoice.html.twig', $data);
-        $contentPdf = $this->pdfService->generatePdfFile($html);
+        $html =  $this->twig->render('pdfTemplates/invoice.html.twig', $data);
+        $contentPdf = $this->PdfUtils->generatePdfFile($html);
 
 
 
 
 
-        $this->emailService->sendEmailWithPdf('subject', $htmlContent, 'mail@gmail.com', $clientEmail, $contentPdf, $data['invoice_number']);
+        $this->emailUtils->sendEmailWithPdf('subject', $htmlContent, 'mail@gmail.com', $clientEmail, $contentPdf, $data['invoice_number']);
     }
 }

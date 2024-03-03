@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Menu\MenuBuilder;
-use App\Service\CompanyService;
+use App\Service\Company\CompanyService;
 use App\Form\Company\EditCompanyType;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -31,7 +31,7 @@ class CompanyManagerController extends AbstractController
 
         $datas = $this->companyService->manager();
 
-        return $this->render('Company/index.html.twig', [
+        return $this->render('admin/company/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
             'datas' => $datas['datasTable'],
@@ -50,7 +50,7 @@ class CompanyManagerController extends AbstractController
         if ($bool) {
             return $this->redirectToRoute('company_manager');
         } else {
-            return $this->render('Company/edit.html.twig', [
+            return $this->render('admin/company/edit.html.twig', [
                 'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $userConnected instanceof UserInterface]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
                 'form' => $form->createView(),

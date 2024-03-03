@@ -5,16 +5,18 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Menu\MenuBuilder;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-use App\Service\EmailService;
+use App\Utilities\EmailUtils;
 
 class HomeController extends AbstractController
 {
-    #[Route('/home', name: 'app_home')]
-    public function index(EmailService $emailService): Response
+    #[Route('/home', name: 'default_index')]
+    public function index(EmailUtils $emailUtils): Response
     {
         // test email
-        // $emailService->sendEmailForInscriptionUsingBrevo(
+        // $emailUtils->sendEmailForInscriptionUsingBrevo(
         //     "admin",
         //     "admin@couillase.com",
         //     "mathieupannetrat5@gmail.com",
@@ -24,7 +26,7 @@ class HomeController extends AbstractController
 
         // $base64 = base64_encode(file_get_contents('https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'));
 
-        // $emailService->sendEmailForQuoteUsingBrevo(
+        // $emailUtils->sendEmailForQuoteUsingBrevo(
         //     "admin",
         //     "admin@couillase.com",
         //     "mathieupannetrat5@gmail.com",
@@ -35,7 +37,7 @@ class HomeController extends AbstractController
         //     "Facture_Pannetrat_12/09/2024.png",
         // );
 
-        // $emailService->sendEmailForInvoiceUsingBrevo(
+        // $emailUtils->sendEmailForInvoiceUsingBrevo(
         //     "admin",
         //     "admin@couillase.com",
         //     "mathieupannetrat5@gmail.com",
@@ -47,8 +49,10 @@ class HomeController extends AbstractController
         // );
         //
 
-        return $this->render('back/dashboard/index.html.twig', [
-            'controller_name' => 'HomeController',
+        $connected = $this->getUser() instanceof UserInterface;
+        return $this->render('employee/index.html.twig', [
+            'menuItems' => (new MenuBuilder)->createMainMenu(['connected' => $connected]),
+            'footerItems' => (new MenuBuilder)->createMainFooter()
         ]);
     }
 }

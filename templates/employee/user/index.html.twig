@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="page-wrapper page-wrapper-admin">		
+
+		{% include '_components/crudTable.html.twig' with {
+			'title' : 'Gestions employés de votre entreprise', 
+			'entityProperties': entityProperties, 
+			'datas': datas,	
+			'createRoute': 'users_company_manager_create',
+			'createLabel': 'Créer un employé',		
+		} %}
+	</div>
+{% endblock %}

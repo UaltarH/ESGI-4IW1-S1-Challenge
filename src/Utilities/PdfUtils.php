@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Service;
+namespace App\Utilities;
 
 use Dompdf\Dompdf;
 use Symfony\Component\HttpFoundation\Response;
 
-class PdfService
+class PdfUtils
 {
     private $dompdf;
 
