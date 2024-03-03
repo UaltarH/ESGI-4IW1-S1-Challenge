@@ -58,6 +58,7 @@ class UsersManagerController extends AbstractController
 
         $bool = $this->usersCompanyService->createUser($newUser, $form, $userConnected);
         if ($bool) {
+            $this->addFlash('success', 'Nouvel employé ajouté avec succès !');
             return $this->redirectToRoute('users_company_manager');
         } else {
             return $this->render('employee/user/create.html.twig', [
@@ -82,6 +83,7 @@ class UsersManagerController extends AbstractController
 
         $bool = $this->usersCompanyService->updateUser($techcareUser, $form, $userConnected);
         if ($bool) {
+            $this->addFlash('success', 'Employé modifié avec succès !');
             return $this->redirectToRoute('users_company_manager');
         } else {
             return $this->render('employee/user/update.html.twig', [
@@ -98,6 +100,7 @@ class UsersManagerController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $techcareUser->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($techcareUser);
             $this->entityManager->flush();
+            $this->addFlash('success', 'Employé supprimé avec succès !');
         }
 
         return $this->redirectToRoute('users_company_manager', [], Response::HTTP_SEE_OTHER);
