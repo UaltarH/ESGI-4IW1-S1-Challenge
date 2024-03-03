@@ -8,6 +8,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\TechcareQuotation;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class CreateInvoiceType extends AbstractType
 {
@@ -21,7 +24,23 @@ class CreateInvoiceType extends AbstractType
                 'choices' => $options['quotations'],
                 'mapped' => true,
             ])
-            ->add('amount');
+            ->add('amount', NumberType::class, [
+                'label' => 'Montant',
+                'scale' => 2,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le montant ne peut pas être vide.',
+                    ]),
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => 'Le montant doit être supérieur ou égal à 0.',
+                    ]),
+                ],
+                'attr' => [
+                    'placeholder' => 'Entrez le montant de la facture',
+                    'step' => '0.01',
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

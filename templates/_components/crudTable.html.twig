@@ -3,7 +3,7 @@
 	<table class="shadow-lg bg-white border-collapse rounded overflow-hidden">
 		<thead>
 			<h1 class="page-title">{{ title }}</h1>
-			<div class="flex flex-row justify-between self-start w-full mb-4">
+			<div class="flex flex-row justify-between self-start w-9/12 mb-4">
 				{% if createLabel is defined and createRoute is defined %}
 					<button id="add-user-btn" class="btn btn-primary">
 						<a href="{{ path(createRoute) }}">{{ createLabel }}</a>

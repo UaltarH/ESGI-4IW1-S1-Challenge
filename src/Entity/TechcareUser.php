@@ -10,6 +10,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 #[ORM\Entity(repositoryClass: TechcareUserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -20,6 +22,7 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     protected ?Uuid $id = null;
+
 
     #[ORM\Column(length: 180, unique: true)]
     protected ?string $email = null;
@@ -231,5 +234,16 @@ class TechcareUser implements UserInterface, PasswordAuthenticatedUserInterface
             }
         }
         return $rolesWithoutUser;
+    }
+
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata): void
+    {
+        $metadata->addConstraint(new UniqueEntity([
+            'fields' => 'email',
+            'message' => 'Cette email est deja utilisé.',
+        ]));
+
+        $metadata->addPropertyConstraint('email', new Assert\Email());
     }
 }
