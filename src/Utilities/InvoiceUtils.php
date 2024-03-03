@@ -108,13 +108,17 @@ class InvoiceUtils
 
     public function sendPdfUsingEmail($invoice)
     {
+        $urlOrTextMessage = '';
         if ($invoice->getStatus() === InvoiceStatus::paid->value) {
             $htmlContent = '<p>Votre facture a deja été payée</p>';
+            $urlOrTextMessage = 'Votre facture a deja été payée';
         } else {
             $invoice->getPayment()->generateToken();
             $payementToken = $invoice->getPayment()->getToken();
             $acceptUrl = $this->router->generate('payement_action', ['token' => $payementToken], UrlGeneratorInterface::ABSOLUTE_URL);
             $htmlContent = '<p>Veuillez cliquer sur le lien ci-dessous pour payer votre facture :</p><br><a href="' . $acceptUrl . '">Payer</a> <br>';
+
+            $urlOrTextMessage = $acceptUrl;
         }
 
         $this->entityManager->flush();
@@ -125,7 +129,25 @@ class InvoiceUtils
         $contentPdf = $this->PdfUtils->generatePdfFile($html);
 
 
+        //brevo
+        $clientFullName = $invoice->getClient()->getFirstname() . ' ' . $invoice->getClient()->getLastname();
+        $dateInvoice = $invoice->getCreatedAt()->format('d/m/Y');
+        $companyName = $invoice->getClient()->getCompany()->getName();
+        $base64 = base64_encode($contentPdf);
+        $invoiceName = $invoice->getInvoiceNumber() . '.pdf';
 
+
+        $this->emailUtils->sendEmailForInvoiceUsingBrevo(
+            "admin",
+            "admin@techcare.com",
+            $clientEmail,
+            $clientFullName,
+            $dateInvoice,
+            $companyName,
+            $base64,
+            $invoiceName,
+            $urlOrTextMessage,
+        );
 
 
         $this->emailUtils->sendEmailWithPdf('subject', $htmlContent, 'mail@gmail.com', $clientEmail, $contentPdf, $data['invoice_number']);
