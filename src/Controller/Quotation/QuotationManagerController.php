@@ -13,7 +13,7 @@ use App\Entity\TechcareQuotation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\Quotation\QuotationManagerService;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class QuotationManagerController extends AbstractController
 {
@@ -97,6 +97,7 @@ class QuotationManagerController extends AbstractController
             'quotationToEdit' => $datas['quotation'],
             'edit' => true,
             'idQuotation' => $quotation->getId(),
+            'user' => $userConnected->getId(),
         ]);
     }
 
@@ -104,9 +105,8 @@ class QuotationManagerController extends AbstractController
     public function editPost(Request $request): Response
     {
         $jsonData = json_decode($request->getContent(), true);
-        $userConnected = $this->getUser();
 
-        $response = $this->quotationService->editPostQuotation($jsonData, $userConnected);
+        $response = $this->quotationService->editPostQuotation($jsonData, $jsonData['user']);
         $responseJson = json_encode($response);
         return new Response($responseJson, 200, ['Content-Type' => 'application/json']);
     }
@@ -137,7 +137,6 @@ class QuotationManagerController extends AbstractController
 
         $userConnected = $this->getUser();
         $datas = $this->quotationService->createQuotation($userConnected);
-
         return $this->render('employee/quotation/create_edit.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu([
                 'connected' => $userConnected instanceof UserInterface,
@@ -150,19 +149,21 @@ class QuotationManagerController extends AbstractController
             'productsAndComponents' => $datas['products'],
             'edit' => false,
             'idQuotation' => '',
+            'user' => (string)$userConnected->getId(),
         ]);
     }
 
     #[Route('/quotation/create/post', name: 'app_quotation_create_post')]
     public function post(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+	if ($request->isXmlHttpRequest() || $request->query->get('showJson') == 1) {
+            $jsonData = json_decode($request->getContent(), true);
 
-        $jsonData = json_decode($request->getContent(), true);
-        $response = $this->quotationService->createPostQuotation($jsonData, $this->getUser());
+            $response = $this->quotationService->createPostQuotation($jsonData, $jsonData['user']);
 
-        $responseJson = json_encode($response);
-        return new Response($responseJson, 200, ['Content-Type' => 'application/json']);
+            // $responseJson = json_encode($response);
+            return new JsonResponse($response);
+	}
     }
 
     #[Route('/quotation/pdf/{id}', name: 'app_quotation_pdf')]

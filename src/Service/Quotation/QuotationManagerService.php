@@ -5,6 +5,7 @@ namespace App\Service\Quotation;
 use App\Entity\TechcareQuotation;
 use App\Entity\TechcareQuotationContent;
 use App\Repository\TechcareQuotationRepository;
+use App\Repository\TechcareUserRepository;
 use App\Utilities\QuotationUtils;
 use App\Enum\QuotationStatus;
 use App\Repository\TechcareClientRepository;
@@ -29,6 +30,7 @@ class QuotationManagerService
     private TechcareComponentRepository $componentsRepository;
     private TechcareClientRepository $clientRepository;
     private TechcareProductRepository $productRepository;
+    private TechcareUserRepository $userRepository;
     private Environment $twig;
     private EmailUtils $emailUtils;
     private PdfUtils $pdfUtils;
@@ -45,7 +47,8 @@ class QuotationManagerService
         TechcareServiceRepository $serviceRepository,
         EntityManagerInterface $entityManager,
         TechcareQuotationRepository $techcareQuotationRepository,
-        QuotationUtils $quotationUtils
+        QuotationUtils $quotationUtils,
+        TechcareUserRepository $userRepository
     ) {
         $this->quotationRepository = $techcareQuotationRepository;
         $this->quotationUtils = $quotationUtils;
@@ -58,6 +61,7 @@ class QuotationManagerService
         $this->pdfUtils = $pdfUtils;
         $this->router = $router;
         $this->twig = $twig;
+        $this->userRepository = $userRepository;
     }
 
     public function manager($userConnected)
@@ -157,8 +161,10 @@ class QuotationManagerService
         ];
     }
 
-    public function editPostQuotation($jsonData, $userConnected)
+    public function editPostQuotation($jsonData, $idUserConnected)
     {
+
+        $userConnected = $this->userRepository->find($idUserConnected);
         $quotation = $this->quotationRepository->find($jsonData['id']);
         $quotation->setDescription($jsonData['description']);
         $quotation->setDiscount($jsonData['discount']);
@@ -203,10 +209,10 @@ class QuotationManagerService
         return $this->quotationUtils->getDatasForCreatAndEditQuotation($company);
     }
 
-    public function createPostQuotation($jsonData, $userConnected)
+    public function createPostQuotation($jsonData, $idUserConnected)
     {
         $faker = Factory::create('fr_FR');
-
+        $userConnected = $this->userRepository->find($idUserConnected);
         //get entities with the json data
         $clientSelected = $this->clientRepository->find($jsonData['clientId']);
         $productSelected = $this->productRepository->find($jsonData['productId']);
@@ -291,9 +297,7 @@ class QuotationManagerService
         $companyName = $quotation->getClient()->getCompany()->getName();
         $quoteName = $quotation->getQuotationNumber();
 
-
-
-        $this->emailUtils->sendEmailWithPdf('subject', $htmlContent, 'mail@gmail.com', $clientEmail, $contentPdf, $data['quotation_number']);
+//        $this->emailUtils->sendEmailWithPdf('subject', $htmlContent, 'mail@gmail.com', $clientEmail, $contentPdf, $data['quotation_number']);
 
         $this->emailUtils->sendEmailForQuoteUsingBrevo(
             "admin",
