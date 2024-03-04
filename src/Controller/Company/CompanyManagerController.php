@@ -38,7 +38,6 @@ class CompanyManagerController extends AbstractController
                 'role' => $userConnected->getRoles()[0],
             ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
-            'company' => $userConnected->getCompany()->getName(),
             'datas' => $datas['datasTable'],
             'entityProperties' => $datas['entityProperties'],
         ]);
@@ -63,7 +62,6 @@ class CompanyManagerController extends AbstractController
                     'role' => $userConnected->getRoles()[0],
                 ]),
                 'footerItems' => (new MenuBuilder)->createMainFooter(),
-                'company' => $userConnected->getCompany()->getName(),
                 'form' => $form->createView(),
             ]);
         }

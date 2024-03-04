@@ -13,13 +13,14 @@ services:
     restart: unless-stopped
     volumes:
       - php_socket:/var/run/php
+      - public:/srv/app/public
     healthcheck:
       interval: 10s
       timeout: 3s
       retries: 3
       start_period: 30s
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-symfony}:${POSTGRES_PASSWORD:-ChangeMe}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-13}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-symfony}:${POSTGRES_PASSWORD:-TechCareDb}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-13}
       # Run "composer require symfony/mercure-bundle" to install and configure the Mercure integration
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
       MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
@@ -40,6 +41,7 @@ services:
       - php_socket:/var/run/php
       - caddy_data:/data
       - caddy_config:/config
+      - public:/srv/app/public
     ports:
       # HTTP
       - target: 80
@@ -58,7 +60,7 @@ services:
     image: postgres:${POSTGRES_VERSION:-13}-alpine
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-app}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMe}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-TechCareDb}
       POSTGRES_USER: ${POSTGRES_USER:-symfony}
     volumes:
       - db_data:/var/lib/postgresql/data:rw
@@ -73,6 +75,7 @@ volumes:
   php_socket:
   caddy_data:
   caddy_config:
+  public:
   ###> doctrine/doctrine-bundle ###
   db_data:
   ###< doctrine/doctrine-bundle ###

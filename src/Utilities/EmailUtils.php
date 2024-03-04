@@ -101,7 +101,10 @@ class EmailUtils
         string $quoteDateFormatted,
         string $quoteCompany,
         string $base64Quote,
-        string $quoteName
+        string $quoteName,
+        string $urlAcceptQuote,
+        string $urlRefuseQuote,
+
     ): void {
         $data = [
             "sender" => [
@@ -118,6 +121,8 @@ class EmailUtils
                 "prenom" => $recipientFirstName,
                 "date" => $quoteDateFormatted,
                 "entreprise" => $quoteCompany,
+                "urlaccept" => $urlAcceptQuote,
+                "urlrefuse" => $urlRefuseQuote,
             ],
             "subject" => "Votre devis en pièce jointe",
             "attachment" => [["content" => $base64Quote, "name" => $quoteName]],
@@ -139,7 +144,9 @@ class EmailUtils
         string $quoteDateFormatted,
         string $quoteCompany,
         string $base64Quote,
-        string $quoteName
+        string $quoteName,
+        string $urlPaidInvoice,
+
     ): void {
         $data = [
             "sender" => [
@@ -156,6 +163,7 @@ class EmailUtils
                 "prenom" => $recipientFirstName,
                 "date" => $quoteDateFormatted,
                 "entreprise" => $quoteCompany,
+                "url" => $urlPaidInvoice,
             ],
             "subject" => "Votre facture en pièce jointe",
             "attachment" => [["content" => $base64Quote, "name" => $quoteName]],

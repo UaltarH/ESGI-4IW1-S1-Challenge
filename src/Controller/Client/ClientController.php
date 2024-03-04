@@ -3,6 +3,10 @@
 namespace App\Controller\Client;
 
 use App\Entity\TechcareClient;
+use App\Entity\TechcareInvoice;
+use App\Entity\TechcarePayment;
+use App\Entity\TechcareQuotation;
+use App\Entity\TechcareQuotationContent;
 use App\Form\Client\ClientForm;
 use App\Menu\MenuBuilder;
 use App\Service\Client\ClientService;
@@ -68,7 +72,6 @@ class ClientController extends AbstractController
                 'form' => $form->createView(),
             ]);
         }
-
     }
 
     #[Route('/client/edit/{id}', name: 'app_client_edit', methods: ['GET', 'POST'])]
@@ -108,7 +111,37 @@ class ClientController extends AbstractController
             return $this->redirectToRoute('app_client_list');
         }
         if ($this->isCsrfTokenValid('delete' . $client->getId(), $request->request->get('_token'))) {
+
+
+            //delete all related data
+            //remove all invoices related to this client
+            $invoices = $entityManager->getRepository(TechcareInvoice::class)->findBy(['client' => $client]);
+            foreach ($invoices as $invoice) {
+                $entityManager->remove($invoice);
+            }
+
+            //remove all payements related to this client
+            $payements = $entityManager->getRepository(TechcarePayment::class)->findBy(['client' => $client]);
+            foreach ($payements as $payement) {
+                $entityManager->remove($payement);
+            }
+
+            //remove all quotations related to this client
+            $quotations = $entityManager->getRepository(TechcareQuotation::class)->findBy(['client' => $client]);
+            foreach ($quotations as $quotation) {
+                $entityManager->remove($quotation);
+
+                //remove all quotation contents related to this quotation
+                $contents = $entityManager->getRepository(TechcareQuotationContent::class)->findBy(['quotation' => $quotation]);
+                foreach ($contents as $content) {
+                    $entityManager->remove($content);
+                }
+            }
+
             $entityManager->remove($client);
+
+
+
             $entityManager->flush();
             $this->addFlash('success', 'Client supprimé avec succès !');
         }

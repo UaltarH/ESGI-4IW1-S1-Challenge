@@ -1,27 +1,18 @@
 <?php
+
 namespace App\Controller;
+
 use App\Menu\MenuBuilder;
-use App\Repository\TechcareCompanyRepository;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
-use \Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
 
-class DefaultController extends AbstractController
+class DesignGuideController extends AbstractController
 {
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
-    #[Route('/', name: 'default_index')]
-    public function index(TechcareCompanyRepository $companyRepository, ChartBuilderInterface $chartBuilder): Response
+    #[Route('/design-guide', name: 'design_guide_index')]
+    public function index(ChartBuilderInterface $chartBuilder)
     {
-        $connected = $this->getUser() instanceof UserInterface;
-
         $chartLine = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chartLine->setData([
             'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -83,18 +74,47 @@ class DefaultController extends AbstractController
                 ],
             ],
         ]);
-
-        return $this->render('default/index.html.twig', [
+        return $this->render('design_guide/index.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu([
-                'connected' => $connected,
-                'role' => $connected ? $this->getUser()->getRoles()[0] : null,
+                'connected' => false,
             ]),
             'footerItems' => (new MenuBuilder)->createMainFooter(),
-            'company' => $connected ? $this->getUser()->getRoles()[0] == 'ROLE_ADMIN' ? null : $this->getUser()->getCompany()->getName() : null,
-            'totalCompanies' => $companyRepository->countCompanies(),
             'chartLine' => $chartLine,
             'chartBar' => $chartBar,
+            'entityProperties'=> [
+                'name' => 'string',
+                'description' => 'text',
+                'price' => 'float',
+                'quantity' => 'integer',
+                'createdAt' => 'datetime',
+                'updatedAt' => 'datetime',
+            ],
+            'datas' => [
+                [
+                    'name' => 'Product 1',
+                    'description' => 'Description of product 1',
+                    'price' => 10.5,
+                    'quantity' => 100,
+                    'createdAt' => (new \DateTime('2021-01-01'))->format('Y-m-d H:i:s'),
+                    'updatedAt' => (new \DateTime('2021-01-01'))->format('Y-m-d H:i:s'),
+                ],
+                [
+                    'name' => 'Product 2',
+                    'description' => 'Description of product 2',
+                    'price' => 20.5,
+                    'quantity' => 200,
+                    'createdAt' => (new \DateTime('2021-01-02'))->format('Y-m-d H:i:s'),
+                    'updatedAt' => (new \DateTime('2021-01-02'))->format('Y-m-d H:i:s'),
+                ],
+                [
+                    'name' => 'Product 3',
+                    'description' => 'Description of product 3',
+                    'price' => 30.5,
+                    'quantity' => 300,
+                    'createdAt' => (new \DateTime('2021-01-03'))->format('Y-m-d H:i:s'),
+                    'updatedAt' => (new \DateTime('2021-01-03'))->format('Y-m-d H:i:s'),
+                ],
+            ],
         ]);
     }
-
 }

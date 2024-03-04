@@ -109,8 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sendEditQuotation(editQuotation) {
-      console.log(JSON.stringify(editQuotation, null, 2));
-
+      editQuotation['user'] = user;
       // send the json object to the server
       $.ajax({
         url: "/quotation/editpost",
@@ -118,7 +117,6 @@ document.addEventListener("DOMContentLoaded", function () {
         contentType: "application/json",
         data: JSON.stringify(editQuotation),
         success: function (response) {
-          console.log(response);
           if (response.status == "success") {
             $.ajax({
               url: "/quotation/pdfpost",
@@ -126,7 +124,6 @@ document.addEventListener("DOMContentLoaded", function () {
               contentType: "application/json",
               data: JSON.stringify({ quotationId: response.quotationId }),
               success: function (response) {
-                console.log(response);
                 if (response.status == "success") {
                   window.location.href = "/quotation/manager";
                 } else {
@@ -148,8 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sendNewQuotation(createQuotation) {
-      console.log(JSON.stringify(createQuotation, null, 2));
-
+      createQuotation['user'] = user;
       // send the json object to the server
       $.ajax({
         url: "/quotation/create/post",
@@ -157,7 +153,6 @@ document.addEventListener("DOMContentLoaded", function () {
         contentType: "application/json",
         data: JSON.stringify(createQuotation),
         success: function (response) {
-          console.log(response);
           if (response.status == "success") {
             // redirect to the home page
             // window.location.href = "/quotation/manager";
@@ -168,7 +163,6 @@ document.addEventListener("DOMContentLoaded", function () {
               contentType: "application/json",
               data: JSON.stringify({ quotationId: response.quotationId }),
               success: function (response) {
-                console.log(response);
                 if (response.status == "success") {
                   window.location.href = "/quotation/manager";
                 } else {
