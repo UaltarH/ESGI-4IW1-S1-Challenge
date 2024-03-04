@@ -16,7 +16,7 @@ framework:
     #fragments: true
     php_errors:
         log: true
-
+when@prod:
     error_controller: App\Controller\ErrorController::show
 when@test:
     framework:
