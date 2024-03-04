@@ -13,6 +13,9 @@ use App\Entity\TechcareProduct;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Product\ProductsAddAndUpdateType;
 use App\Service\Products\ProductsManagerService;
+use App\Entity\TechcareQuotationContent;
+use App\Entity\TechcarePayment;
+use App\Entity\TechcareInvoice;
 
 class ProductsManagerController extends AbstractController
 {
@@ -78,7 +81,7 @@ class ProductsManagerController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_COMPANY');
         $userConnected = $this->getUser();
-        if($techcareProduct->getCompany() !== $userConnected->getCompany()){
+        if ($techcareProduct->getCompany() !== $userConnected->getCompany()) {
             return $this->createAccessDeniedException("Vous n'avez pas le droit de modifier ce produit");
         }
         $componentsOftheProduct = $techcareProduct->getComponents()->toArray();
@@ -108,11 +111,39 @@ class ProductsManagerController extends AbstractController
     public function delete(Request $request, TechcareProduct $techcareProduct, EntityManagerInterface $entityManager): Response | Exception
     {
         $this->denyAccessUnlessGranted('ROLE_COMPANY');
-        if($techcareProduct->getCompany() !== $this->getUser()->getCompany()){
+        if ($techcareProduct->getCompany() !== $this->getUser()->getCompany()) {
             return $this->createAccessDeniedException("Vous n'avez pas le droit de supprimer ce produit");
         }
         if ($this->isCsrfTokenValid('delete' . $techcareProduct->getId(), $request->request->get('_token'))) {
+
+            //TODO: change database schema
+            $quotationsToRemove = [];
+            //remove all quotations contents related to this product
+            $quotationsContents = $entityManager->getRepository(TechcareQuotationContent::class)->findBy(['product' => $techcareProduct]);
+            foreach ($quotationsContents as $quotationContent) {
+                $quotationsToRemove[] = $quotationContent->getQuotation();
+                $entityManager->remove($quotationContent);
+            }
+
+            //remove all quotations related to this product
+            foreach ($quotationsToRemove as $quotation) {
+                //remove all payements related to this quotation
+                $payements = $entityManager->getRepository(TechcarePayment::class)->findBy(['quotation' => $quotation]);
+                foreach ($payements as $payement) {
+                    //remova all invoices related to this payement
+                    $invoices = $entityManager->getRepository(TechcareInvoice::class)->findBy(['payment' => $payement]);
+                    foreach ($invoices as $invoice) {
+                        $entityManager->remove($invoice);
+                    }
+
+                    $entityManager->remove($payement);
+                }
+
+                $entityManager->remove($quotation);
+            }
+
             $entityManager->remove($techcareProduct);
+
             $entityManager->flush();
         }
         $this->addFlash('success', 'Produit supprimé avec succès !');

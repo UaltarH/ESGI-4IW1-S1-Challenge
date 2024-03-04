@@ -15,7 +15,7 @@ class ClientFixtures extends Fixture implements DependentFixtureInterface
         $faker = Factory::create('fr_FR');
 
         for ($i = 0; $i < 10; $i++) {
-            for ($j = 0; $j < 5; $j++) {
+            for ($j = 0; $j < 15; $j++) {
                 $object = (new Client())
                     ->setFirstname($faker->firstName)
                     ->setLastname($faker->lastName)
@@ -29,7 +29,7 @@ class ClientFixtures extends Fixture implements DependentFixtureInterface
                     ->setCompany($this->getReference('company_' . $j));
 
                 $manager->persist($object);
-                $this->addReference('client_' . $i * 5 + $j, $object);
+                $this->addReference('client_' . $i * 15 + $j, $object);
             }
         }
 

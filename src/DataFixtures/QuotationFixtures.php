@@ -21,7 +21,7 @@ class QuotationFixtures extends Fixture implements DependentFixtureInterface
         $smartphoneCpt = 0;
         $ordinateurCpt = 0;
         $tabletteCpt = 0;
-        for ($x = 0; $x < 50; $x++) {
+        for ($x = 0; $x < 150; $x++) {
             $client = $this->getReference('client_' . $x);
             $company = $client->getCompany();
             for ($i = 0; $i < 2; $i++) {
