@@ -43,22 +43,6 @@ class EmailUtils
         }
     }
 
-    public function sendEmailUsingMailer(string $subject, string $content, string $senderEmail, string $recipientEmail): void
-    {
-        $email = (new Email())
-            ->from($senderEmail)
-            ->to($recipientEmail)
-            ->subject($subject)
-            ->text('Sending emails is fun again!')
-            ->html($content);
-
-        try {
-            $this->mailer->send($email);
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-        }
-    }
-
     public function sendEmailForInscriptionUsingBrevo(
         string $senderName,
         string $senderEmail,
@@ -97,14 +81,13 @@ class EmailUtils
         string $senderName,
         string $senderEmail,
         string $recipientEmail,
-        string $recipientFirstName,
+        string $recipientFullName,
         string $quoteDateFormatted,
         string $quoteCompany,
         string $base64Quote,
         string $quoteName,
         string $urlAcceptQuote,
         string $urlRefuseQuote,
-
     ): void {
         $data = [
             "sender" => [
@@ -118,7 +101,7 @@ class EmailUtils
             ],
             "templateId" => $this->idTemplateQuote,
             "params" => [
-                "prenom" => $recipientFirstName,
+                "prenom" => $recipientFullName,
                 "date" => $quoteDateFormatted,
                 "entreprise" => $quoteCompany,
                 "urlaccept" => $urlAcceptQuote,
@@ -146,7 +129,6 @@ class EmailUtils
         string $base64Quote,
         string $quoteName,
         string $urlPaidInvoice,
-
     ): void {
         $data = [
             "sender" => [
@@ -231,4 +213,40 @@ class EmailUtils
 
         curl_close($ch);
     }
+
+    // test email
+    // $emailUtils->sendEmailForInscriptionUsingBrevo(
+    //     "admin",
+    //     "admin@couillase.com",
+    //     "mathieupannetrat5@gmail.com",
+    //     "Mathieu Pannetrat",
+    //     "https://www.google.com"
+    // );
+
+    // $base64 = base64_encode(file_get_contents('https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'));
+
+    // $emailUtils->sendEmailForQuoteUsingBrevo(
+    //     "admin",
+    //     "admin@couillase.com",
+    //     "mathieupannetrat5@gmail.com",
+    //     "Mathieu",
+    //     "12/09/2024",
+    //     "Company Name",
+    //     $base64,
+    //     "Facture_Pannetrat_12/09/2024.png",
+    //     "https://www.google.com",
+    //     "https://www.google.com",
+    // );
+
+    // $emailUtils->sendEmailForInvoiceUsingBrevo(
+    //     "admin",
+    //     "admin@couillase.com",
+    //     "mathieupannetrat5@gmail.com",
+    //     "Mathieu",
+    //     "12/09/2024",
+    //     "Company Name",
+    //     $base64,
+    //     "Facture_Pannetrat_12/09/2024.png"
+    // );
+    //
 }

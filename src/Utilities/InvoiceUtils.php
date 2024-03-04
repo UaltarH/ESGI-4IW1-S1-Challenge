@@ -108,7 +108,7 @@ class InvoiceUtils
 
     public function sendPdfUsingEmail($invoice)
     {
-        $urlOrTextMessage = '';$urlOrTextMessage = '';
+        $urlOrTextMessage = '';
         if ($invoice->getStatus() === InvoiceStatus::paid->value) {
             $htmlContent = '<p>Votre facture a deja été payée</p>';
             $urlOrTextMessage = 'Votre facture a deja été payée';

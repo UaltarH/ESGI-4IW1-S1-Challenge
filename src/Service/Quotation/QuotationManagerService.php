@@ -298,6 +298,7 @@ class QuotationManagerService
         $quoteName = $quotation->getQuotationNumber();
 
 //        $this->emailUtils->sendEmailWithPdf('subject', $htmlContent, 'mail@gmail.com', $clientEmail, $contentPdf, $data['quotation_number']);
+
         $this->emailUtils->sendEmailForQuoteUsingBrevo(
             "admin",
             "admin@techcare.com",
