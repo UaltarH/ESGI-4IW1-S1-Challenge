@@ -80,7 +80,6 @@ class QuotationUtils
     {
         $company = $quotation->getClient()->getCompany();
         $arrayQuotationContent = $quotation->getContents();
-
         $logoTechcare = $this->commonUtils->getLogoTechcareForPdf();
 
         $data = [

@@ -265,6 +265,17 @@
 					Créer le devis
 				{% endif %}				
 			</button>
+
+			{% if quotationToEdit is defined %}
+			<form id="quotationForm" action="{{ path('app_quotation_edit_post') }}" method="post">
+				<input type="hidden" name="quotationData" id="quotationData" />				
+			</form>
+			{% else %}
+			<form id="quotationForm" action="{{ path('app_quotation_create_post') }}" method="post">
+				<input type="hidden" name="quotationData" id="quotationData" />				
+			</form>
+			{% endif %}	
+
 		</div>
 	</article>
 
