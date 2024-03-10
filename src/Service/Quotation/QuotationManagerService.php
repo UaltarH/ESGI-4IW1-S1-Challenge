@@ -196,11 +196,9 @@ class QuotationManagerService
 
         $this->entityManager->flush();
 
-        return [
-            'status' => 'success',
-            'message' => 'all is good',
-            'quotationId' => $quotation->getId(),
-        ];
+        $this->sendPdf($quotation);
+
+        return true;
     }
 
     public function createQuotation($userConnected)
@@ -242,6 +240,7 @@ class QuotationManagerService
         $quotation->setUpdatedAt(new \DateTimeImmutable());
 
         $this->entityManager->persist($quotation);
+        $this->entityManager->flush();
 
         //create the quotation contents
         $quotationsContents = $jsonData['services'];
@@ -259,15 +258,17 @@ class QuotationManagerService
             $quotationContentEntity->setQuotation($quotation);
 
             $this->entityManager->persist($quotationContentEntity);
+            $this->entityManager->flush();
         }
 
         $this->entityManager->flush();
 
-        return [
-            'status' => 'success',
-            'message' => 'all is good',
-            'quotationId' => $quotation->getId()
-        ];
+        //test
+        $this->entityManager->refresh($quotation);
+
+        // dd($quotation->getContents());
+
+        $this->sendPdf($quotation);
     }
 
     public function sendPdf($quotation)
@@ -279,7 +280,7 @@ class QuotationManagerService
         $quotation->generateToken();
         $this->entityManager->flush();
 
-
+        $this->entityManager->refresh($quotation);
         $data = $this->quotationUtils->prepareDataForPdfOrPreview($quotation);
 
         $html =  $this->twig->render('pdfTemplates/quotation.html.twig', $data);

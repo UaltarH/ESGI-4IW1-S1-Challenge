@@ -27,7 +27,7 @@ class QuotationManagerController extends AbstractController
     #[Route('/quotation/manager', name: 'app_quotation_manager')]
     public function index(): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
+        if (!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
         }
 
@@ -48,10 +48,10 @@ class QuotationManagerController extends AbstractController
     #[Route('/quotation/show/{id}', name: 'app_quotation_show')]
     public function show(TechcareQuotation $quotation): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
+        if (!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à ce devis");
         }
-        if($quotation->getClient()->getCompany() !== $this->getUser()->getCompany()) {
+        if ($quotation->getClient()->getCompany() !== $this->getUser()->getCompany()) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à ce devis");
         }
 
@@ -63,7 +63,7 @@ class QuotationManagerController extends AbstractController
             'role' => $this->getUser()->getRoles()[0],
         ]);
         $data['footerItems'] = (new MenuBuilder)->createMainFooter();
-        if($connected) {
+        if ($connected) {
             $data['company'] = $this->getUser()->getCompany()->getName();
         }
 
@@ -74,10 +74,10 @@ class QuotationManagerController extends AbstractController
     #[Route('/quotation/edit/{id}', name: 'app_quotation_edit')]
     public function edit(TechcareQuotation $quotation): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
+        if (!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour modifier ce devis.");
         }
-        if($quotation->getClient()->getCompany() !== $this->getUser()->getCompany()) {
+        if ($quotation->getClient()->getCompany() !== $this->getUser()->getCompany()) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour modifier ce devis.");
         }
 
@@ -104,20 +104,23 @@ class QuotationManagerController extends AbstractController
     #[Route('/quotation/editpost', name: 'app_quotation_edit_post')]
     public function editPost(Request $request): Response
     {
-        $jsonData = json_decode($request->getContent(), true);
+        $quotationData = $request->request->get('quotationData');
+        $quotationArray = json_decode($quotationData, true);
+        $userConnected = $this->getUser();
 
-        $response = $this->quotationService->editPostQuotation($jsonData, $jsonData['user']);
-        $responseJson = json_encode($response);
-        return new Response($responseJson, 200, ['Content-Type' => 'application/json']);
+        $this->quotationService->editPostQuotation($quotationArray, $userConnected);
+
+        $this->addFlash('success', 'Votre devis a bien été modifié et envoyer à votre client !');
+        return $this->redirectToRoute('app_quotation_manager');
     }
 
     #[Route('/quotation/delete/{id}', name: 'app_quotation_delete', methods: ['POST'])]
     public function delete(Request $request, TechcareQuotation $quotation, EntityManagerInterface $entityManager): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
+        if (!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour supprimer ce devis.");
         }
-        if($quotation->getClient()->getCompany() !== $this->getUser()->getCompany()) {
+        if ($quotation->getClient()->getCompany() !== $this->getUser()->getCompany()) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour supprimer ce devis.");
         }
         if ($this->isCsrfTokenValid('delete' . $quotation->getId(), $request->request->get('_token'))) {
@@ -131,7 +134,7 @@ class QuotationManagerController extends AbstractController
     #[Route('/quotation/create', name: 'app_quotation_create')]
     public function create(): Response | Exception
     {
-        if(!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
+        if (!$this->isGranted('ROLE_COMPANY') && !$this->isGranted('ROLE_OWNER_COMPANY') && !$this->isGranted('ROLE_ACCOUNTANT')) {
             return $this->createAccessDeniedException("Vous n'avez pas les droits pour accéder à cette page.");
         }
 
@@ -156,14 +159,12 @@ class QuotationManagerController extends AbstractController
     #[Route('/quotation/create/post', name: 'app_quotation_create_post')]
     public function post(Request $request): Response
     {
-	if ($request->isXmlHttpRequest() || $request->query->get('showJson') == 1) {
-            $jsonData = json_decode($request->getContent(), true);
+        $quotationData = $request->request->get('quotationData');
+        $quotationArray = json_decode($quotationData, true);
+        $this->quotationService->createPostQuotation($quotationArray, $this->getUser());
 
-            $response = $this->quotationService->createPostQuotation($jsonData, $jsonData['user']);
-
-            // $responseJson = json_encode($response);
-            return new JsonResponse($response);
-	}
+        $this->addFlash('success', 'Votre devis a bien été créer et envoyer à votre client !');
+        return $this->redirectToRoute('app_quotation_manager');
     }
 
     #[Route('/quotation/pdf/{id}', name: 'app_quotation_pdf')]
@@ -172,18 +173,6 @@ class QuotationManagerController extends AbstractController
         $this->quotationService->sendPdf($quotation);
         $this->addFlash('success', 'Le devis a bien été envoyé !');
         return $this->redirectToRoute('app_quotation_manager');
-    }
-
-    #[Route('/quotation/pdfpost', name: 'app_quotation_pdf_post')]
-    public function sendPdfFromClient(Request $request, TechcareQuotationRepository $quotationRepository)
-    {
-        $jsonData = json_decode($request->getContent(), true);
-        $quotation = $quotationRepository->find($jsonData['quotationId']);
-
-        $this->quotationService->sendPdf($quotation);
-
-        $responseJson = json_encode(['status' => 'success']);
-        return new Response($responseJson, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/quotation/accept/{token}', name: 'app_quotation_accept')]
