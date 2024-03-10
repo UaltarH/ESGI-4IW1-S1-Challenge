@@ -117,7 +117,6 @@ class InvoiceUtils
             $payementToken = $invoice->getPayment()->getToken();
             $acceptUrl = $this->router->generate('payement_action', ['token' => $payementToken], UrlGeneratorInterface::ABSOLUTE_URL);
             $htmlContent = '<p>Veuillez cliquer sur le lien ci-dessous pour payer votre facture :</p><br><a href="' . $acceptUrl . '">Payer</a> <br>';
-
             $urlOrTextMessage = $acceptUrl;
         }
 
@@ -128,14 +127,12 @@ class InvoiceUtils
         $html =  $this->twig->render('pdfTemplates/invoice.html.twig', $data);
         $contentPdf = $this->PdfUtils->generatePdfFile($html);
 
-
         //brevo
         $clientFullName = $invoice->getClient()->getFirstname() . ' ' . $invoice->getClient()->getLastname();
         $dateInvoice = $invoice->getCreatedAt()->format('d/m/Y');
         $companyName = $invoice->getClient()->getCompany()->getName();
         $base64 = base64_encode($contentPdf);
         $invoiceName = $invoice->getInvoiceNumber() . '.pdf';
-
 
         $this->emailUtils->sendEmailForInvoiceUsingBrevo(
             "admin",
@@ -148,8 +145,6 @@ class InvoiceUtils
             $invoiceName,
             $urlOrTextMessage,
         );
-
-
         $this->emailUtils->sendEmailWithPdf('subject', $htmlContent, 'mail@gmail.com', $clientEmail, $contentPdf, $data['invoice_number']);
     }
 }

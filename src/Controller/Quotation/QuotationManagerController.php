@@ -13,7 +13,7 @@ use App\Entity\TechcareQuotation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\Quotation\QuotationManagerService;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class QuotationManagerController extends AbstractController
 {
@@ -97,6 +97,7 @@ class QuotationManagerController extends AbstractController
             'quotationToEdit' => $datas['quotation'],
             'edit' => true,
             'idQuotation' => $quotation->getId(),
+            'user' => $userConnected->getId(),
         ]);
     }
 
@@ -139,7 +140,6 @@ class QuotationManagerController extends AbstractController
 
         $userConnected = $this->getUser();
         $datas = $this->quotationService->createQuotation($userConnected);
-
         return $this->render('employee/quotation/create_edit.html.twig', [
             'menuItems' => (new MenuBuilder)->createMainMenu([
                 'connected' => $userConnected instanceof UserInterface,
@@ -152,6 +152,7 @@ class QuotationManagerController extends AbstractController
             'productsAndComponents' => $datas['products'],
             'edit' => false,
             'idQuotation' => '',
+            'user' => (string)$userConnected->getId(),
         ]);
     }
 

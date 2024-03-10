@@ -108,7 +108,6 @@ document.addEventListener("DOMContentLoaded", function () {
           discount: discountValue,
           services: services,
         };
-
         document.getElementById("quotationData").value =
           JSON.stringify(editQuotation);
 

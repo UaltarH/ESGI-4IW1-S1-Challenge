@@ -87,7 +87,7 @@ class EmailUtils
         string $base64Quote,
         string $quoteName,
         string $urlAcceptQuote,
-        string $urlRefuseQuote
+        string $urlRefuseQuote,
     ): void {
         $data = [
             "sender" => [
@@ -128,7 +128,7 @@ class EmailUtils
         string $quoteCompany,
         string $base64Quote,
         string $quoteName,
-        string $urlPaidInvoice
+        string $urlPaidInvoice,
     ): void {
         $data = [
             "sender" => [
