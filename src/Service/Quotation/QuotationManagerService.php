@@ -14,7 +14,6 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\TechcareComponentRepository;
 use App\Repository\TechcareProductRepository;
-use Faker\Factory;
 use Twig\Environment;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Utilities\EmailUtils;
@@ -209,7 +208,6 @@ class QuotationManagerService
 
     public function createPostQuotation($jsonData, $idUserConnected)
     {
-        $faker = Factory::create('fr_FR');
         $userConnected = $this->userRepository->find($idUserConnected);
         //get entities with the json data
         $clientSelected = $this->clientRepository->find($jsonData['clientId']);
@@ -222,7 +220,7 @@ class QuotationManagerService
         $amountQuotation = floatval($jsonData['price']);
 
         //create the quotation number
-        $quotationNumber = date('Y') . '-' . date('m') . '-' . str_replace(' ', '', $clientSelected->getCompany()->getName()) . '-' . $faker->uuid();
+        $quotationNumber = date('Y') . '-' . date('m') . '-' . str_replace(' ', '', $clientSelected->getCompany()->getName()) . '-' . uniqid();
 
         // create status of the quotation
         $statusQuotation = QuotationStatus::pending->value;
