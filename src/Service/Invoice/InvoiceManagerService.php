@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Utilities\InvoiceUtils;
 use App\Utilities\QuotationUtils;
 use DateTimeImmutable;
-use Faker\Factory;
 use App\Entity\TechcarePayment;
 use App\Enum\InvoiceStatus;
 
@@ -85,7 +84,6 @@ class InvoiceManagerService
     public function createInvoice($invoice, $form, $userConnected)
     {
         if ($form->isSubmitted() && $form->isValid()) {
-            $faker = Factory::create('fr_FR');
             $quotationSelected = $invoice->getQuotation();
             $company = $userConnected->getCompany();
 
@@ -96,7 +94,7 @@ class InvoiceManagerService
             $newPayment->setClient($quotationSelected->getClient());
             $newPayment->setQuotation($quotationSelected);
             $newPayment->setDate(new DateTimeImmutable());
-            $newPayment->setPaymentNumber($faker->uuid());
+            $newPayment->setPaymentNumber(uniqid());
             $this->entityManager->persist($newPayment);
 
             $invoice->setCreatedAt(new DateTimeImmutable());
@@ -104,7 +102,7 @@ class InvoiceManagerService
             $invoice->setUpdatedAt(new DateTimeImmutable());
             $invoice->setUpdatedBy($userConnected->getFirstname() . ' ' . $userConnected->getLastname());
             $invoice->setStatus(InvoiceStatus::not_paid->value);
-            $invoice->setInvoiceNumber(date('Y') . '-' . date('m') . '-' . str_replace(' ', '', $company->getName()) . '-' . $faker->uuid());
+            $invoice->setInvoiceNumber(date('Y') . '-' . date('m') . '-' . str_replace(' ', '', $company->getName()) . '-' . uniqid());
             $invoice->setClient($quotationSelected->getClient());
             $invoice->setPayment($newPayment);
             $this->entityManager->persist($invoice);
